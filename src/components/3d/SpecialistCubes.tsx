@@ -42,7 +42,7 @@ const SpecialistCubes = ({
         <OrbitControls 
           enableZoom={true} 
           enablePan={true} 
-          enableRotate={true}
+          enableRotate={!isExperienceOpen}
           minDistance={5}
           maxDistance={30}
           target={[0, 0, 0]}
@@ -91,10 +91,9 @@ const Scene = ({
     setTopLinePositions(topLinePos);
   }, [specialists.length]);
 
-  useFrame((_, delta) => {
-    if (groupRef.current && !isExperienceOpen) {
-      groupRef.current.rotation.y += delta * 0.1;
-    }
+  // Static scene when experience is open
+  useFrame(() => {
+    // No automatic rotation when experience is open
   });
 
   return (

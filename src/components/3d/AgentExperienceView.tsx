@@ -1,6 +1,6 @@
 
 import { useRef, useState, useEffect } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
+import { useThree } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 import * as THREE from 'three';
 import { Agent } from '../agents/types/agentTypes';
@@ -28,7 +28,7 @@ const AgentExperienceView = ({ agent, onClose }: AgentExperienceViewProps) => {
   const [scale, setScale] = useState(0);
   const [showChat, setShowChat] = useState(false);
   const [chatScale, setChatScale] = useState(0);
-  const orbitalButtonsRef = useRef<THREE.Group>(null);
+  const buttonsRef = useRef<THREE.Group>(null);
   
   // Define orbital buttons
   const orbitalButtons: OrbitalButton[] = [
@@ -107,20 +107,11 @@ const AgentExperienceView = ({ agent, onClose }: AgentExperienceViewProps) => {
   }, [showChat]);
 
   // Handle the opening animation
-  useFrame((_, delta) => {
+  useEffect(() => {
     if (openAnimation && scale < 1) {
       setScale(prev => Math.min(prev + 0.04, 1));
     }
-    
-    if (groupRef.current) {
-      groupRef.current.rotation.y += 0.003;
-    }
-    
-    // Rotate orbital buttons
-    if (orbitalButtonsRef.current && isFullyOpened) {
-      orbitalButtonsRef.current.rotation.y += delta * 0.2;
-    }
-  });
+  }, [openAnimation, scale]);
 
   // Close chat and return to sphere view
   const handleCloseChat = () => {
@@ -166,9 +157,9 @@ const AgentExperienceView = ({ agent, onClose }: AgentExperienceViewProps) => {
         </Html>
       </group>
       
-      {/* Orbital buttons around the agent sphere */}
+      {/* Static action buttons around the agent sphere */}
       {isFullyOpened && (
-        <group ref={orbitalButtonsRef} position={[0, 0.5, -2]}>
+        <group ref={buttonsRef} position={[0, 0.5, -2]}>
           {orbitalButtons.map((button) => (
             <group key={button.id} position={button.position}>
               <mesh onClick={(e) => {

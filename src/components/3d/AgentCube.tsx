@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
@@ -21,6 +20,7 @@ const AgentCube = ({
   isExperienceOpen
 }: AgentCubeProps) => {
   const cubeRef = useRef<THREE.Mesh>(null);
+  const labelRef = useRef<THREE.Group>(null);
   const [hovered, setHovered] = useState(false);
   const [clicked, setClicked] = useState(false);
   const [currentPosition] = useState(new THREE.Vector3());
@@ -38,12 +38,19 @@ const AgentCube = ({
   
   // Handle transition to new positions
   useFrame((_, delta) => {
-    if (!cubeRef.current) return;
+    if (!cubeRef.current || !labelRef.current) return;
     
     // Update position with lerp for smooth transitions
     if (position && currentPosition) {
       currentPosition.lerp(position, 0.1);
       cubeRef.current.position.copy(currentPosition);
+      
+      // Keep labels positioned under the cube
+      if (labelRef.current) {
+        labelRef.current.position.x = currentPosition.x;
+        labelRef.current.position.y = currentPosition.y - 2;
+        labelRef.current.position.z = currentPosition.z;
+      }
     }
     
     // Handle rotation based on state
@@ -102,18 +109,19 @@ const AgentCube = ({
         />
       </mesh>
       
-      {/* Text labels */}
-      <Html position={[0, -2, 0]} center distanceFactor={15}>
-        <div className="text-white font-bold text-center text-xs" style={{ textShadow: '0 0 5px #000' }}>
-          {agent.name}
-        </div>
-      </Html>
-      
-      <Html position={[0, -2.6, 0]} center distanceFactor={15}>
-        <div className="text-gray-300 text-center text-xs" style={{ textShadow: '0 0 5px #000' }}>
-          {agent.specialty}
-        </div>
-      </Html>
+      {/* Text labels with proper positioning */}
+      <group ref={labelRef} position={[position.x, position.y - 2, position.z]}>
+        <Html center>
+          <div className="flex flex-col items-center">
+            <div className="text-white font-bold text-center text-xs mb-1" style={{ textShadow: '0 0 5px #000' }}>
+              {agent.name}
+            </div>
+            <div className="text-gray-300 text-center text-xs" style={{ textShadow: '0 0 5px #000' }}>
+              {agent.specialty}
+            </div>
+          </div>
+        </Html>
+      </group>
     </group>
   );
 };
