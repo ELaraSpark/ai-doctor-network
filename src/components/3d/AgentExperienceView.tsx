@@ -1,7 +1,7 @@
 
 import { useRef, useState, useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { Text, Html, useTexture } from '@react-three/drei';
+import { Html } from '@react-three/drei';
 import * as THREE from 'three';
 import { Agent } from '../agents/types/agentTypes';
 import AgentChatInterface from './AgentChatInterface';
@@ -79,27 +79,18 @@ const AgentExperienceView = ({ agent, onClose }: AgentExperienceViewProps) => {
           />
         </mesh>
         
-        <Text
-          position={[0, -1.5, 0]}
-          fontSize={0.4}
-          color="white"
-          anchorX="center"
-          anchorY="middle"
-          outlineWidth={0.05}
-          outlineColor="#000000"
-        >
-          {agent.name}
-        </Text>
+        {/* Replace Text with Html */}
+        <Html position={[0, -1.5, 0]} center distanceFactor={10}>
+          <div className="text-white font-bold text-center text-lg" style={{ textShadow: '0 0 5px #000' }}>
+            {agent.name}
+          </div>
+        </Html>
         
-        <Text
-          position={[0, -2, 0]}
-          fontSize={0.25}
-          color="#a0a0a0"
-          anchorX="center"
-          anchorY="middle"
-        >
-          {agent.specialty}
-        </Text>
+        <Html position={[0, -2, 0]} center distanceFactor={10}>
+          <div className="text-gray-300 text-center text-sm" style={{ textShadow: '0 0 5px #000' }}>
+            {agent.specialty}
+          </div>
+        </Html>
       </group>
       
       {/* Chat interface */}
