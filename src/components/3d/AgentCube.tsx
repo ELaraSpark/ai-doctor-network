@@ -88,8 +88,10 @@ const AgentCube = ({
     }
   }, [isExperienceOpen, isSelected, position]);
 
-  // Get initial position for the label, defaulting to 0,0,0 if position is undefined
-  const initialLabelPosition = position ? [position.x, position.y - 2, position.z] : [0, -2, 0];
+  // Create a proper THREE.Vector3 for the initial label position
+  const initialLabelPosition = position 
+    ? new THREE.Vector3(position.x, position.y - 2, position.z) 
+    : new THREE.Vector3(0, -2, 0);
 
   return (
     <group>
