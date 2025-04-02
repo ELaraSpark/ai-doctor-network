@@ -86,7 +86,7 @@ const AgentCube = ({
     if (position) {
       currentPosition.copy(position);
     }
-  }, [isExperienceOpen, isSelected, position]);
+  }, [isExperienceOpen, isSelected, position, currentPosition]);
 
   // Create a proper THREE.Vector3 for the initial label position
   const initialLabelPosition = position 

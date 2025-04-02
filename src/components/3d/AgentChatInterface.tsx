@@ -33,6 +33,7 @@ const AgentChatInterface = ({ agent, onClose }: AgentChatInterfaceProps) => {
   const [isListening, setIsListening] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [animationComplete, setAnimationComplete] = useState(false);
+  const chatCardRef = useRef<HTMLDivElement>(null);
   
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -48,8 +49,23 @@ const AgentChatInterface = ({ agent, onClose }: AgentChatInterfaceProps) => {
       setAnimationComplete(true);
     }, 600);
     
-    return () => clearTimeout(timeout);
-  }, []);
+    // Add click event listener to detect clicks outside the chat
+    const handleClickOutside = (event: MouseEvent) => {
+      if (chatCardRef.current && !chatCardRef.current.contains(event.target as Node)) {
+        onClose();
+      }
+    };
+    
+    // Only add the event listener after animation completes
+    if (animationComplete) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    
+    return () => {
+      clearTimeout(timeout);
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [animationComplete, onClose]);
   
   const handleSendMessage = async () => {
     if (!input.trim() || isLoading) return;
@@ -116,6 +132,7 @@ const AgentChatInterface = ({ agent, onClose }: AgentChatInterfaceProps) => {
   
   return (
     <Card 
+      ref={chatCardRef}
       className={`w-full h-full flex flex-col bg-white/90 backdrop-blur-md border-2 border-medical-blue/30 rounded-xl shadow-xl ${
         animationComplete ? 'opacity-100 scale-100' : 'opacity-0 scale-90'
       } transition-all duration-500`}
@@ -130,7 +147,15 @@ const AgentChatInterface = ({ agent, onClose }: AgentChatInterfaceProps) => {
             <p className="text-xs text-muted-foreground">{agent.specialty}</p>
           </div>
         </div>
-        <Button variant="ghost" size="sm" onClick={onClose} className="h-8 w-8 p-0">
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={(e) => {
+            e.stopPropagation();
+            onClose();
+          }} 
+          className="h-8 w-8 p-0 rounded-full hover:bg-gray-200/80"
+        >
           <X className="h-4 w-4" />
         </Button>
       </CardHeader>
