@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
@@ -41,7 +42,7 @@ const AgentCube = ({
     if (!cubeRef.current || !labelRef.current) return;
     
     // Update position with lerp for smooth transitions
-    if (position && currentPosition) {
+    if (position) {
       currentPosition.lerp(position, 0.1);
       cubeRef.current.position.copy(currentPosition);
       
@@ -87,6 +88,9 @@ const AgentCube = ({
     }
   }, [isExperienceOpen, isSelected, position]);
 
+  // Get initial position for the label, defaulting to 0,0,0 if position is undefined
+  const initialLabelPosition = position ? [position.x, position.y - 2, position.z] : [0, -2, 0];
+
   return (
     <group>
       <mesh
@@ -110,7 +114,7 @@ const AgentCube = ({
       </mesh>
       
       {/* Text labels with proper positioning */}
-      <group ref={labelRef} position={[position.x, position.y - 2, position.z]}>
+      <group ref={labelRef} position={initialLabelPosition}>
         <Html center>
           <div className="flex flex-col items-center">
             <div className="text-white font-bold text-center text-xs mb-1" style={{ textShadow: '0 0 5px #000' }}>
