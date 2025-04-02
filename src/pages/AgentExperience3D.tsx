@@ -4,10 +4,16 @@ import { motion } from "framer-motion";
 import PublicLayout from "@/components/layout/PublicLayout";
 import SpecialistCubes from "@/components/3d/SpecialistCubes";
 import { Agent } from "@/components/agents/types/agentTypes";
-import { specialists } from "@/components/collaboration/data/specialistsData";
+import { specialists as collaborationSpecialists } from "@/components/collaboration/data/specialistsData";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Cube } from "lucide-react";
+import { ArrowLeft, Box } from "lucide-react";
+
+// Transform specialists to match the Agent type from agentTypes
+const specialists: Agent[] = collaborationSpecialists.map(specialist => ({
+  ...specialist,
+  capabilities: [`${specialist.specialty} expertise`, "Medical diagnosis", "Treatment recommendations"]
+}));
 
 const AgentExperience3D = () => {
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
@@ -35,7 +41,7 @@ const AgentExperience3D = () => {
               </Button>
             </Link>
             <h1 className="text-2xl font-bold flex items-center">
-              <Cube className="h-6 w-6 mr-2 text-medical-blue" />
+              <Box className="h-6 w-6 mr-2 text-medical-blue" />
               3D Agent Experience
             </h1>
           </div>
