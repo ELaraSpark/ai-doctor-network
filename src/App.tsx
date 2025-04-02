@@ -24,6 +24,7 @@ import AboutUs from "./pages/AboutUs";
 import Notifications from "./pages/Notifications";
 import AIExpertsSettings from "./pages/AIExpertsSettings";
 import EditAIExpert from "./pages/EditAIExpert";
+import AgentExperience3D from "./pages/AgentExperience3D";
 
 // Import the new page for security logs if needed
 // import SecurityLogs from "./pages/SecurityLogs";
@@ -44,6 +45,7 @@ const App = () => (
               <Route path="/register" element={<Register />} />
               <Route path="/features" element={<Features />} />
               <Route path="/about" element={<AboutUs />} />
+              <Route path="/3d-agents" element={<AgentExperience3D />} />
               <Route 
                 path="/dashboard" 
                 element={
