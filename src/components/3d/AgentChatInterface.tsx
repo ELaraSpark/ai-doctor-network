@@ -32,6 +32,7 @@ const AgentChatInterface = ({ agent, onClose }: AgentChatInterfaceProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [animationComplete, setAnimationComplete] = useState(false);
   
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -40,6 +41,15 @@ const AgentChatInterface = ({ agent, onClose }: AgentChatInterfaceProps) => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+  
+  useEffect(() => {
+    // Animation for chat interface appearance
+    const timeout = setTimeout(() => {
+      setAnimationComplete(true);
+    }, 600);
+    
+    return () => clearTimeout(timeout);
+  }, []);
   
   const handleSendMessage = async () => {
     if (!input.trim() || isLoading) return;
@@ -105,11 +115,15 @@ const AgentChatInterface = ({ agent, onClose }: AgentChatInterfaceProps) => {
   };
   
   return (
-    <Card className="w-full h-full flex flex-col bg-white/90 backdrop-blur-md border-2 border-medical-blue/30 rounded-xl shadow-xl">
+    <Card 
+      className={`w-full h-full flex flex-col bg-white/90 backdrop-blur-md border-2 border-medical-blue/30 rounded-xl shadow-xl ${
+        animationComplete ? 'opacity-100 scale-100' : 'opacity-0 scale-90'
+      } transition-all duration-500`}
+    >
       <CardHeader className="py-3 px-4 border-b flex justify-between items-center">
         <div className="flex items-center space-x-2">
           <div className="w-10 h-10 rounded-full bg-gradient-to-r from-medical-blue to-teal-400 flex items-center justify-center">
-            <agent.icon className="h-5 w-5 text-white" />
+            <MessageSquare className="h-5 w-5 text-white" />
           </div>
           <div>
             <h3 className="font-semibold text-sm">{agent.name}</h3>
@@ -136,6 +150,9 @@ const AgentChatInterface = ({ agent, onClose }: AgentChatInterfaceProps) => {
                 }`}
               >
                 <p className="text-sm">{msg.content}</p>
+                <span className="text-xs opacity-70 block mt-1">
+                  {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </span>
               </div>
             </div>
           ))}

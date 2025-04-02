@@ -23,6 +23,7 @@ const AgentCube = ({
   const cubeRef = useRef<THREE.Mesh>(null);
   const [hovered, setHovered] = useState(false);
   const [clicked, setClicked] = useState(false);
+  const [currentPosition] = useState(new THREE.Vector3());
   
   // Colors based on the agent's specialty
   const getColorScheme = () => {
@@ -34,11 +35,22 @@ const AgentCube = ({
   };
   
   const { baseColor, hoverColor, selectedColor } = getColorScheme();
-
+  
+  // Handle transition to new positions
   useFrame((_, delta) => {
-    if (!cubeRef.current || isExperienceOpen) return;
+    if (!cubeRef.current) return;
     
-    if (isSelected) {
+    // Update position with lerp for smooth transitions
+    if (position && currentPosition) {
+      currentPosition.lerp(position, 0.1);
+      cubeRef.current.position.copy(currentPosition);
+    }
+    
+    // Handle rotation based on state
+    if (isExperienceOpen) {
+      // No rotation while experience is open
+      return;
+    } else if (isSelected) {
       cubeRef.current.rotation.x += delta * 2;
       cubeRef.current.rotation.y += delta * 2;
       cubeRef.current.rotation.z += delta * 2;
@@ -54,27 +66,33 @@ const AgentCube = ({
       if (isExperienceOpen) {
         // Shrink and hide the cube when experience is open
         cubeRef.current.scale.set(0.01, 0.01, 0.01);
-        cubeRef.current.visible = false;
+        cubeRef.current.visible = isSelected ? false : true;
       } else {
         // Reset the cube when experience is closed
         cubeRef.current.scale.set(1, 1, 1);
         cubeRef.current.visible = true;
       }
     }
-  }, [isExperienceOpen]);
+    
+    // Initialize the current position
+    if (position) {
+      currentPosition.copy(position);
+    }
+  }, [isExperienceOpen, isSelected, position]);
 
   return (
-    <group position={position}>
+    <group>
       <mesh
         ref={cubeRef}
-        onPointerOver={() => setHovered(true)}
-        onPointerOut={() => setHovered(false)}
+        onPointerOver={() => !isExperienceOpen && setHovered(true)}
+        onPointerOut={() => !isExperienceOpen && setHovered(false)}
         onClick={(e) => {
+          if (isExperienceOpen) return;
           e.stopPropagation();
           setClicked(!clicked);
           onSelect();
         }}
-        scale={hovered ? [1.1, 1.1, 1.1] : [1, 1, 1]}
+        scale={hovered && !isExperienceOpen ? [1.1, 1.1, 1.1] : [1, 1, 1]}
       >
         <boxGeometry args={[2.5, 2.5, 2.5]} />
         <meshStandardMaterial 
@@ -84,7 +102,7 @@ const AgentCube = ({
         />
       </mesh>
       
-      {/* Replace Text component with HTML for better compatibility */}
+      {/* Text labels */}
       <Html position={[0, -2, 0]} center distanceFactor={15}>
         <div className="text-white font-bold text-center text-xs" style={{ textShadow: '0 0 5px #000' }}>
           {agent.name}
