@@ -23,40 +23,41 @@ const PublicLayout = ({
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#f0f5fa] to-blue-50">
       {showHeader && (
-        <header className="border-b bg-white bg-opacity-80 backdrop-blur-sm">
-          <div className="container mx-auto px-6 py-4">
-            <nav className="flex items-center justify-between">
-              <motion.div 
-                className="flex items-center space-x-2"
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <div className="w-8 h-8 rounded-md bg-gradient-to-r from-medical-purple to-blue-500 flex items-center justify-center">
-                  <span className="text-white font-semibold text-sm">LA</span>
+        // Updated header styles: sticky, white bg, border
+        <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white">
+          {/* Use max-w-screen-xl for consistency if needed, or keep container */}
+          <div className="container mx-auto px-6"> 
+            {/* Reduced padding py-3 */}
+            <nav className="flex items-center justify-between py-3">
+              {/* Updated Logo */}
+              <Link to="/" className="flex items-center gap-2 text-decoration-none">
+                <div className="bg-[#615EFF] text-white w-[34px] h-[34px] rounded-lg flex items-center justify-center font-bold flex-shrink-0">
+                  LA
                 </div>
-                <span className="font-display font-bold text-lg gradient-text">
-                  LENY-AI
-                </span>
-              </motion.div>
-              <motion.div
-                className="hidden md:flex items-center space-x-6"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-              >
-                <Link to="/features" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Features</Link>
-                <Link to="/about" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">About Us</Link>
-              </motion.div>
-              <motion.div 
-                className="flex items-center space-x-4"
-                initial={{ opacity: 0, x: 10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-              >
+                <div className="flex flex-col">
+                  <span className="font-bold text-xl text-primary leading-tight"> {/* text-primary defined in globals? */}
+                    LENY-AI
+                  </span>
+                  <span className="text-xs text-gray-600 font-medium leading-snug whitespace-nowrap mt-px">
+                    Practice medicine, not paperwork
+                  </span>
+                </div>
+              </Link>
+              
+              {/* Updated Nav Links */}
+              <div className="hidden md:flex items-center gap-8"> {/* Increased gap */}
+                <Link to="/features" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">Features</Link>
+                {/* Added Link to the new Tool */}
+                <Link to="/tools/document-transformer" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">Tools</Link> 
+                <Link to="/about" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">About Us</Link>
+              </div>
+
+              {/* Updated User Actions */}
+              <div className="flex items-center gap-3"> {/* Reduced gap */}
                 {isAuthenticated ? (
                   <Link to="/dashboard">
-                    <Button className="gradient-btn-blue text-white">
+                    {/* Use base Button and add specific classes */}
+                    <Button className="bg-primary hover:bg-primary/90 text-white text-sm font-semibold rounded-lg px-4 py-2.5">
                       <LayoutDashboard className="mr-2 h-4 w-4" />
                       Dashboard
                     </Button>
@@ -64,29 +65,66 @@ const PublicLayout = ({
                 ) : (
                   <>
                     <Link to="/login">
-                      <Button variant="ghost">Log in</Button>
+                      {/* Use base Button and add specific classes */}
+                      <Button variant="ghost" className="text-sm font-semibold rounded-lg px-4 py-2.5 text-gray-600 hover:bg-gray-100">Log in</Button>
                     </Link>
                     <Link to="/register">
-                      <Button className="gradient-btn-blue text-white">Sign up</Button>
+                      {/* Use base Button and add specific classes */}
+                      <Button className="bg-primary hover:bg-primary/90 text-white text-sm font-semibold rounded-lg px-4 py-2.5">Sign up</Button>
                     </Link>
                   </>
                 )}
-              </motion.div>
+              </div>
             </nav>
           </div>
         </header>
       )}
 
-      <main className="flex-1">
+      {/* Remove gradient from main content area if layout handles bg */}
+      <main className="flex-1 bg-white"> 
         {children}
       </main>
 
       {showFooter && (
-        <footer className="bg-white bg-opacity-80 backdrop-blur-sm py-8">
-          <div className="container mx-auto px-6 text-center">
-            <p className="text-sm text-muted-foreground">
-              &copy; {new Date().getFullYear()} LENY-AI Health Technologies. All rights reserved.
-            </p>
+        // Updated footer styles: white bg, top border
+        <footer className="bg-white border-t border-gray-200 pt-10 pb-5">
+          <div className="container mx-auto px-6">
+            {/* Footer columns */}
+            <div className="flex flex-wrap justify-between gap-8 mb-8">
+              <div className="w-full sm:w-1/2 md:w-auto">
+                <h3 className="text-base font-semibold mb-5 text-gray-800">Support</h3>
+                <ul className="space-y-3">
+                  <li><Link to="/help" className="text-sm text-gray-600 hover:underline">Help Center</Link></li>
+                  <li><Link to="/privacy" className="text-sm text-gray-600 hover:underline">Privacy Policy</Link></li>
+                  <li><Link to="/terms" className="text-sm text-gray-600 hover:underline">Terms of Service</Link></li>
+                  <li><Link to="/contact" className="text-sm text-gray-600 hover:underline">Contact Us</Link></li>
+                </ul>
+              </div>
+              <div className="w-full sm:w-1/2 md:w-auto">
+                <h3 className="text-base font-semibold mb-5 text-gray-800">Features</h3>
+                <ul className="space-y-3">
+                  <li><Link to="/features#specialists" className="text-sm text-gray-600 hover:underline">AI Specialists</Link></li>
+                  <li><Link to="/features#transcription" className="text-sm text-gray-600 hover:underline">Medical Transcription</Link></li>
+                  <li><Link to="/features#research" className="text-sm text-gray-600 hover:underline">Research Assistance</Link></li>
+                  <li><Link to="/features#analytics" className="text-sm text-gray-600 hover:underline">Healthcare Analytics</Link></li>
+                </ul>
+              </div>
+              <div className="w-full sm:w-1/2 md:w-auto">
+                <h3 className="text-base font-semibold mb-5 text-gray-800">About</h3>
+                <ul className="space-y-3">
+                  <li><Link to="/about#story" className="text-sm text-gray-600 hover:underline">Our Story</Link></li>
+                  <li><Link to="/careers" className="text-sm text-gray-600 hover:underline">Careers</Link></li>
+                  <li><Link to="/press" className="text-sm text-gray-600 hover:underline">Press</Link></li>
+                  <li><Link to="/blog" className="text-sm text-gray-600 hover:underline">Blog</Link></li>
+                </ul>
+              </div>
+            </div>
+            {/* Copyright */}
+            <div className="border-t border-gray-200 pt-6 mt-8 text-center">
+              <p className="text-sm text-gray-500">
+                &copy; {new Date().getFullYear()} LENY-AI, Inc. All rights reserved.
+              </p>
+            </div>
           </div>
         </footer>
       )}

@@ -24,6 +24,8 @@ import AboutUs from "./pages/AboutUs";
 import Notifications from "./pages/Notifications";
 import AIExpertsSettings from "./pages/AIExpertsSettings";
 import EditAIExpert from "./pages/EditAIExpert";
+import DocumentTransformer from "./pages/DocumentTransformer";
+import CollaborationHub from "./pages/CollaborationHub"; // Import the new collaboration page
 
 // Import the new page for security logs if needed
 // import SecurityLogs from "./pages/SecurityLogs";
@@ -130,6 +132,24 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <EditAIExpert />
+                  </ProtectedRoute>
+                } 
+              />
+              {/* Route for the new Document Transformer tool */}
+              <Route 
+                path="/tools/document-transformer" 
+                element={
+                  <ProtectedRoute>
+                    <DocumentTransformer />
+                  </ProtectedRoute>
+                } 
+              />
+              {/* Route for the new Collaboration Hub */}
+              <Route 
+                path="/collaboration-hub" 
+                element={
+                  <ProtectedRoute>
+                    <CollaborationHub />
                   </ProtectedRoute>
                 } 
               />
