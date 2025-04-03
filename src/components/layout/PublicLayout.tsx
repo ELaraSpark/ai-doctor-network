@@ -3,7 +3,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
-import { LayoutDashboard, Box } from "lucide-react";
+import { LayoutDashboard } from "lucide-react";
 import { motion } from "framer-motion";
 
 type PublicLayoutProps = {
@@ -47,10 +47,6 @@ const PublicLayout = ({
               >
                 <Link to="/features" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Features</Link>
                 <Link to="/about" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">About Us</Link>
-                <Link to="/3d-agents" className="text-sm font-medium text-muted-foreground hover:text-medical-blue transition-colors flex items-center">
-                  <Box className="h-4 w-4 mr-1" />
-                  3D Experience
-                </Link>
               </motion.div>
               <motion.div 
                 className="flex items-center space-x-4"
