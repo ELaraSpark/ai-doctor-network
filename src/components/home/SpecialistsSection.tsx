@@ -1,6 +1,6 @@
-import SpecialistCard from "@/components/home/SpecialistCard";
+import HealthcareCard from "@/components/home/HealthcareCard"; // Import the new card
 import { agents } from "@/components/agents/data/agentsData";
-import { 
+import {
   Carousel,
   CarouselContent,
   CarouselItem,
@@ -8,47 +8,45 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"; // Import Carousel components
 
-// Define interface for the mapped specialist object to satisfy TypeScript
-interface MappedSpecialist {
+// Define interface for the mapped specialist object to match HealthcareCard props
+interface MappedSpecialistForHC {
   id: string;
-  logoText: string; 
-  specialty: string; 
+  logoText: string;
+  location: string; // Changed from specialty
   description: string;
-  services: string[]; 
+  services: string[];
   imageUrl: string; 
   delay: number;
   isNew: boolean;
-  logoIconText: string; 
-  logoColor: string;
-  rating: number | 'New'; // Explicitly type rating
-  reviewCount?: number; 
-  availability: string; 
-  price: string; 
-  pricePeriod: string; 
+  logoIconText: string;
+  // logoColor is not directly used by HealthcareCard
+  rating: number | 'New';
+  reviewCount?: number;
+  availability: string;
+  price: string;
+  pricePeriod: string;
 }
 
 const SpecialistsSection = () => {
-  // Map agents data to the LENY-AI SpecialistCard props
-  // Displaying all agents now instead of slicing
-  const specialists: MappedSpecialist[] = agents.map((agent, index) => { // Type the specialists array
-    const isNewAgent = index < 3; // Mark first 3 as new for example
+  // Map agents data to the HealthcareCard props
+  const specialists: MappedSpecialistForHC[] = agents.map((agent, index) => {
+    const isNewAgent = index < 3; // Example logic for 'New' rating
     return {
       id: agent.id,
-      logoText: agent.name, 
-      specialty: agent.specialty, 
+      logoText: agent.name,
+      location: agent.specialty, // Map specialty to location
       description: agent.description,
-      services: agent.capabilities.slice(0, 2), // Limit capabilities shown
-      imageUrl: `/agents/${agent.id}.jpg`, // Assuming images exist at this path
-      delay: 0.1 * (index + 1), // Keep delay for potential staggered animation if needed elsewhere
-      // Props specific to LENY-AI style
-      isNew: isNewAgent, 
-      logoIconText: agent.name.substring(0, 2), 
-      logoColor: `bg-${agent.color || 'primary'}`, // Use agent color or default
-      rating: isNewAgent ? 'New' : (4.7 + Math.random() * 0.3), 
-      reviewCount: isNewAgent ? undefined : Math.floor(500 + Math.random() * 1500), 
-      availability: index % 2 === 0 ? "Available Mon-Fri" : "Available 24/7", 
-      price: isNewAgent ? "$0" : `$${10 + index * 5}`, 
-      pricePeriod: isNewAgent ? "for first consultation" : "per consultation", 
+      services: agent.capabilities.slice(0, 2), // Show first 2 capabilities as services
+      imageUrl: `/agents/${agent.id}.jpg`, // Assuming image path convention
+      logoIconText: agent.name.substring(0, 2).toUpperCase(),
+      rating: isNewAgent ? 'New' : parseFloat((4.7 + Math.random() * 0.3).toFixed(1)),
+      reviewCount: isNewAgent ? undefined : Math.floor(500 + Math.random() * 1500),
+      availability: index % 2 === 0 ? "Available Mon-Fri" : "Available 24/7",
+      price: isNewAgent ? "$0" : `$${10 + index * 5}`,
+      pricePeriod: isNewAgent ? "for first consultation" : "per consultation",
+      // Add missing properties required by the interface
+      delay: 0, // Delay is not used in HealthcareCard, set to 0
+      isNew: isNewAgent, // Keep the isNew logic if needed elsewhere, though not used by card
     };
   });
   
@@ -63,12 +61,15 @@ const SpecialistsSection = () => {
     >
       <CarouselContent className="-ml-4"> {/* Negative margin for item spacing */}
         {specialists.map((specialist, index) => (
-          <CarouselItem key={specialist.id || index} className="pl-4 md:basis-1/2 lg:basis-1/3"> {/* Use specialist.id as key */}
-            <div className="p-1 h-full"> {/* Padding for item content, h-full for consistent height */}
-              <SpecialistCard 
-                // Pass all props from the mapped specialist object
-                {...specialist} 
-                delay={0} // Override delay for carousel items
+          <CarouselItem key={specialist.id || index} className="pl-4 md:basis-1/2 lg:basis-1/3">
+            <div className="p-1 h-full">
+              {/* Render the new HealthcareCard */}
+              <HealthcareCard
+                // Spread the mapped props
+                {...specialist}
+                // Add optional favorite handling if needed later
+                // isFavorite={false}
+                // onFavoriteToggle={() => console.log('Toggle favorite for', specialist.id)}
               />
             </div>
           </CarouselItem>

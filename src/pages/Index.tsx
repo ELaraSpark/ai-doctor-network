@@ -1,14 +1,57 @@
 import PublicLayout from "@/components/layout/PublicLayout";
 import SpecialistsSection from "@/components/home/SpecialistsSection";
 import CTASection from "@/components/home/CTASection";
-// import SearchSection from "@/components/home/SearchSection"; // Placeholder for new component
-// import FilterBar from "@/components/home/FilterBar"; // Placeholder for new component
-import { useEffect } from "react";
-import { Link } from "react-router-dom"; 
-import { Button } from "@/components/ui/button"; 
-import { FileText, Users } from "lucide-react"; // <-- Added Users import
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom"; // Keep useNavigate for potential future use
+import { Button } from "@/components/ui/button";
+import {
+  FileText,
+  Users,
+  Search,
+  SlidersHorizontal,
+  HeartPulse, // Cardiology (Placeholder, not used)
+  Brain, // Neurology (Placeholder, not used)
+  Microscope, // Pathology
+  Bone, // Orthopedics (Example - will be replaced)
+  Eye, // Ophthalmology (will be replaced)
+  FlaskConical, // Pharma/Labs
+  Stethoscope, // General Practice & Nursing
+  Sparkles, // All/General Icon
+  ClipboardList, // Added for Tumor Board filter
+  NotebookPen, // Added for Quick Notes filter
+  GraduationCap, // Added for Med Students
+  MessageCircle, // Added for Chat
+} from "lucide-react";
+import QuickNotes from "./QuickNotes"; // Import QuickNotes
+import Chat from "./Chat"; // Import Chat
+import TumorBoardView from "@/components/tumor-board/TumorBoardView"; // Import TumorBoardView
+import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton for loading
+
+// Define type for filter/tool items
+type FilterItem = {
+  id: string;
+  label: string;
+  icon: React.ElementType;
+  type: 'filter' | 'tool'; // Simplified type
+};
+
+// Updated filter/tool data
+const filterCategories: FilterItem[] = [
+  { id: 'all', label: 'All Specialists', icon: Sparkles, type: 'filter' },
+  { id: 'tumor-board', label: 'Tumor Board', icon: ClipboardList, type: 'tool' },
+  { id: 'quick-notes', label: 'Quick Notes', icon: NotebookPen, type: 'tool' },
+  { id: 'chat', label: 'Chat', icon: MessageCircle, type: 'tool' },
+  { id: 'med-students', label: 'Med Students', icon: GraduationCap, type: 'filter' },
+  { id: 'nursing', label: 'Nursing', icon: Stethoscope, type: 'filter' },
+  // Add more relevant categories
+];
 
 const Index = () => {
+  const [activeFilter, setActiveFilter] = useState('all'); // For filtering SpecialistsSection
+  const [activeTool, setActiveTool] = useState<string | null>(null); // State for active tool view
+  const [isToolLoading, setIsToolLoading] = useState(false); // State for loading indicator
+  const navigate = useNavigate(); // Keep for potential future use
+
   // Preload agent profile images (Keep this logic)
   useEffect(() => {
     const agentIds = ["cardio", "neuro", "path", "gen", "opth", "radiology", "pharma"];
@@ -18,85 +61,108 @@ const Index = () => {
     });
   }, []);
 
+  const handleFilterClick = (item: FilterItem) => {
+    if (item.type === 'filter') {
+      setActiveFilter(item.id);
+      setActiveTool(null); // Hide any open tool when a filter is clicked
+    } else if (item.type === 'tool') {
+      // Toggle tool visibility: if same tool clicked, hide it, otherwise show it
+      setActiveTool(prevTool => prevTool === item.id ? null : item.id);
+      setActiveFilter('all'); // Reset specialist filter when a tool is opened
+      // Show loading briefly
+      setIsToolLoading(true);
+      setTimeout(() => setIsToolLoading(false), 300); // Adjust delay as needed
+    }
+  };
+
+  // Determine which main content component to render below the filter bar
+  const renderMainContent = () => {
+    switch (activeTool) {
+      case 'quick-notes':
+        return <QuickNotes />;
+      case 'chat':
+        return <Chat />;
+      case 'tumor-board':
+        return <TumorBoardView />;
+      default:
+        // Pass activeFilter to SpecialistsSection if it uses it for filtering
+        return <SpecialistsSection /* activeFilter={activeFilter} */ />;
+    }
+  };
+
   return (
-    // PublicLayout likely handles the Header and Footer
-    <PublicLayout showHeader={true}> 
-      {/* Remove the gradient background and min-height from here, apply to body or layout if needed */}
-      <div> 
-        {/* Placeholder for Search Section - To be implemented */}
-        <div className="border-b border-gray-200 py-4">
-          <div className="container mx-auto px-6">
-            <div className="flex items-center max-w-3xl mx-auto border border-gray-300 rounded-full shadow-sm bg-white overflow-hidden">
-              <input 
-                type="text" 
-                className="flex-grow px-8 py-3.5 border-none text-sm font-medium focus:outline-none" 
-                placeholder="Search AI specialists or medical tasks..." 
+    // Always render PublicLayout with the header
+    <PublicLayout showHeader={true} showFooter={!activeTool}> {/* Hide footer when tool is active */}
+      {/* Main content area with padding */}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+
+        {/* Combined Search and Filter/Tool Bar Section */}
+        {/* Made sticky below the header (assuming header height ~60px) */}
+        <div className="sticky top-[60px] z-20 bg-white/95 backdrop-blur-sm border-b border-gray-200 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-3"> 
+          <div className="container mx-auto flex items-center gap-4"> {/* Use gap-4 for spacing */}
+            
+            {/* Filter/Tool Buttons Area (Moved to Left) */}
+            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
+              {filterCategories.map((category) => (
+                <button
+                key={category.id}
+                onClick={() => handleFilterClick(category)} // Use the updated handler
+                className={`flex flex-col items-center gap-1.5 p-2 min-w-[70px] sm:min-w-[80px] cursor-pointer group ${
+                  // Highlight if it's the active filter OR the active tool
+                  (activeFilter === category.id && category.type === 'filter') || (activeTool === category.id && category.type === 'tool')
+                    ? 'text-gray-900 border-b-2 border-gray-900'
+                    : 'text-gray-500 hover:text-gray-900 border-b-2 border-transparent hover:border-gray-300'
+                }`}
+              >
+                <category.icon
+                  size={22}
+                  className={`transition-opacity ${
+                    // Highlight icon if active filter or tool
+                    (activeFilter === category.id && category.type === 'filter') || (activeTool === category.id && category.type === 'tool')
+                     ? 'opacity-100' : 'opacity-70 group-hover:opacity-100'
+                  }`}
+                  strokeWidth={(activeFilter === category.id && category.type === 'filter') || (activeTool === category.id && category.type === 'tool') ? 2 : 1.5}
+                />
+                <span className="text-xs font-medium whitespace-nowrap">{category.label}</span>
+              </button>
+            ))}
+            </div>
+
+            {/* Search Input Area (Moved to Right using ml-auto) */}
+            <div className="flex items-center ml-auto max-w-xs border border-gray-200 rounded-full shadow-sm hover:shadow-md transition-shadow bg-white overflow-hidden h-12"> {/* Adjusted max-width */}
+              <input
+                type="text"
+                className="flex-grow px-5 py-2 border-none text-sm placeholder-gray-500 focus:outline-none"
+                placeholder="Search..." // Shortened placeholder
               />
-              <button className="bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center m-1 mr-2 flex-shrink-0">
-                {/* Search Icon SVG */}
-                <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" className="block fill-none h-4 w-4 stroke-current stroke-[4] overflow-visible">
-                  <path d="m13 24c6.0751322 0 11-4.9248678 11-11 0-6.07513225-4.9248678-11-11-11-6.07513225 0-11 4.92486775-11 11 0 6.0751322 4.92486775 11 11 11zm8-3 9 9"></path>
-                </svg>
+              <button className="bg-primary text-white w-9 h-9 rounded-full flex items-center justify-center mr-1.5 flex-shrink-0 hover:bg-primary/90 transition-colors">
+                <Search size={14} strokeWidth={3} />
               </button>
             </div>
+
           </div>
         </div>
 
-        {/* Quick Actions Section */}
-        <div className="container mx-auto px-6 pt-4 pb-2 text-center"> {/* Added padding */}
-          <h3 className="text-sm font-semibold text-gray-500 mb-3">Quick Actions:</h3>
-          <div className="flex justify-center gap-3 flex-wrap">
-            <Link to="/tools/document-transformer">
-              <Button variant="outline" size="sm" className="text-xs">
-                <FileText size={14} className="mr-1.5" /> {/* Example Icon */}
-                Transform Document
-              </Button>
-            </Link>
-            {/* Added Collaboration Hub Quick Action */}
-            <Link to="/collaboration-hub">
-              <Button variant="outline" size="sm" className="text-xs">
-                <Users size={14} className="mr-1.5" /> {/* Example Icon */}
-                Start Collaboration
-              </Button>
-            </Link>
-            {/* Add more quick action buttons here if needed */}
-          </div>
+        {/* Main Content Area (Specialists or Tool) - Adjusted margin-top */}
+        <div className="mt-8 mb-16 min-h-[500px]"> {/* Added min-height */}
+          {isToolLoading ? (
+            // Show Skeleton loaders while tool loads
+            <div className="space-y-4">
+              <Skeleton className="h-12 w-1/2" />
+              <Skeleton className="h-[400px] w-full" />
+            </div>
+          ) : (
+            renderMainContent()
+          )} 
         </div>
 
-        {/* Placeholder for Filter Bar - To be implemented */}
-        <div className="container mx-auto px-6 border-t pt-2"> {/* Added border-t and pt-2 */}
-          <div className="flex items-center gap-2 py-5 overflow-x-auto">
-            {/* Example Filter Items (repeat as needed) - Using colored divs as icon placeholders */}
-            <div className="flex flex-col items-center gap-2 p-2 min-w-[80px] cursor-pointer text-gray-600 border-b-2 border-transparent hover:text-black data-[active=true]:border-black data-[active=true]:text-black" data-active={true}>
-              <div className="w-6 h-6 rounded bg-gray-500"></div> {/* Placeholder Icon */}
-              <span className="text-xs font-semibold whitespace-nowrap">All Specialists</span>
-            </div>
-            <div className="flex flex-col items-center gap-2 p-2 min-w-[80px] cursor-pointer text-gray-600 border-b-2 border-transparent hover:text-black data-[active=true]:border-black data-[active=true]:text-black" data-active={false}>
-              <div className="w-6 h-6 rounded bg-red-500"></div> {/* Placeholder Icon */}
-              <span className="text-xs font-semibold whitespace-nowrap">Cardiology</span>
-            </div>
-            <div className="flex flex-col items-center gap-2 p-2 min-w-[80px] cursor-pointer text-gray-600 border-b-2 border-transparent hover:text-black data-[active=true]:border-black data-[active=true]:text-black" data-active={false}>
-              <div className="w-6 h-6 rounded bg-blue-500"></div> {/* Placeholder Icon */}
-              <span className="text-xs font-semibold whitespace-nowrap">Neurology</span>
-            </div>
-            {/* Add more filter items here... */}
-            
-            {/* Filter Button */}
-            <button className="ml-auto flex items-center gap-2 px-4 py-3 border border-gray-300 rounded-full bg-white text-xs font-semibold cursor-pointer hover:border-gray-500 flex-shrink-0">
-              <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" className="block h-3.5 w-3.5 fill-gray-700"><path d="M5 8c1.306 0 2.418.835 2.83 2H14v2H7.829A3.001 3.001 0 1 1 5 8zm0 2a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm6-8a3 3 0 1 1-2.829 4H2V4h6.17A3.001 3.001 0 0 1 11 2zm0 2a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"></path></svg>
-              Filters
-            </button>
+        {/* CTA Section - Conditionally hide if a tool is active */}
+        {!activeTool && (
+          <div className="mb-16">
+             <CTASection />
           </div>
-        </div>
-        
-        {/* Specialist Section (Keep and ensure it's inside the main container) */}
-        <div className="container mx-auto px-6 mt-8 mb-12"> {/* Added margins */}
-           {/* Remove the container div from SpecialistsSection itself if it has one */}
-          <SpecialistsSection /> 
-        </div>
+        )}
 
-        {/* CTA Section (Keep, will modify later if needed) */}
-        <CTASection /> 
       </div>
     </PublicLayout>
   );

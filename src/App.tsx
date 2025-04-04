@@ -18,14 +18,17 @@ import Analytics from "./pages/Analytics";
 import NotFound from "./pages/NotFound";
 import Settings from "./pages/Settings";
 import FollowupScheduler from "./pages/FollowupScheduler";
-import FollowupMonitoring from "./pages/FollowupMonitoring";
+// Removed FollowupMonitoring import as the page was deleted
 import Features from "./pages/Features";
 import AboutUs from "./pages/AboutUs";
 import Notifications from "./pages/Notifications";
 import AIExpertsSettings from "./pages/AIExpertsSettings";
 import EditAIExpert from "./pages/EditAIExpert";
 import DocumentTransformer from "./pages/DocumentTransformer";
-import CollaborationHub from "./pages/CollaborationHub"; // Import the new collaboration page
+import CollaborationHub from "./pages/CollaborationHub";
+import TumorBoardView from "@/components/tumor-board/TumorBoardView";
+import QuickNotes from "./pages/QuickNotes";
+import Chat from "./pages/Chat"; // Import the new Chat page
 
 // Import the new page for security logs if needed
 // import SecurityLogs from "./pages/SecurityLogs";
@@ -102,14 +105,7 @@ const App = () => (
                   </ProtectedRoute>
                 } 
               />
-              <Route 
-                path="/followup-monitoring" 
-                element={
-                  <ProtectedRoute>
-                    <FollowupMonitoring />
-                  </ProtectedRoute>
-                } 
-              />
+              {/* Removed Followup Monitoring route */}
               <Route 
                 path="/notifications" 
                 element={
@@ -118,23 +114,7 @@ const App = () => (
                   </ProtectedRoute>
                 } 
               />
-              {/* New routes for AI Experts Settings */}
-              <Route 
-                path="/settings/ai-experts" 
-                element={
-                  <ProtectedRoute>
-                    <AIExpertsSettings />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route 
-                path="/settings/ai-experts/edit/:id" 
-                element={
-                  <ProtectedRoute>
-                    <EditAIExpert />
-                  </ProtectedRoute>
-                } 
-              />
+              {/* AI Experts routes removed */}
               {/* Route for the new Document Transformer tool */}
               <Route 
                 path="/tools/document-transformer" 
@@ -153,6 +133,13 @@ const App = () => (
                   </ProtectedRoute>
                 } 
               />
+              {/* Route for the new Tumor Board view - Made public */}
+              <Route 
+                path="/tumor-board" 
+                element={<TumorBoardView />} 
+              />
+              {/* Removed route for Quick Notes (now shown in Index) */}
+              {/* Removed route for Chat (now shown in Index) */}
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

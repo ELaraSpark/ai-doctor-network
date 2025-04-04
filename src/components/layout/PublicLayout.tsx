@@ -10,38 +10,36 @@ type PublicLayoutProps = {
   children: React.ReactNode;
   showHeader?: boolean;
   showFooter?: boolean;
+  forceHideHeader?: boolean; // New prop
 };
 
 const PublicLayout = ({ 
   children, 
   showHeader = true, 
-  showFooter = true 
+  showFooter = true,
+  forceHideHeader = false // Default to false
 }: PublicLayoutProps) => {
   const { user } = useAuth();
   const isAuthenticated = !!user;
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#f0f5fa] to-blue-50">
-      {showHeader && (
+      {/* Conditionally render header based on showHeader AND forceHideHeader */}
+      {showHeader && !forceHideHeader && ( 
         // Updated header styles: sticky, white bg, border
         <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white">
           {/* Use max-w-screen-xl for consistency if needed, or keep container */}
           <div className="container mx-auto px-6"> 
             {/* Reduced padding py-3 */}
             <nav className="flex items-center justify-between py-3">
-              {/* Updated Logo */}
-              <Link to="/" className="flex items-center gap-2 text-decoration-none">
-                <div className="bg-[#615EFF] text-white w-[34px] h-[34px] rounded-lg flex items-center justify-center font-bold flex-shrink-0">
-                  LA
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-bold text-xl text-primary leading-tight"> {/* text-primary defined in globals? */}
-                    LENY-AI
-                  </span>
-                  <span className="text-xs text-gray-600 font-medium leading-snug whitespace-nowrap mt-px">
-                    Practice medicine, not paperwork
-                  </span>
-                </div>
+              {/* Simplified Logo */}
+              <Link to="/" className="flex items-center text-decoration-none">
+                {/* Removed icon div */}
+                {/* Removed flex-col div */}
+                <span className="font-bold text-2xl text-primary leading-none"> {/* Adjusted size/leading */}
+                  Leny.ai
+                </span>
+                {/* Removed tagline span */}
               </Link>
               
               {/* Updated Nav Links */}
@@ -49,7 +47,7 @@ const PublicLayout = ({
                 <Link to="/features" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">Features</Link>
                 {/* Added Link to the new Tool */}
                 <Link to="/tools/document-transformer" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">Tools</Link> 
-                <Link to="/about" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">About Us</Link>
+                {/* Removed About Us link */}
               </div>
 
               {/* Updated User Actions */}
