@@ -1,38 +1,42 @@
 
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
-import { Clock, Zap } from "lucide-react";
-import ChatPreview from "@/components/home/ChatPreview";
+// Removed unused imports: Button, Link, useAuth, Clock, ChatPreview
+// Removed duplicate motion import
+import { Zap } from "lucide-react"; // Keep Zap if the highlighted benefit is retained or adapted
 
 const HeroSection = () => {
-  const { user } = useAuth();
-  const isAuthenticated = !!user;
+  // Removed auth logic as it's not used in the simplified version
+  // const { user } = useAuth();
+  // const isAuthenticated = !!user;
 
   return (
-    <section className="py-10 md:py-16">
-      <div className="container mx-auto px-6">
-        <div className="flex flex-col items-center text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="w-full max-w-2xl mx-auto mb-8"
-          >
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-gray-900 mb-4">
-              Healthcare AI,<br />
-              Simplified
-            </h1>
+    // Adjusted padding and max-width to align closer with the example's feel
+    <section className="py-8 md:py-12">
+      <div className="container mx-auto px-6 text-center max-w-3xl"> {/* Increased max-width */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }} // Added exit animation
+          transition={{ duration: 0.3 }} // Adjusted duration slightly for exit
+          // Removed extra wrapping div and mb-8
+        >
+          {/* Adopted H1 style from example - adjusted font size classes and changed color to primary */}
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-primary mb-4">
+            Your Time, Finally Your Own
+          </h1>
+          {/* Adopted P style from example - adjusted font size, color, and added italic class */}
+          <p className="text-lg text-gray-600 mb-6 italic">
+            AI agents handle paperwork, you handle healing.
+          </p>
 
-            <div className="flex items-center justify-center space-x-2 mb-6 p-3 bg-blue-50 rounded-lg border border-blue-100 max-w-md mx-auto">
-              <Zap className="h-5 w-5 text-medical-yellow flex-shrink-0" />
-              <p className="text-sm font-medium text-blue-800">
-                <span className="font-bold">Save up to 70% of your time</span> on administrative tasks and documentation
-              </p>
-            </div>
-          </motion.div>
-        </div>
+          {/* Optional: Keep or adapt the highlighted benefit if desired */}
+          {/* <div className="flex items-center justify-center space-x-2 mb-6 p-3 bg-blue-50 rounded-lg border border-blue-100 max-w-md mx-auto">
+            <Zap className="h-5 w-5 text-blue-600 flex-shrink-0" /> // Adjusted color
+            <p className="text-sm font-medium text-blue-800">
+              <span className="font-bold">Save up to 70% of your time</span> on administrative tasks and documentation
+            </p>
+          </div> */}
+        </motion.div>
       </div>
     </section>
   );

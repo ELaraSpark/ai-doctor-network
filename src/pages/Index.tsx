@@ -1,5 +1,9 @@
 import PublicLayout from "@/components/layout/PublicLayout";
+import { AnimatePresence } from "framer-motion"; // Import AnimatePresence
+import HeroSection from "@/components/home/HeroSection"; // Import HeroSection
 import SpecialistsSection from "@/components/home/SpecialistsSection";
+import BenefitsSection from "@/components/home/BenefitsSection"; // Import BenefitsSection
+import SecurityBanner from "@/components/home/SecurityBanner"; // Import SecurityBanner
 import CTASection from "@/components/home/CTASection";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom"; // Keep useNavigate for potential future use
@@ -93,9 +97,15 @@ const Index = () => {
   return (
     // Always render PublicLayout with the header
     <PublicLayout showHeader={true} showFooter={!activeTool}> {/* Hide footer when tool is active */}
+      
+      {/* Wrap conditional Hero Section with AnimatePresence for smooth exit */}
+      <AnimatePresence>
+        {!activeTool && activeFilter === 'all' && <HeroSection />} 
+      </AnimatePresence>
+
       {/* Main content area with padding */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-
+        
         {/* Combined Search and Filter/Tool Bar Section */}
         {/* Made sticky below the header (assuming header height ~60px) */}
         <div className="sticky top-[60px] z-20 bg-white/95 backdrop-blur-sm border-b border-gray-200 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-3"> 
@@ -153,17 +163,26 @@ const Index = () => {
             </div>
           ) : (
             renderMainContent()
-          )} 
+          )}
         </div>
 
-        {/* CTA Section - Conditionally hide if a tool is active */}
+        {/* Benefits, CTA, and Security Banner - Conditionally hide if a tool is active */}
         {!activeTool && (
-          <div className="mb-16">
-             <CTASection />
-          </div>
+          <>
+            <div className="my-12 md:my-16"> {/* Added margin */}
+              <BenefitsSection />
+            </div>
+            <div className="mb-16">
+              <CTASection />
+            </div>
+            <div className="mb-16"> {/* Added margin */}
+               <SecurityBanner />
+            </div>
+          </>
         )}
 
       </div>
+      {/* Footer is handled by PublicLayout, SecurityBanner will appear above it */}
     </PublicLayout>
   );
 };
