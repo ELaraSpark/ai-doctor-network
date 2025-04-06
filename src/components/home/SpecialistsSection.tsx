@@ -37,7 +37,11 @@ const AIAgentsSection = () => { // Renamed component
       location: agent.specialty, // Map specialty to location
       description: agent.description,
       services: agent.capabilities.slice(0, 2), // Show first 2 capabilities as services
-      imageUrl: `/agents/${agent.id}.jpg`, // Assuming image path convention
+      // Map specific images or use placeholder
+      imageUrl: agent.id === 'cardio' ? '/agents/female-doctor-scrubs.jpg' :
+                agent.id === 'neuro' ? '/agents/male-doctor-labcoat.jpg' :
+                agent.id === 'path' ? '/agents/female-surgeon-cap.jpg' :
+                '/placeholder.svg', // Placeholder for others
       logoIconText: agent.name.substring(0, 2).toUpperCase(),
       rating: isNewAgent ? 'New' : parseFloat((4.7 + Math.random() * 0.3).toFixed(1)),
       reviewCount: isNewAgent ? undefined : Math.floor(500 + Math.random() * 1500),
