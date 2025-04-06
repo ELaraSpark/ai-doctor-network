@@ -41,7 +41,7 @@ const HealthcareCard: React.FC<HealthcareCardProps> = ({
         <img
           src={imageUrl || '/api/placeholder/400/320'} // Use provided image or placeholder
           alt={logoText}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover object-top" // Added object-top
           onError={(e) => {
             // Fallback if image fails to load
             const target = e.target as HTMLImageElement;
