@@ -107,9 +107,9 @@ const AgentSelector = ({ onSelect, className }: AgentSelectorProps) => {
   return (
     <div className={cn("space-y-4", className)}>
       <div className="space-y-2">
-        <h2 className="h3">Select AI Specialist</h2>
+        <h2 className="h3">Select AI Agent</h2> {/* Changed Specialist -> Agent */}
         <p className="text-muted-foreground">
-          Choose the AI medical specialist to assist with this case
+          Choose the AI medical agent to assist with this case {/* Changed specialist -> agent */}
         </p>
       </div>
 

@@ -10,7 +10,7 @@ import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
+// import Dashboard from "./pages/Dashboard"; // Removed unused import
 import PatientRecords from "./pages/PatientRecords";
 import Agents from "./pages/Agents";
 import Collaboration from "./pages/Collaboration";
@@ -18,12 +18,26 @@ import Analytics from "./pages/Analytics";
 import NotFound from "./pages/NotFound";
 import Settings from "./pages/Settings";
 import FollowupScheduler from "./pages/FollowupScheduler";
-import FollowupMonitoring from "./pages/FollowupMonitoring";
+// Removed FollowupMonitoring import as the page was deleted
 import Features from "./pages/Features";
 import AboutUs from "./pages/AboutUs";
 import Notifications from "./pages/Notifications";
 import AIExpertsSettings from "./pages/AIExpertsSettings";
 import EditAIExpert from "./pages/EditAIExpert";
+import DocumentTransformer from "./pages/DocumentTransformer";
+import CollaborationHub from "./pages/CollaborationHub";
+import ExpertPanelView from "@/components/tumor-board/TumorBoardView"; // Updated import name
+import QuickNotes from "./pages/QuickNotes";
+import Chat from "./pages/Chat";
+// Import new placeholder pages
+import RecentChats from "./pages/RecentChats";
+import RecentSearches from "./pages/RecentSearches"; // This import might be unused now
+import MyAgents from "./pages/MyAgents";
+import MyTemplates from "./pages/MyTemplates"; // Updated import name
+import Integrations from "./pages/Integrations";
+import Tasks from "./pages/Tasks";
+import CreateAgentPage from "./pages/CreateAgentPage";
+import Referrals from "./pages/Referrals"; // Import Referrals page
 
 // Import the new page for security logs if needed
 // import SecurityLogs from "./pages/SecurityLogs";
@@ -44,14 +58,7 @@ const App = () => (
               <Route path="/register" element={<Register />} />
               <Route path="/features" element={<Features />} />
               <Route path="/about" element={<AboutUs />} />
-              <Route 
-                path="/dashboard" 
-                element={
-                  <ProtectedRoute>
-                    <Dashboard />
-                  </ProtectedRoute>
-                } 
-              />
+              {/* Removed /dashboard route */}
               <Route 
                 path="/patients" 
                 element={
@@ -100,14 +107,7 @@ const App = () => (
                   </ProtectedRoute>
                 } 
               />
-              <Route 
-                path="/followup-monitoring" 
-                element={
-                  <ProtectedRoute>
-                    <FollowupMonitoring />
-                  </ProtectedRoute>
-                } 
-              />
+              {/* Removed Followup Monitoring route */}
               <Route 
                 path="/notifications" 
                 element={
@@ -116,23 +116,41 @@ const App = () => (
                   </ProtectedRoute>
                 } 
               />
-              {/* New routes for AI Experts Settings */}
+              {/* AI Experts routes removed */}
+              {/* Route for the new Document Transformer tool */}
               <Route 
-                path="/settings/ai-experts" 
+                path="/tools/document-transformer" 
                 element={
                   <ProtectedRoute>
-                    <AIExpertsSettings />
+                    <DocumentTransformer />
                   </ProtectedRoute>
                 } 
               />
+              {/* Route for the new Collaboration Hub */}
               <Route 
-                path="/settings/ai-experts/edit/:id" 
+                path="/collaboration-hub" 
                 element={
                   <ProtectedRoute>
-                    <EditAIExpert />
+                    <CollaborationHub />
                   </ProtectedRoute>
                 } 
               />
+              {/* Route for the new Expert Panel view - Made public */}
+              <Route 
+                path="/tumor-board" // Keeping path for now, can rename later if needed
+                element={<ExpertPanelView />} // Use renamed component
+              />
+              {/* Add routes for new placeholder pages */}
+              <Route path="/recent-chats" element={<ProtectedRoute><RecentChats /></ProtectedRoute>} />
+              {/* Removed /recent-searches route */}
+              <Route path="/my-agents" element={<ProtectedRoute><MyAgents /></ProtectedRoute>} />
+              <Route path="/my-templates" element={<ProtectedRoute><MyTemplates /></ProtectedRoute>} /> {/* Updated path and element */}
+              <Route path="/integrations" element={<ProtectedRoute><Integrations /></ProtectedRoute>} />
+              <Route path="/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
+              <Route path="/agents/create" element={<ProtectedRoute><CreateAgentPage /></ProtectedRoute>} />
+              <Route path="/referrals" element={<ProtectedRoute><Referrals /></ProtectedRoute>} /> {/* Add route for referrals page */}
+              {/* Removed route for Quick Notes (now shown in Index) */}
+              {/* Removed route for Chat (now shown in Index) */}
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

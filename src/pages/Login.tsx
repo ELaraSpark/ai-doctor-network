@@ -16,8 +16,8 @@ const Login = () => {
       icon: <FileText className="h-10 w-10 text-white/80" />,
     },
     {
-      title: "Specialist Collaboration",
-      description: "Connect with AI specialists across different medical fields for second opinions and complex case analysis.",
+      title: "Specialist Collaboration", // Title kept as is, maybe change later if needed
+      description: "Connect with AI agents across different medical fields for second opinions and complex case analysis.", // Changed specialists -> agents
       icon: <Users className="h-10 w-10 text-white/80" />,
     },
     {

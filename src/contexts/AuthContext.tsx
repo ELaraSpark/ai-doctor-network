@@ -62,7 +62,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         throw error;
       }
       
-      navigate("/dashboard");
+      navigate("/agents"); // Changed redirect to /agents
       return { error: null, success: true };
     } catch (error) {
       console.error("Error signing in:", error);
@@ -72,12 +72,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signInWithGoogle = async () => {
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: window.location.origin + "/dashboard",
-        },
-      });
+       const { error } = await supabase.auth.signInWithOAuth({
+         provider: 'google',
+         options: {
+           redirectTo: window.location.origin + "/agents", // Changed redirect to /agents
+         },
+       });
       
       if (error) {
         throw error;
@@ -96,7 +96,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         email,
         password,
         options: {
-          emailRedirectTo: window.location.origin + "/dashboard",
+          emailRedirectTo: window.location.origin + "/agents", // Changed redirect to /agents
         },
       });
       

@@ -1,33 +1,43 @@
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { cn } from '@/lib/utils';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'; // Assuming Tooltip is used
 
-import React from "react";
-import { NavLink } from "react-router-dom";
-import { cn } from "@/lib/utils";
-import { LucideIcon } from "lucide-react";
-
-type NavItemProps = {
+interface NavItemProps {
   to: string;
-  icon: LucideIcon;
+  icon: React.ElementType;
   label: string;
-  collapsed: boolean;
-};
+  // Removed isCollapsed prop
+}
 
-const NavItem = ({ to, icon: Icon, label, collapsed }: NavItemProps) => {
+const NavItem = ({ to, icon: Icon, label }: NavItemProps) => { // Removed isCollapsed from destructuring
+  const location = useLocation();
+  const isActive = location.pathname === to || (to !== '/' && location.pathname.startsWith(to));
+
+  const linkContent = (
+    <>
+      <Icon size={20} className={cn("transition-colors", isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground")} />
+      {/* Label is always visible now */}
+      <span className={cn(
+        "ml-3 text-sm font-medium transition-colors",
+        isActive ? "text-primary" : "text-foreground group-hover:text-foreground"
+        // Removed isCollapsed conditional class
+      )}>
+        {label}
+      </span>
+    </>
+  );
+
+  const linkClasses = cn(
+    "flex items-center px-4 py-2.5 rounded-md group transition-colors",
+    isActive ? "bg-primary/10 text-primary" : "hover:bg-muted"
+  );
+
+  // Removed the isCollapsed conditional rendering logic
   return (
-    <NavLink
-      to={to}
-      className={({ isActive }) =>
-        cn(
-          "flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all",
-          isActive
-            ? "bg-aida-50 text-aida-700"
-            : "text-muted-foreground hover:bg-secondary hover:text-foreground",
-          collapsed ? "justify-center" : "space-x-3"
-        )
-      }
-    >
-      <Icon size={20} className={collapsed ? "mx-auto" : ""} />
-      {!collapsed && <span>{label}</span>}
-    </NavLink>
+    <Link to={to} className={linkClasses}>
+      {linkContent}
+    </Link>
   );
 };
 
