@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState } from "react"; // Keep only one import
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button"; // Added Button import
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Star, Heart } from "lucide-react";
@@ -17,11 +18,11 @@ interface AgentCardProps { // Renamed interface
   logoIconText?: string; // Text for the square logo (e.g., "Ca")
   logoColor?: string; // Background color for the square logo (Tailwind class, e.g., "bg-red-500")
   rating?: number | 'New'; // Rating number or the string "New"
-  reviewCount?: number; // e.g., 1284 (only shown if rating is a number)
-  availability?: string; // e.g., "Available 24/7"
-  price?: string; // e.g., "$0"
-  pricePeriod?: string; // e.g., "for first consultation"
-  isNew?: boolean; // To show the "New" badge on the image
+  reviewCount?: number;
+  // availability?: string; // Removed
+  // price?: string; // Removed
+  // pricePeriod?: string; // Removed
+  isNew?: boolean;
 }
 
 // Heart Icon for Favorite Button
@@ -51,12 +52,12 @@ const AgentCard = ({ // Renamed component
   logoIconText = logoText.substring(0, 2),
   logoColor = "bg-primary", // Default to primary color
   rating = 4.9, // Default rating
-  reviewCount = 1284, // Default review count
-  availability = "Available 24/7",
-  price = "$0",
-  pricePeriod = "for first consultation",
-  isNew = false, // Default to not new
-}: AgentCardProps) => { // Use renamed interface
+  reviewCount = 1284,
+  // availability = "Available 24/7", // Removed default
+  // price = "$0", // Removed default
+  // pricePeriod = "for first consultation", // Removed default
+  isNew = false,
+}: AgentCardProps) => {
   const [isFavorite, setIsFavorite] = useState(false);
 
   const toggleFavorite = (e: React.MouseEvent) => {
@@ -141,26 +142,20 @@ const AgentCard = ({ // Renamed component
           </div>
 
           {/* Description */}
-          <p className="text-sm text-gray-600 mb-2 line-clamp-2">{description}</p> {/* Limit lines */}
+          <p className="text-sm text-gray-600 mb-3 line-clamp-2">{description}</p> {/* Limit lines, added mb-3 */}
 
-          {/* Availability */}
-          {availability && (
-            <p className="text-sm text-gray-600 mb-3">{availability}</p>
-          )}
+          {/* Removed Availability */}
 
-          {/* Price */}
-          {price && (
-            <div className="text-base font-semibold mb-3">
-              {price}
-              {pricePeriod && (
-                <span className="text-sm font-normal text-gray-600 ml-1">{pricePeriod}</span>
-              )}
-            </div>
-          )}
+          {/* Removed Price */}
+
+          {/* Try Me Button */}
+          <Button variant="outline" size="sm" className="w-full mb-3"> {/* Added Button */}
+             Try me
+          </Button>
 
           {/* Services/Tags - Added mt-auto to push tags to the bottom */}
           {services.length > 0 && (
-            <div className="flex flex-wrap gap-2 mt-auto pt-3"> {/* Added mt-auto and pt-3 */}
+            <div className="flex flex-wrap gap-2 mt-auto pt-3 border-t"> {/* Added border-t */}
               {services.map((service, i) => (
                 <Badge key={i} variant="secondary" className="text-xs font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200 px-3 py-1">
                   {service}

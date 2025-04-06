@@ -23,6 +23,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { Switch } from "@/components/ui/switch"; // Added Switch import
+import { Separator } from "@/components/ui/separator"; // Added Separator import
+import { Label } from "@/components/ui/label"; // Added Label import
 
 const accountFormSchema = z.object({
   name: z.string().min(2, {
@@ -40,9 +43,11 @@ const accountFormSchema = z.object({
 
 type AccountFormValues = z.infer<typeof accountFormSchema>;
 
-const AccountTab = () => {
+// Renaming component to reflect combined content
+const ProfileSecurityTab = () => {
   const { toast } = useToast();
-  
+  const [twoFactorEnabled, setTwoFactorEnabled] = useState(false); // Added state from SecurityTab
+
   const accountForm = useForm<AccountFormValues>({
     resolver: zodResolver(accountFormSchema),
     defaultValues: {
@@ -60,14 +65,29 @@ const AccountTab = () => {
       description: "Your account information has been saved.",
     });
   }
-  
+
+  // Added handlers from SecurityTab
+  const handleChangePassword = () => {
+    console.log("Change password clicked");
+    // Add logic to open a modal or navigate to a password change form
+    toast({ title: "Password Change", description: "Password change modal/form not implemented." });
+  };
+
+  const handleToggleTwoFactor = () => {
+    setTwoFactorEnabled(prev => !prev);
+    // Add logic to initiate 2FA setup or disable it
+    console.log("2FA toggled:", !twoFactorEnabled);
+    toast({ title: "Two-Factor Authentication", description: `2FA ${!twoFactorEnabled ? 'enabled' : 'disabled'} (logic not implemented).` });
+  };
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-6"> {/* Increased spacing */}
+      {/* Profile Information Card */}
       <Card>
         <CardHeader>
-          <CardTitle>Account Information</CardTitle>
+          <CardTitle>Profile Information</CardTitle> {/* Updated title */}
           <CardDescription>
-            Update your account details and public profile
+            Update your public profile details.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -154,12 +174,14 @@ const AccountTab = () => {
           </Form>
         </CardContent>
       </Card>
-      
+      {/* Removed extra closing </Card> tag */}
+
+      {/* Profile Picture Card */}
       <Card>
         <CardHeader>
           <CardTitle>Profile Picture</CardTitle>
           <CardDescription>
-            Change your profile photo
+            Change your profile photo.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -181,8 +203,61 @@ const AccountTab = () => {
           <Button variant="outline">Upload New Image</Button>
         </CardContent>
       </Card>
+
+      {/* Security Settings Card */}
+      <Card>
+         <CardHeader>
+           <CardTitle>Security Settings</CardTitle>
+           <CardDescription>
+             Manage your password and account security.
+           </CardDescription>
+         </CardHeader>
+         <CardContent className="space-y-6">
+           {/* Password Section from SecurityTab */}
+           <div className="space-y-4">
+             <h3 className="text-lg font-medium">Password</h3>
+             <div className="flex items-center justify-between space-x-2 rounded-lg border p-4">
+               <div>
+                 <Label>Change Password</Label>
+                 <p className="text-sm text-muted-foreground">
+                   Update your account password regularly for better security.
+                 </p>
+               </div>
+               <Button variant="outline" onClick={handleChangePassword}>Change Password</Button>
+             </div>
+           </div>
+
+           <Separator />
+
+           {/* 2FA Section from SecurityTab */}
+           <div className="space-y-4">
+             <h3 className="text-lg font-medium">Two-Factor Authentication (2FA)</h3>
+             <div className="flex items-center justify-between space-x-2 rounded-lg border p-4">
+               <Label htmlFor="two-factor-switch" className="flex flex-col space-y-1">
+                 <span>Enable 2FA</span>
+                 <span className="font-normal leading-snug text-muted-foreground">
+                   Add an extra layer of security to your account using an authenticator app.
+                 </span>
+               </Label>
+               <Switch
+                 id="two-factor-switch"
+                 checked={twoFactorEnabled}
+                 onCheckedChange={handleToggleTwoFactor}
+               />
+             </div>
+             {twoFactorEnabled && (
+               <div className="pl-4 text-sm text-muted-foreground">
+                 {/* Placeholder for 2FA setup instructions or status */}
+                 <p>Two-factor authentication is currently enabled.</p>
+                 <Button variant="link" className="p-0 h-auto text-primary">Manage 2FA Settings</Button>
+               </div>
+             )}
+           </div>
+           {/* Note: Active Sessions section is omitted for simplicity as requested */}
+         </CardContent>
+      </Card>
     </div>
   );
 };
 
-export default AccountTab;
+export default ProfileSecurityTab; // Renamed export

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button } from '@/components/ui/button'; // Added Button import
 
 interface HealthcareCardProps {
   imageUrl: string;
@@ -8,11 +9,11 @@ interface HealthcareCardProps {
   rating: number | string; // Can be number or "New"
   reviewCount?: number;
   description: string;
-  availability: string;
-  price: string;
-  pricePeriod: string;
+  // availability: string; // Removed
+  // price: string; // Removed
+  // pricePeriod: string; // Removed
   services: string[];
-  isFavorite?: boolean; // Optional: to control the heart icon state
+  isFavorite?: boolean;
   onFavoriteToggle?: () => void; // Optional: handler for favorite button
 }
 
@@ -24,9 +25,9 @@ const HealthcareCard: React.FC<HealthcareCardProps> = ({
   rating,
   reviewCount,
   description,
-  availability,
-  price,
-  pricePeriod,
+  // availability, // Removed
+  // price, // Removed
+  // pricePeriod, // Removed
   services,
   isFavorite = false,
   onFavoriteToggle,
@@ -81,10 +82,12 @@ const HealthcareCard: React.FC<HealthcareCardProps> = ({
           <div className="font-semibold text-base text-gray-900 truncate">{logoText}</div>
         </div>
 
-        {/* Title and Rating Row */}
-        <div className="flex justify-between items-start mb-1">
-          <div className="font-semibold text-gray-900">{location}</div>
-          {displayRating && (
+        {/* Wrap all content above the button */}
+        <div className="flex-grow">
+          {/* Title and Rating Row */}
+          <div className="flex justify-between items-start mb-1">
+            <div className="font-semibold text-gray-900">{location}</div>
+            {displayRating && (
             <div className="flex items-center font-medium text-sm text-gray-800 flex-shrink-0 ml-2">
               <svg
                 viewBox="0 0 32 32"
@@ -105,27 +108,30 @@ const HealthcareCard: React.FC<HealthcareCardProps> = ({
           )}
         </div>
 
-        {/* Description, Availability, Price */}
-        <div className="text-sm text-gray-600 mb-1">{description}</div>
-        <div className="text-sm text-gray-600 mb-2">{availability}</div>
-        <div className="font-semibold text-gray-900">
-          {price}
-          <span className="font-normal text-gray-600 text-sm ml-1">{pricePeriod}</span>
-        </div>
+        {/* Description */}
+        <div className="text-sm text-gray-600 mb-3">{description}</div>
+        {/* Removed Availability */}
+        {/* Removed Price */}
 
-        {/* Services Tags */}
-        {services && services.length > 0 && (
-          <div className="mt-3 pt-3 border-t border-gray-100 flex flex-wrap gap-2">
-            {services.map((service, index) => (
-              <div
+          {/* Services Tags */}
+          {services && services.length > 0 && (
+            <div className="pt-3 border-t border-gray-100 flex flex-wrap gap-2"> {/* Removed flex-grow */}
+              {services.map((service, index) => (
+                <div
                 key={index}
                 className="bg-gray-100 px-3 py-1.5 rounded-full text-xs font-medium text-gray-700"
               >
                 {service}
               </div>
-            ))}
-          </div>
-        )}
+                ))}
+              </div>
+            )}
+        </div> {/* End wrapper for growing content */}
+
+        {/* Try Me Button - Positioned last, add margin top for spacing */}
+        <Button variant="default" size="sm" className="w-full mt-4 flex-shrink-0"> {/* Removed mt-auto, added mt-4 and flex-shrink-0 */}
+           Try me
+        </Button>
       </div>
     </div>
   );

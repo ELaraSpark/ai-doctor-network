@@ -1,12 +1,12 @@
 import PublicLayout from "@/components/layout/PublicLayout";
 // Removed AnimatePresence import
-import HeroSection from "@/components/home/HeroSection"; // Import HeroSection
-import AIAgentsSection from "@/components/home/SpecialistsSection"; // Updated import name (file path remains for now)
-import BenefitsSection from "@/components/home/BenefitsSection"; // Import BenefitsSection
-import SecurityBanner from "@/components/home/SecurityBanner"; // Import SecurityBanner
+import HeroSection from "@/components/home/HeroSection";
+import AIAgentsSection from "@/components/home/SpecialistsSection";
+import BenefitsSection from "@/components/home/BenefitsSection";
+import SecurityBanner from "@/components/home/SecurityBanner"; // Re-added import
 import CTASection from "@/components/home/CTASection";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; // Keep useNavigate for potential future use
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   FileText,
@@ -138,11 +138,11 @@ const Index = () => {
             ))}
             </div>
 
-            {/* Search Input Area - Removed ml-auto, adjusted width/margins */}
-            <div className="flex items-center w-full md:w-auto md:max-w-xs border border-gray-200 rounded-full shadow-sm hover:shadow-md transition-shadow bg-white overflow-hidden h-12 mt-2 md:mt-0"> {/* Added top margin on mobile */}
+            {/* Search Input Area - Add ml-auto on medium screens and up */}
+            <div className="flex items-center w-full md:w-auto md:ml-auto md:max-w-xs border border-gray-200 rounded-full shadow-sm hover:shadow-md transition-shadow bg-white overflow-hidden h-12 mt-2 md:mt-0"> {/* Keep top margin on mobile, add ml-auto on md+ */}
               <input
                 type="text"
-                className="flex-grow px-5 py-2 border-none text-sm placeholder-gray-500 focus:outline-none w-full" // Ensure input takes full width inside container
+                className="flex-grow px-5 py-2 border-none text-sm placeholder-gray-500 focus:outline-none w-full"
                 placeholder="Search..." // Shortened placeholder
               />
               <button className="bg-primary text-white w-9 h-9 rounded-full flex items-center justify-center mr-1.5 flex-shrink-0 hover:bg-primary/90 transition-colors">
@@ -177,7 +177,8 @@ const Index = () => {
             <div className="mb-16">
               <CTASection />
             </div>
-            <div className="mb-16"> {/* Added margin */}
+            {/* Re-added SecurityBanner section */}
+            <div className="mb-16">
                <SecurityBanner />
             </div>
           </>

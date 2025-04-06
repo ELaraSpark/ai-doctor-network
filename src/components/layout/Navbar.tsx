@@ -50,13 +50,15 @@ const Navbar = ({ className }: NavbarProps) => {
         className
       )}
     >
-      {/* Integrate MobileNav component */}
+      {/* Integrate MobileNav component (stays on the left) */}
       <MobileNav />
 
-      {/* Search Section - adjusted margin for mobile */}
-      <div className="flex-1 flex items-center ml-2 lg:ml-0"> {/* Add ml-2 for mobile, remove for lg */}
-        {searchOpen ? (
-          <div className="max-w-md w-full animate-fadeIn">
+      {/* Container for right-aligned items */}
+      <div className="flex items-center ml-auto space-x-2">
+        {/* Search Section - Removed flex-1, adjusted margins */}
+        <div className="flex items-center"> {/* Removed flex-1 and margins */}
+          {searchOpen ? (
+            <div className="max-w-md w-full animate-fadeIn">
             <div className="relative">
               <Search
                 size={18}
@@ -78,14 +80,13 @@ const Navbar = ({ className }: NavbarProps) => {
             onClick={() => setSearchOpen(true)}
             className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
           >
-            <Search size={18} />
-          </Button>
-        )}
-      </div>
+              <Search size={18} />
+            </Button>
+          )}
+        </div>
 
-      <div className="flex items-center space-x-2">
+        {/* Other right-aligned items would go here */}
         {/* Notification Popover Removed */}
-
         {/* Avatar Dropdown Menu Removed */}
       </div>
     </div>
