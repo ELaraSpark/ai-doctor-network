@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Bell, Search, User, Settings, LogOut, Brain } from "lucide-react"; // Added Brain icon
+import { Bell, Search, User, Settings, LogOut, Brain, Zap } from "lucide-react"; // Added Brain, Zap icons
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -118,6 +118,13 @@ const Navbar = ({ className }: NavbarProps) => {
                 </p>
               </div>
             </DropdownMenuLabel>
+            {/* Promotional Banner - Wrapped in DropdownMenuItem */}
+            <DropdownMenuItem className="focus:bg-transparent cursor-default hover:bg-transparent p-0">
+              <div className="flex items-center space-x-2 rounded-md bg-blue-50 p-2 text-sm text-blue-700 w-full mx-2 my-1">
+                <Zap className="h-4 w-4 text-orange-500 flex-shrink-0" />
+                <span className="whitespace-normal leading-tight">Save up to 70% of your time on admin tasks & docs</span>
+              </div>
+            </DropdownMenuItem>
              <DropdownMenuSeparator />
             {/* Link to AI Agents page */}
             <DropdownMenuItem asChild>
