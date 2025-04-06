@@ -1,10 +1,11 @@
 
 import React from "react";
 // Removed duplicate React import
-import { Link, useNavigate } from "react-router-dom"; // Added useNavigate
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
-import { LayoutDashboard, User, Settings, LogOut, Brain } from "lucide-react"; // Added icons
+// Added new icons: Clock, Search, Users, Bookmark, Zap, List, Gift
+import { User, Settings, LogOut, Brain, Clock, Search as SearchIcon, Users as UsersIcon, Bookmark, Zap, List, Gift } from "lucide-react"; // Added Gift
 import { motion } from "framer-motion";
 import {
   DropdownMenu,
@@ -80,52 +81,95 @@ const PublicLayout = ({
                   // Render Avatar Dropdown if authenticated
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        className="relative h-9 w-9 rounded-full flex items-center justify-center hover:bg-gray-100" // Adjusted hover
-                      >
-                        <Avatar className="h-8 w-8 border border-gray-200"> {/* Adjusted border */}
-                          {/* TODO: Use actual user avatar src */}
-                          <AvatarImage src="/avatar-placeholder.jpg" alt={user?.email || 'User'} />
-                          {/* TODO: Use actual user initials */}
-                          <AvatarFallback className="bg-gray-200 text-gray-700">
-                            {user?.email?.substring(0, 2).toUpperCase() || 'U'}
-                          </AvatarFallback>
-                        </Avatar>
-                      </Button>
+                      {/* Using Avatar directly as trigger */}
+                      <Avatar className="h-9 w-9 border border-gray-200 cursor-pointer hover:opacity-90 transition-opacity">
+                        {/* TODO: Use actual user avatar src */}
+                        <AvatarImage src="/avatar-placeholder.jpg" alt={user?.email || 'User'} />
+                        {/* TODO: Use actual user initials */}
+                        <AvatarFallback className="bg-gray-200 text-gray-700 font-medium">
+                          {user?.email?.substring(0, 2).toUpperCase() || 'U'}
+                        </AvatarFallback>
+                      </Avatar>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-56">
-                      <DropdownMenuLabel>
-                        <div className="flex flex-col space-y-1">
-                          {/* TODO: Display actual user name/email */}
-                          <p className="text-sm font-medium">{user?.email || 'My Account'}</p>
-                          {/* <p className="text-xs text-muted-foreground">Role/Dept</p> */}
+                    {/* Adjusted width w-64 */}
+                    <DropdownMenuContent align="end" className="w-64 border border-gray-200 shadow-lg rounded-lg">
+                      {/* User Info Section */}
+                      <div className="p-4 border-b border-gray-200">
+                        <div className="flex items-center">
+                          <Avatar className="h-10 w-10 mr-3">
+                             <AvatarImage src="/avatar-placeholder.jpg" alt={user?.email || 'User'} />
+                             <AvatarFallback className="bg-gray-200 text-gray-700 font-medium">
+                               {user?.email?.substring(0, 2).toUpperCase() || 'U'}
+                             </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            {/* TODO: Replace with actual user name */}
+                            <div className="font-medium text-sm">Medical User</div>
+                            <div className="text-xs text-gray-500">{user?.email || 'user@hospital.org'}</div>
+                          </div>
                         </div>
-                      </DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                       {/* Placeholder for Recent Agents */}
-                       <DropdownMenuItem disabled className="text-xs text-muted-foreground">
-                         <Brain className="mr-2 h-4 w-4" />
-                         <span>Recent Agents (coming soon)</span>
-                       </DropdownMenuItem>
-                       <DropdownMenuSeparator />
-                      <DropdownMenuItem asChild>
-                        <Link to="/settings" className="cursor-pointer">
-                          <User className="mr-2 h-4 w-4 text-primary" /> {/* Adjusted color */}
-                          <span>Profile</span>
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <Link to="/settings" className="cursor-pointer">
-                          <Settings className="mr-2 h-4 w-4 text-primary" /> {/* Adjusted color */}
-                          <span>Settings</span>
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-red-600 hover:text-red-700 focus:text-red-700 hover:bg-red-50 focus:bg-red-50">
-                        <LogOut className="mr-2 h-4 w-4" />
-                        <span>Log out</span>
-                      </DropdownMenuItem>
+                      </div>
+
+                      {/* Menu Items Section */}
+                      <div className="py-2">
+                        {/* Updated items to use Link */}
+                        <DropdownMenuItem asChild>
+                          <Link to="/recent-chats" className="cursor-pointer">
+                            <Clock size={16} className="mr-3 text-gray-500" />
+                            <span>Recent Chats</span>
+                          </Link>
+                        </DropdownMenuItem>
+                        {/* Removed Recent Searches */}
+                        <DropdownMenuItem asChild>
+                           <Link to="/my-agents" className="cursor-pointer">
+                             <UsersIcon size={16} className="mr-3 text-gray-500" />
+                             <span>My Agents</span>
+                           </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                           <Link to="/my-templates" className="cursor-pointer"> {/* Updated path */}
+                             <Bookmark size={16} className="mr-3 text-gray-500" />
+                             <span>My Templates</span> {/* Updated label */}
+                           </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                           <Link to="/integrations" className="cursor-pointer">
+                             <Zap size={16} className="mr-3 text-gray-500" />
+                             <span>Integrations</span>
+                           </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                           <Link to="/tasks" className="cursor-pointer">
+                             <List size={16} className="mr-3 text-gray-500" />
+                             <span>Tasks</span>
+                           </Link>
+                        </DropdownMenuItem>
+                        {/* Added Referrals Link */}
+                        <DropdownMenuItem asChild>
+                           <Link to="/referrals" className="cursor-pointer">
+                             <Gift size={16} className="mr-3 text-gray-500" />
+                             <span>Referrals</span>
+                           </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem asChild>
+                          <Link to="/settings" className="cursor-pointer">
+                            <Settings size={16} className="mr-3 text-gray-500" />
+                            <span>Settings</span>
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-red-600 hover:text-red-700 focus:text-red-700 hover:bg-red-50 focus:bg-red-50">
+                          <LogOut size={16} className="mr-3" />
+                          <span>Log out</span>
+                        </DropdownMenuItem>
+                      </div>
+
+                      {/* Pro Upgrade Banner */}
+                      <div className="p-3 bg-gray-50 border-t border-gray-200 text-xs rounded-b-lg">
+                        <div className="font-medium mb-1">Free Plan</div>
+                        {/* TODO: Link this button */}
+                        <button className="text-primary font-medium hover:underline">Upgrade to Pro</button>
+                      </div>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 ) : (
@@ -147,8 +191,8 @@ const PublicLayout = ({
         </header>
       )}
 
-      {/* Remove gradient from main content area if layout handles bg */}
-      <main className="flex-1 bg-white"> 
+      {/* Main content area needs min-h-0 for nested flex-1 children. Removed overflow-hidden. */}
+      <main className="flex-1 bg-white min-h-0">
         {children}
       </main>
 

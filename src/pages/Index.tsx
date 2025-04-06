@@ -102,16 +102,17 @@ const Index = () => {
       {/* Render HeroSection always, control visibility via prop */}
       <HeroSection isVisible={!activeTool && activeFilter === 'all'} />
 
-      {/* Main content area with padding */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        
+      {/* Main content area with padding - Added flex-1, min-h-0 back. Always center content vertically. */}
+      <div className={`container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col flex-1 min-h-0 justify-center`}>
+
         {/* Combined Search and Filter/Tool Bar Section */}
-        {/* Made sticky below the header (assuming header height ~60px) */}
-        <div className="sticky top-[60px] z-20 bg-white/95 backdrop-blur-sm border-b border-gray-200 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-3"> 
-          <div className="container mx-auto flex items-center gap-4"> {/* Use gap-4 for spacing */}
-            
-            {/* Filter/Tool Buttons Area (Moved to Left) */}
-            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
+        {/* Restored sticky positioning */}
+        <div className="sticky top-[60px] z-20 bg-white/95 backdrop-blur-sm border-b border-gray-200 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-3">
+          {/* Stack vertically on small screens, row on medium+ */}
+          <div className="container mx-auto flex flex-col md:flex-row items-center gap-3 md:gap-4"> {/* Adjusted gap for stacking */}
+
+            {/* Filter/Tool Buttons Area - Allow shrinking on smaller screens if needed */}
+            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar w-full md:w-auto"> {/* Full width on mobile */}
               {filterCategories.map((category) => (
                 <button
                 key={category.id}
@@ -137,11 +138,11 @@ const Index = () => {
             ))}
             </div>
 
-            {/* Search Input Area (Moved to Right using ml-auto) */}
-            <div className="flex items-center ml-auto max-w-xs border border-gray-200 rounded-full shadow-sm hover:shadow-md transition-shadow bg-white overflow-hidden h-12"> {/* Adjusted max-width */}
+            {/* Search Input Area - Removed ml-auto, adjusted width/margins */}
+            <div className="flex items-center w-full md:w-auto md:max-w-xs border border-gray-200 rounded-full shadow-sm hover:shadow-md transition-shadow bg-white overflow-hidden h-12 mt-2 md:mt-0"> {/* Added top margin on mobile */}
               <input
                 type="text"
-                className="flex-grow px-5 py-2 border-none text-sm placeholder-gray-500 focus:outline-none"
+                className="flex-grow px-5 py-2 border-none text-sm placeholder-gray-500 focus:outline-none w-full" // Ensure input takes full width inside container
                 placeholder="Search..." // Shortened placeholder
               />
               <button className="bg-primary text-white w-9 h-9 rounded-full flex items-center justify-center mr-1.5 flex-shrink-0 hover:bg-primary/90 transition-colors">
@@ -152,11 +153,13 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Main Content Area (Specialists or Tool) - Adjusted margin-top */}
-        <div className="mt-8 mb-16 min-h-[500px]"> {/* Added min-height */}
+        {/* Main Content Area (Specialists or Tool) - Adjusted min-height for mobile */}
+        {/* Chat state has no flex/height classes, relies on Chat component's height */}
+        {/* Apply min-h only on medium screens and up */}
+        <div className={`${activeTool === 'chat' ? '' : 'mt-6 md:mt-8 mb-12 md:mb-16 md:min-h-[500px] w-full'}`}>
           {isToolLoading ? (
             // Show Skeleton loaders while tool loads
-            <div className="space-y-4">
+            <div className="space-y-4 w-full">
               <Skeleton className="h-12 w-1/2" />
               <Skeleton className="h-[400px] w-full" />
             </div>

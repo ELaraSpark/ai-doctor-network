@@ -28,7 +28,16 @@ import DocumentTransformer from "./pages/DocumentTransformer";
 import CollaborationHub from "./pages/CollaborationHub";
 import ExpertPanelView from "@/components/tumor-board/TumorBoardView"; // Updated import name
 import QuickNotes from "./pages/QuickNotes";
-import Chat from "./pages/Chat"; // Import the new Chat page
+import Chat from "./pages/Chat";
+// Import new placeholder pages
+import RecentChats from "./pages/RecentChats";
+import RecentSearches from "./pages/RecentSearches"; // This import might be unused now
+import MyAgents from "./pages/MyAgents";
+import MyTemplates from "./pages/MyTemplates"; // Updated import name
+import Integrations from "./pages/Integrations";
+import Tasks from "./pages/Tasks";
+import CreateAgentPage from "./pages/CreateAgentPage";
+import Referrals from "./pages/Referrals"; // Import Referrals page
 
 // Import the new page for security logs if needed
 // import SecurityLogs from "./pages/SecurityLogs";
@@ -131,6 +140,15 @@ const App = () => (
                 path="/tumor-board" // Keeping path for now, can rename later if needed
                 element={<ExpertPanelView />} // Use renamed component
               />
+              {/* Add routes for new placeholder pages */}
+              <Route path="/recent-chats" element={<ProtectedRoute><RecentChats /></ProtectedRoute>} />
+              {/* Removed /recent-searches route */}
+              <Route path="/my-agents" element={<ProtectedRoute><MyAgents /></ProtectedRoute>} />
+              <Route path="/my-templates" element={<ProtectedRoute><MyTemplates /></ProtectedRoute>} /> {/* Updated path and element */}
+              <Route path="/integrations" element={<ProtectedRoute><Integrations /></ProtectedRoute>} />
+              <Route path="/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
+              <Route path="/agents/create" element={<ProtectedRoute><CreateAgentPage /></ProtectedRoute>} />
+              <Route path="/referrals" element={<ProtectedRoute><Referrals /></ProtectedRoute>} /> {/* Add route for referrals page */}
               {/* Removed route for Quick Notes (now shown in Index) */}
               {/* Removed route for Chat (now shown in Index) */}
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
