@@ -120,7 +120,7 @@ const AgentConsultationForm = ({ agent, isOpen, onClose }: AgentConsultationForm
           <div className="bg-slate-50 dark:bg-slate-900 p-3 rounded-md">
             <p className="text-sm font-medium">Consulting with: {agent.name}</p>
             <p className="text-xs text-muted-foreground mt-1">
-              The AI specialist will analyze the symptoms from a {agent.specialty} perspective
+              The AI agent will analyze the symptoms from a {agent.specialty} perspective {/* Changed specialist -> agent */}
               and provide diagnostic insights.
             </p>
           </div>

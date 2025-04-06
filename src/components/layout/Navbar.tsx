@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Bell, Search, User, Settings, LogOut } from "lucide-react";
+import { Bell, Search, User, Settings, LogOut, Brain } from "lucide-react"; // Added Brain icon
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -118,13 +118,15 @@ const Navbar = ({ className }: NavbarProps) => {
                 </p>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuSeparator />
+             <DropdownMenuSeparator />
+            {/* Link to AI Agents page */}
             <DropdownMenuItem asChild>
-              <Link to="/settings" className="cursor-pointer">
-                <User className="mr-2 h-4 w-4 text-blue-600" />
-                <span>Profile</span>
-              </Link>
+              <Link to="/agents" className="cursor-pointer">
+                 <Brain className="mr-2 h-4 w-4 text-blue-600" />
+                 <span>AI Agents</span>
+               </Link>
             </DropdownMenuItem>
+             {/* Removed redundant Profile link and extra separator */}
             <DropdownMenuItem asChild>
               <Link to="/settings" className="cursor-pointer">
                 <Settings className="mr-2 h-4 w-4 text-blue-600" />

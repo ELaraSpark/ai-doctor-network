@@ -8,8 +8,8 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"; // Import Carousel components
 
-// Define interface for the mapped specialist object to match HealthcareCard props
-interface MappedSpecialistForHC {
+// Define interface for the mapped agent object to match HealthcareCard props
+interface MappedAgentForHC { // Renamed interface
   id: string;
   logoText: string;
   location: string; // Changed from specialty
@@ -27,9 +27,9 @@ interface MappedSpecialistForHC {
   pricePeriod: string;
 }
 
-const SpecialistsSection = () => {
+const AIAgentsSection = () => { // Renamed component
   // Map agents data to the HealthcareCard props
-  const specialists: MappedSpecialistForHC[] = agents.map((agent, index) => {
+  const aiAgents: MappedAgentForHC[] = agents.map((agent, index) => { // Renamed variable
     const isNewAgent = index < 3; // Example logic for 'New' rating
     return {
       id: agent.id,
@@ -60,13 +60,13 @@ const SpecialistsSection = () => {
       className="w-full relative" // Added relative positioning for nav buttons
     >
       <CarouselContent className="-ml-4"> {/* Negative margin for item spacing */}
-        {specialists.map((specialist, index) => (
-          <CarouselItem key={specialist.id || index} className="pl-4 md:basis-1/2 lg:basis-1/3">
+        {aiAgents.map((aiAgent, index) => ( // Use renamed variable
+          <CarouselItem key={aiAgent.id || index} className="pl-4 md:basis-1/2 lg:basis-1/3">
             <div className="p-1 h-full">
               {/* Render the new HealthcareCard */}
               <HealthcareCard
                 // Spread the mapped props
-                {...specialist}
+                {...aiAgent} // Use renamed variable
                 // Add optional favorite handling if needed later
                 // isFavorite={false}
                 // onFavoriteToggle={() => console.log('Toggle favorite for', specialist.id)}
@@ -81,4 +81,4 @@ const SpecialistsSection = () => {
     </Carousel>
   );
 };
-export default SpecialistsSection;
+export default AIAgentsSection; // Renamed export

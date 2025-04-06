@@ -9,7 +9,8 @@ import { toast } from "sonner"; // Assuming sonner is available globally or prov
 
 // --- Helper Data & Functions ---
 
-const allSpecialists = [
+// Renamed to reflect AI Agents acting as panel members
+const allAgentsForPanel = [
   { id: 'oncologist', name: 'Medical Oncology', color: '#4287f5', icon: '👨‍⚕️', description: 'Systemic treatments, chemotherapy' },
   { id: 'surgeon', name: 'Surgical Oncology', color: '#42c5f5', icon: '🔪', description: 'Surgical resection assessment' },
   { id: 'radiologist', name: 'Radiology', color: '#42f59e', icon: '🔍', description: 'Imaging interpretation' },
@@ -19,18 +20,20 @@ const allSpecialists = [
   { id: 'cardiology', name: 'Cardiology', color: '#d93025', icon: '❤️', description: 'Heart and vascular conditions' },
 ];
 
-const getSpecialistById = (id: string) => allSpecialists.find(s => s.id === id) || { id: 'unknown', name: 'Unknown', color: '#888888', icon: '❓', description: 'Unknown specialist' };
+// Renamed function
+const getAgentById = (id: string) => allAgentsForPanel.find(s => s.id === id) || { id: 'unknown', name: 'Unknown', color: '#888888', icon: '❓', description: 'Unknown Agent' };
 
-const generateSimulatedDiscussion = (agents: Specialist[], caseInfo: string) => {
-  const agentIds = agents.map(a => a.id);
+// Parameter renamed
+const generateSimulatedDiscussion = (panelAgents: PanelAgent[], caseInfo: string) => {
+  const agentIds = panelAgents.map(a => a.id);
   let script: { agentId: string; content: string; type?: string }[] = [];
 
   if (agentIds.includes('radiologist')) {
       script.push({ agentId: 'radiologist', content: `Reviewing imaging for case: ${caseInfo.substring(0, 30)}... Findings indicate ${Math.random() > 0.5 ? 'a suspicious 3cm lesion' : 'potential inflammation'}.` });
-  } else if (agents.length > 0) {
-      script.push({ agentId: agents[0].id, content: `Initiating review for case: ${caseInfo.substring(0, 30)}...` });
+  } else if (panelAgents.length > 0) {
+      script.push({ agentId: panelAgents[0].id, content: `Initiating review for case: ${caseInfo.substring(0, 30)}...` });
   } else {
-       script.push({ agentId: 'system', content: `No specialists selected for case: ${caseInfo.substring(0, 30)}...` });
+       script.push({ agentId: 'system', content: `No AI agents selected for case: ${caseInfo.substring(0, 30)}...` }); // Updated text
   }
   if (agentIds.includes('pathologist')) {
     script.push({ agentId: 'pathologist', content: `Biopsy results pending, morphology ${Math.random() > 0.5 ? 'concerning' : 'atypical'}.` });
@@ -53,9 +56,9 @@ const generateSimulatedDiscussion = (agents: Specialist[], caseInfo: string) => 
         content: `Consensus: Agree on PET & CA 19-9?`,
         type: 'consensus_poll'
       });
-  } else if (agents.length > 1) {
+  } else if (panelAgents.length > 1) {
        script.push({
-           agentId: agents[0].id,
+           agentId: panelAgents[0].id,
            content: `Next step: Further imaging?`,
            type: 'consensus_poll'
        });
@@ -67,7 +70,7 @@ const generateSimulatedDiscussion = (agents: Specialist[], caseInfo: string) => 
   });
 
   const filteredScript = script.filter(msg => msg.agentId === 'system' || agentIds.includes(msg.agentId));
-  const consensusData = extractConsensusFromScript(filteredScript, agents);
+  const consensusData = extractConsensusFromScript(filteredScript, panelAgents); // Pass renamed parameter
   return { script: filteredScript, consensusData };
 };
 
@@ -75,56 +78,57 @@ export interface ConsensusItem {
     topic: string;
     status: 'Discussed' | 'Proposed' | 'Pending' | 'Agreed' | 'Confirmed';
     details: string;
-    specialists: { id: string; color: string; initial: string }[];
+    agents: { id: string; color: string; initial: string }[]; // Renamed specialists -> agents
 }
 
-const extractConsensusFromScript = (script: { agentId: string; content: string; type?: string }[], agents: Specialist[]): ConsensusItem[] => {
+// Parameter renamed
+const extractConsensusFromScript = (script: { agentId: string; content: string; type?: string }[], panelAgents: PanelAgent[]): ConsensusItem[] => {
     const items: ConsensusItem[] = [];
-    const specialistMap = new Map(agents.map(a => [a.id, a]));
-    const topics: { [key: string]: { keywords: string[], status: ConsensusItem['status'], specialists: Set<string>, details: string[] } } = {
-        'Imaging Findings': { keywords: ['imaging', 'scan', 'lesion', 'margins'], status: 'Discussed', specialists: new Set(), details: [] },
-        'Pathology Report': { keywords: ['biopsy', 'morphology', 'stains', 'malignancy'], status: 'Pending', specialists: new Set(), details: [] },
-        'Treatment Plan': { keywords: ['chemotherapy', 'radiation', 'neoadjuvant', 'adjuvant', 'regimen'], status: 'Proposed', specialists: new Set(), details: [] },
-        'Surgical Assessment': { keywords: ['surgical', 'resection', 'resectability', 'vascular'], status: 'Discussed', specialists: new Set(), details: [] },
-        'Next Steps': { keywords: ['next step', 'recommend', 'consensus point', 'marker'], status: 'Proposed', specialists: new Set(), details: [] },
+    const agentMap = new Map(panelAgents.map(a => [a.id, a])); // Renamed specialistMap -> agentMap
+    const topics: { [key: string]: { keywords: string[], status: ConsensusItem['status'], agents: Set<string>, details: string[] } } = { // Renamed specialists -> agents
+        'Imaging Findings': { keywords: ['imaging', 'scan', 'lesion', 'margins'], status: 'Discussed', agents: new Set(), details: [] },
+        'Pathology Report': { keywords: ['biopsy', 'morphology', 'stains', 'malignancy'], status: 'Pending', agents: new Set(), details: [] },
+        'Treatment Plan': { keywords: ['chemotherapy', 'radiation', 'neoadjuvant', 'adjuvant', 'regimen'], status: 'Proposed', agents: new Set(), details: [] },
+        'Surgical Assessment': { keywords: ['surgical', 'resection', 'resectability', 'vascular'], status: 'Discussed', agents: new Set(), details: [] },
+        'Next Steps': { keywords: ['next step', 'recommend', 'consensus point', 'marker'], status: 'Proposed', agents: new Set(), details: [] },
     };
     script.forEach(msg => {
         if (msg.agentId === 'system') return;
         let assigned = false;
         Object.entries(topics).forEach(([topicName, topicData]) => {
             if (topicData.keywords.some(kw => msg.content.toLowerCase().includes(kw))) {
-                topicData.specialists.add(msg.agentId);
+                topicData.agents.add(msg.agentId); // Use agents set
                 topicData.details.push(msg.content);
                 if (msg.type === 'consensus_poll') topicData.status = 'Proposed';
                 assigned = true;
             }
         });
         if (!assigned && msg.type === 'consensus_poll') {
-             topics['Next Steps'].specialists.add(msg.agentId);
+             topics['Next Steps'].agents.add(msg.agentId); // Use agents set
              topics['Next Steps'].details.push(msg.content);
              topics['Next Steps'].status = 'Proposed';
         }
     });
     Object.entries(topics).forEach(([topicName, topicData]) => {
-        if (topicData.specialists.size > 0) {
+        if (topicData.agents.size > 0) { // Check agents set size
             items.push({
                 topic: topicName,
                 status: topicData.status,
                 details: topicData.details.length > 0 ? topicData.details.join(' | ') : 'No specific details captured.',
-                specialists: Array.from(topicData.specialists).map(id => {
-                    const spec = specialistMap.get(id) || getSpecialistById(id);
-                    return { id: spec.id, color: spec.color, initial: spec.name.substring(0, 2).toUpperCase() };
+                agents: Array.from(topicData.agents).map(id => { // Use agents set
+                    const agent = agentMap.get(id) || getAgentById(id); // Use agentMap and getAgentById
+                    return { id: agent.id, color: agent.color, initial: agent.name.substring(0, 2).toUpperCase() };
                 })
             });
         }
     });
     // Simplified placeholder return for brevity
-    return items.length > 0 ? items : [{ topic: 'General Discussion', status: 'Discussed', details: 'Consultation held.', specialists: agents.map(a => ({ id: a.id, color: a.color, initial: a.name.substring(0, 2).toUpperCase() })) }];
+    return items.length > 0 ? items : [{ topic: 'General Discussion', status: 'Discussed', details: 'Consultation held.', agents: panelAgents.map(a => ({ id: a.id, color: a.color, initial: a.name.substring(0, 2).toUpperCase() })) }]; // Use agents and panelAgents
 };
 
 
 // --- Component Types ---
-interface Specialist {
+interface PanelAgent { // Renamed interface
     id: string;
     name: string;
     color: string;
@@ -137,16 +141,16 @@ interface Message {
     type?: 'consensus_poll' | 'summary';
 }
 interface ConsultationSetupProps {
-    onStart: (agents: Specialist[], caseInfo: string) => void;
+    onStart: (agents: PanelAgent[], caseInfo: string) => void; // Use PanelAgent
 }
 interface ConsultationViewProps {
-    agents: Specialist[];
+    agents: PanelAgent[]; // Use PanelAgent
     caseInfo: string;
     onGoBack: () => void;
     onProceed: (data: ConsensusItem[]) => void;
 }
 interface ParticipantListHeaderProps {
-    agents: Specialist[];
+    agents: PanelAgent[]; // Use PanelAgent
     activeAgentId: string | null;
 }
 interface MessageItemProps {
@@ -162,8 +166,8 @@ interface TypingIndicatorProps {
 const ConsultationSetup: React.FC<ConsultationSetupProps> = ({ onStart }) => {
   const [caseDetails, setCaseDetails] = useState("55-year-old male experiencing chest pain radiating to the left arm for the past hour, with mild shortness of breath and dizziness. BP 145/90, P 92. Hx of hypertension, no prior cardiac history reported.");
   const [isLoading, setIsLoading] = useState(false);
-  const [suggestions, setSuggestions] = useState<Specialist[]>([]);
-  const [localSelectedAgents, setLocalSelectedAgents] = useState<Specialist[]>([]);
+  const [suggestions, setSuggestions] = useState<PanelAgent[]>([]); // Use PanelAgent
+  const [localSelectedAgents, setLocalSelectedAgents] = useState<PanelAgent[]>([]); // Use PanelAgent
   const [analysisPerformed, setAnalysisPerformed] = useState(false);
 
   const handleAnalyze = useCallback(() => {
@@ -182,7 +186,7 @@ const ConsultationSetup: React.FC<ConsultationSetupProps> = ({ onStart }) => {
       if (caseLower.includes('lung') || caseLower.includes('breath') || caseLower.includes('pulmonary')) suggestedIds.add('pulmonologist');
       if (caseLower.includes('heart') || caseLower.includes('cardiac') || caseLower.includes('chest pain')) suggestedIds.add('cardiology');
       if (suggestedIds.size === 0) { suggestedIds.add('oncologist'); suggestedIds.add('radiologist'); }
-      const suggestedAgents = allSpecialists.filter(s => suggestedIds.has(s.id));
+      const suggestedAgents = allAgentsForPanel.filter(s => suggestedIds.has(s.id)); // Use allAgentsForPanel
       setSuggestions(suggestedAgents);
       if (suggestedAgents.length > 0) { setLocalSelectedAgents(suggestedAgents.slice(0, Math.min(suggestedAgents.length, 2))); }
       setIsLoading(false);
@@ -190,7 +194,7 @@ const ConsultationSetup: React.FC<ConsultationSetupProps> = ({ onStart }) => {
     }, 1500);
   }, [caseDetails]);
 
-  const toggleAgent = (agent: Specialist) => {
+  const toggleAgent = (agent: PanelAgent) => { // Use PanelAgent
     // Only allow toggling if analysis is performed and not loading
     if (!analysisPerformed || isLoading) return;
     setLocalSelectedAgents(prev => prev.some(a => a.id === agent.id) ? prev.filter(a => a.id !== agent.id) : [...prev, agent]);
@@ -211,14 +215,14 @@ const ConsultationSetup: React.FC<ConsultationSetupProps> = ({ onStart }) => {
              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary flex-shrink-0">
                <UsersIcon size={24} strokeWidth={1.5} />
              </div>
-             <h1 className="text-xl md:text-2xl font-semibold text-gray-900">AI Expert Consultation Panel</h1>
+             <h1 className="text-xl md:text-2xl font-semibold text-gray-900">AI Expert Panel Setup</h1> {/* Updated Title */}
           </div>
 
           <div className="flex flex-col flex-grow mb-4">
             <Label htmlFor="case-summary" className="mb-1.5 text-sm font-medium text-gray-700">Patient Case Summary</Label>
             {/* Moved descriptive paragraph here */}
             <p className="text-xs text-gray-500 mb-2">
-              Enter patient case details below. Our AI will suggest relevant AI specialists for a collaborative review, like a virtual tumor board.
+              Enter patient case details below. Our AI will suggest relevant AI agents for a collaborative review in the expert panel. {/* Updated text */}
             </p>
             <Textarea
               id="case-summary"
@@ -242,16 +246,16 @@ const ConsultationSetup: React.FC<ConsultationSetupProps> = ({ onStart }) => {
             ) : (
               <>
                 <FlaskConical size={16} className="mr-2" />
-                Analyze & Suggest Specialists
+                Analyze & Suggest AI Agents {/* Updated text */}
               </>
             )}
           </Button>
         </div>
 
-        {/* Right Column: Specialist Suggestions / Preview */}
+        {/* Right Column: AI Agent Suggestions / Preview */}
         <div className="flex flex-col md:w-1/2 lg:w-5/12 overflow-y-auto border-t md:border-t-0 md:border-l border-gray-200 pt-6 md:pt-0 md:pl-6">
           <h2 className="text-base font-semibold text-gray-700 mb-3 pb-2 border-b border-gray-200 flex-shrink-0">
-            {isLoading ? 'Analyzing...' : (analysisPerformed && suggestions.length > 0 ? 'Suggested Specialists' : 'Available Specialists (Preview)')}
+            {isLoading ? 'Analyzing...' : (analysisPerformed && suggestions.length > 0 ? 'Suggested AI Agents' : 'Available AI Agents (Preview)')} {/* Updated text */}
           </h2>
           <div className="flex-grow overflow-y-auto space-y-3 mb-4 pr-1"> {/* Added padding-right for scrollbar */}
             {isLoading ? (
@@ -294,12 +298,12 @@ const ConsultationSetup: React.FC<ConsultationSetupProps> = ({ onStart }) => {
                 })
               ) : (
                 <div className="text-center text-sm text-gray-500 pt-10">
-                  No specific specialists suggested based on the summary.
+                  No specific AI agents suggested based on the summary. {/* Updated text */}
                 </div>
               )
             ) : (
-              // Pre-Analysis: Show all specialists grayed out
-              allSpecialists.map((agent, index) => (
+              // Pre-Analysis: Show all agents grayed out
+              allAgentsForPanel.map((agent, index) => ( // Use allAgentsForPanel
                 <div
                   key={agent.id}
                   className={`flex items-center p-3 rounded-lg border border-gray-200 opacity-50 cursor-not-allowed`} // Grayed out and non-interactive
@@ -361,7 +365,7 @@ const ConsultationSetup: React.FC<ConsultationSetupProps> = ({ onStart }) => {
 
 // --- Real-time Consultation Components ---
 
-const ParticipantListHeader: React.FC<ParticipantListHeaderProps> = ({ agents, activeAgentId }) => {
+const ParticipantListHeader: React.FC<ParticipantListHeaderProps> = ({ agents, activeAgentId }) => { // agents prop is PanelAgent[]
   if (!agents || agents.length === 0) return null;
   return (
     <div className="bg-white border-b border-gray-200 px-3 py-2 sticky top-0 z-10">
@@ -388,7 +392,7 @@ const ParticipantListHeader: React.FC<ParticipantListHeaderProps> = ({ agents, a
 };
 
 const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
-    const agent = getSpecialistById(message.agentId);
+    const agent = getAgentById(message.agentId); // Use getAgentById
     const isSystem = message.agentId === 'system';
     const isConsensus = message.type === 'consensus_poll';
     const isSummary = message.type === 'summary';
@@ -458,7 +462,7 @@ const MessageStream: React.FC<{ messages: Message[] }> = ({ messages }) => {
 
 const TypingIndicator: React.FC<TypingIndicatorProps> = ({ agentId }) => {
   if (!agentId) return null;
-  const agent = getSpecialistById(agentId);
+  const agent = getAgentById(agentId); // Use getAgentById
   const animationStyle = { animation: 'fadeInUp 0.3s ease-out forwards', opacity: 0 };
   return (
     <div className="flex justify-start p-4 pt-1 pb-2" style={animationStyle}>
@@ -485,12 +489,12 @@ const ConsultationView: React.FC<ConsultationViewProps> = ({ agents, caseInfo, o
   const [messages, setMessages] = useState<Message[]>([]);
   const [typingAgentId, setTypingAgentId] = useState<string | null>(null);
   const [sessionStatus, setSessionStatus] = useState('Initializing...');
-  const [generatedConsensusData, setGeneratedConsensusData] = useState<ConsensusItem[] | null>(null);
+  const [generatedConsensusData, setGeneratedConsensusData] = useState<ConsensusItem[] | null>(null); // Type uses agents property
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (!agents || agents.length === 0) {
-        setSessionStatus('Error: No specialists selected.');
+        setSessionStatus('Error: No AI agents selected.'); // Updated text
         return;
     }
     setMessages([]);
@@ -564,13 +568,13 @@ const ConsultationView: React.FC<ConsultationViewProps> = ({ agents, caseInfo, o
 
 
 // --- Main App Component (Entry Point) ---
-const TumorBoardView: React.FC = () => {
+const ExpertPanelView: React.FC = () => { // Renamed component
   const [currentView, setCurrentView] = useState<'setup' | 'consultation' | 'report'>('setup');
-  const [selectedAgents, setSelectedAgents] = useState<Specialist[]>([]);
+  const [selectedAgents, setSelectedAgents] = useState<PanelAgent[]>([]); // Use PanelAgent
   const [caseDetails, setCaseDetails] = useState('');
-  const [consensusData, setConsensusData] = useState<ConsensusItem[] | null>(null);
+  const [consensusData, setConsensusData] = useState<ConsensusItem[] | null>(null); // Type uses agents property
 
-  const handleStartConsultation = useCallback((agents: Specialist[], caseInfo: string) => {
+  const handleStartConsultation = useCallback((agents: PanelAgent[], caseInfo: string) => { // Use PanelAgent
     setSelectedAgents(agents);
     setCaseDetails(caseInfo);
     setCurrentView('consultation');
@@ -636,4 +640,4 @@ const TumorBoardView: React.FC = () => {
   );
 }
 
-export default TumorBoardView;
+export default ExpertPanelView; // Renamed export

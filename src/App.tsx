@@ -10,7 +10,7 @@ import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
+// import Dashboard from "./pages/Dashboard"; // Removed unused import
 import PatientRecords from "./pages/PatientRecords";
 import Agents from "./pages/Agents";
 import Collaboration from "./pages/Collaboration";
@@ -26,7 +26,7 @@ import AIExpertsSettings from "./pages/AIExpertsSettings";
 import EditAIExpert from "./pages/EditAIExpert";
 import DocumentTransformer from "./pages/DocumentTransformer";
 import CollaborationHub from "./pages/CollaborationHub";
-import TumorBoardView from "@/components/tumor-board/TumorBoardView";
+import ExpertPanelView from "@/components/tumor-board/TumorBoardView"; // Updated import name
 import QuickNotes from "./pages/QuickNotes";
 import Chat from "./pages/Chat"; // Import the new Chat page
 
@@ -49,14 +49,7 @@ const App = () => (
               <Route path="/register" element={<Register />} />
               <Route path="/features" element={<Features />} />
               <Route path="/about" element={<AboutUs />} />
-              <Route 
-                path="/dashboard" 
-                element={
-                  <ProtectedRoute>
-                    <Dashboard />
-                  </ProtectedRoute>
-                } 
-              />
+              {/* Removed /dashboard route */}
               <Route 
                 path="/patients" 
                 element={
@@ -133,10 +126,10 @@ const App = () => (
                   </ProtectedRoute>
                 } 
               />
-              {/* Route for the new Tumor Board view - Made public */}
+              {/* Route for the new Expert Panel view - Made public */}
               <Route 
-                path="/tumor-board" 
-                element={<TumorBoardView />} 
+                path="/tumor-board" // Keeping path for now, can rename later if needed
+                element={<ExpertPanelView />} // Use renamed component
               />
               {/* Removed route for Quick Notes (now shown in Index) */}
               {/* Removed route for Chat (now shown in Index) */}

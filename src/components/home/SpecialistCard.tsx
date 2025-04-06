@@ -6,9 +6,9 @@ import { cn } from "@/lib/utils";
 import { Star, Heart } from "lucide-react";
 
 // Updated Props for LENY-AI style card
-interface SpecialistCardProps {
+interface AgentCardProps { // Renamed interface
   id: string;
-  logoText: string; // Specialist Name (e.g., CardioAssist)
+  logoText: string; // Agent Name (e.g., CardioAssist)
   specialty: string; // e.g., Cardiology
   description: string;
   services: string[]; // Service tags
@@ -40,7 +40,7 @@ const StarIcon = ({ className = "h-3.5 w-3.5", filled = true }: { className?: st
   <Star className={cn(className, filled ? "fill-primary text-primary" : "fill-gray-300 text-gray-300")} />
 );
 
-const SpecialistCard = ({
+const AgentCard = ({ // Renamed component
   id,
   logoText,
   specialty,
@@ -56,7 +56,7 @@ const SpecialistCard = ({
   price = "$0",
   pricePeriod = "for first consultation",
   isNew = false, // Default to not new
-}: SpecialistCardProps) => {
+}: AgentCardProps) => { // Use renamed interface
   const [isFavorite, setIsFavorite] = useState(false);
 
   const toggleFavorite = (e: React.MouseEvent) => {
@@ -175,4 +175,4 @@ const SpecialistCard = ({
   );
 };
 
-export default SpecialistCard;
+export default AgentCard; // Renamed export

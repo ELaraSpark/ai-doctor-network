@@ -78,8 +78,8 @@ const FeaturesSection = () => {
       icon: <Users className="h-6 w-6 text-medical-green" />,
       iconBgClass: "bg-medical-green/10",
       title: "Collaborative Consultation",
-      description: "Collaborate with colleagues and AI specialists on complex cases and consultations.",
-      items: ["Specialist Consultation", "Case Sharing", "Diagnostic Assistance"],
+      description: "Collaborate with colleagues and AI Agents on complex cases and consultations.", // Changed specialists -> Agents
+      items: ["AI Agent Consultation", "Case Sharing", "Diagnostic Assistance"], // Changed Specialist -> AI Agent
       linkTo: "/collaboration",
       delay: 0.3
     }

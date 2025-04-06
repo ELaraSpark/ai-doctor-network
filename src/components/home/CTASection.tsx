@@ -13,7 +13,7 @@ const CTASection = () => {
         </h2>
         {/* Updated paragraph */}
         <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-          Our AI specialists are available 24/7 to assist with your medical questions and needs.
+          Our AI agents are available 24/7 to assist with your medical questions and needs.
         </p>
         {/* Updated buttons */}
         <div className="flex justify-center gap-4 flex-wrap">

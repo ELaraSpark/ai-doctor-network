@@ -1,7 +1,7 @@
 import PublicLayout from "@/components/layout/PublicLayout";
-import { AnimatePresence } from "framer-motion"; // Import AnimatePresence
+// Removed AnimatePresence import
 import HeroSection from "@/components/home/HeroSection"; // Import HeroSection
-import SpecialistsSection from "@/components/home/SpecialistsSection";
+import AIAgentsSection from "@/components/home/SpecialistsSection"; // Updated import name (file path remains for now)
 import BenefitsSection from "@/components/home/BenefitsSection"; // Import BenefitsSection
 import SecurityBanner from "@/components/home/SecurityBanner"; // Import SecurityBanner
 import CTASection from "@/components/home/CTASection";
@@ -18,7 +18,7 @@ import {
   Microscope, // Pathology
   Bone, // Orthopedics (Example - will be replaced)
   Eye, // Ophthalmology (will be replaced)
-  FlaskConical, // Pharma/Labs
+  FlaskConical, // Pharma/Labs & Research
   Stethoscope, // General Practice & Nursing
   Sparkles, // All/General Icon
   ClipboardList, // Added for Tumor Board filter
@@ -28,7 +28,7 @@ import {
 } from "lucide-react";
 import QuickNotes from "./QuickNotes"; // Import QuickNotes
 import Chat from "./Chat"; // Import Chat
-import TumorBoardView from "@/components/tumor-board/TumorBoardView"; // Import TumorBoardView
+import ExpertPanelView from "@/components/tumor-board/TumorBoardView"; // Import Renamed Component (path is still old name)
 import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton for loading
 
 // Define type for filter/tool items
@@ -41,17 +41,18 @@ type FilterItem = {
 
 // Updated filter/tool data
 const filterCategories: FilterItem[] = [
-  { id: 'all', label: 'All Specialists', icon: Sparkles, type: 'filter' },
-  { id: 'tumor-board', label: 'Tumor Board', icon: ClipboardList, type: 'tool' },
+  { id: 'all', label: 'All AI Agents', icon: Sparkles, type: 'filter' },
+  { id: 'tumor-board', label: 'Expert Panel', icon: ClipboardList, type: 'tool' }, // Renamed label
   { id: 'quick-notes', label: 'Quick Notes', icon: NotebookPen, type: 'tool' },
   { id: 'chat', label: 'Chat', icon: MessageCircle, type: 'tool' },
   { id: 'med-students', label: 'Med Students', icon: GraduationCap, type: 'filter' },
   { id: 'nursing', label: 'Nursing', icon: Stethoscope, type: 'filter' },
+  { id: 'research', label: 'Research Mode', icon: FlaskConical, type: 'filter' }, // Added Research Mode filter
   // Add more relevant categories
 ];
 
 const Index = () => {
-  const [activeFilter, setActiveFilter] = useState('all'); // For filtering SpecialistsSection
+  const [activeFilter, setActiveFilter] = useState('all'); // For filtering AI Agents Section
   const [activeTool, setActiveTool] = useState<string | null>(null); // State for active tool view
   const [isToolLoading, setIsToolLoading] = useState(false); // State for loading indicator
   const navigate = useNavigate(); // Keep for potential future use
@@ -72,7 +73,7 @@ const Index = () => {
     } else if (item.type === 'tool') {
       // Toggle tool visibility: if same tool clicked, hide it, otherwise show it
       setActiveTool(prevTool => prevTool === item.id ? null : item.id);
-      setActiveFilter('all'); // Reset specialist filter when a tool is opened
+      setActiveFilter('all'); // Reset AI Agent filter when a tool is opened
       // Show loading briefly
       setIsToolLoading(true);
       setTimeout(() => setIsToolLoading(false), 300); // Adjust delay as needed
@@ -87,10 +88,10 @@ const Index = () => {
       case 'chat':
         return <Chat />;
       case 'tumor-board':
-        return <TumorBoardView />;
+        return <ExpertPanelView />; // Use Renamed Component
       default:
-        // Pass activeFilter to SpecialistsSection if it uses it for filtering
-        return <SpecialistsSection /* activeFilter={activeFilter} */ />;
+        // Pass activeFilter to AIAgentsSection (or renamed component) if it uses it for filtering
+        return <AIAgentsSection /* activeFilter={activeFilter} */ />; // Use updated component name
     }
   };
 
@@ -98,10 +99,8 @@ const Index = () => {
     // Always render PublicLayout with the header
     <PublicLayout showHeader={true} showFooter={!activeTool}> {/* Hide footer when tool is active */}
       
-      {/* Wrap conditional Hero Section with AnimatePresence for smooth exit */}
-      <AnimatePresence>
-        {!activeTool && activeFilter === 'all' && <HeroSection />} 
-      </AnimatePresence>
+      {/* Render HeroSection always, control visibility via prop */}
+      <HeroSection isVisible={!activeTool && activeFilter === 'all'} />
 
       {/* Main content area with padding */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
