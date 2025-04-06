@@ -45,12 +45,13 @@ const Chat = () => {
 
     const showInitialState = messages.length === 0;
 
-    const Greeting = () => (
-         <div className="flex items-center gap-3 mb-8">
-            <div className="text-primary"><Sparkles size={24} strokeWidth={1.5} /></div>
-            <h1 className="text-xl font-medium text-foreground">Medical knowledge at your fingertips</h1>
-        </div>
-    );
+     const Greeting = () => (
+          <div className="flex items-center gap-3 mb-8">
+             <div className="text-primary"><Sparkles size={24} strokeWidth={1.5} /></div>
+             {/* Updated title text */}
+             <h1 className="text-xl font-medium text-foreground">Hi. Let's do great things together</h1>
+         </div>
+     );
 
     const MessageDisplay = () => (
          // Handles flex growth, scrolling, padding, and spacing.

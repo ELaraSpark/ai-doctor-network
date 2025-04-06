@@ -1,14 +1,10 @@
-import HealthcareCard from "@/components/home/HealthcareCard"; // Import the new card
+import React, { useState } from 'react'; // Added useState
+import HealthcareCard from "@/components/home/HealthcareCard";
 import { agents } from "@/components/agents/data/agentsData";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"; // Import Carousel components
+import { Button } from '@/components/ui/button'; // Added Button import
+import { ChevronDown } from 'lucide-react'; // Added icon for button
 
-// Define interface for the mapped agent object to match HealthcareCard props
+// Define interface for the mapped agent object
 interface MappedAgentForHC { // Renamed interface
   id: string;
   logoText: string;
@@ -22,15 +18,19 @@ interface MappedAgentForHC { // Renamed interface
   // logoColor is not directly used by HealthcareCard
   rating: number | 'New';
   reviewCount?: number;
-  availability: string;
-  price: string;
-  pricePeriod: string;
+  // availability: string; // Removed
+  // price: string; // Removed
+  // pricePeriod: string; // Removed
 }
 
-const AIAgentsSection = () => { // Renamed component
-  // Map agents data to the HealthcareCard props
-  const aiAgents: MappedAgentForHC[] = agents.map((agent, index) => { // Renamed variable
-    const isNewAgent = index < 3; // Example logic for 'New' rating
+const INITIAL_VISIBLE_COUNT = 3; // Show 3 agents initially
+
+const AIAgentsSection = () => {
+  const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT);
+
+  // Map agents data
+  const aiAgents: MappedAgentForHC[] = agents.map((agent, index) => {
+    const isNewAgent = index < 3;
     return {
       id: agent.id,
       logoText: agent.name,
@@ -45,44 +45,46 @@ const AIAgentsSection = () => { // Renamed component
       logoIconText: agent.name.substring(0, 2).toUpperCase(),
       rating: isNewAgent ? 'New' : parseFloat((4.7 + Math.random() * 0.3).toFixed(1)),
       reviewCount: isNewAgent ? undefined : Math.floor(500 + Math.random() * 1500),
-      availability: index % 2 === 0 ? "Available Mon-Fri" : "Available 24/7",
-      price: isNewAgent ? "$0" : `$${10 + index * 5}`,
-      pricePeriod: isNewAgent ? "for first consultation" : "per consultation",
-      // Add missing properties required by the interface
-      delay: 0, // Delay is not used in HealthcareCard, set to 0
+      // availability: index % 2 === 0 ? "Available Mon-Fri" : "Available 24/7", // Removed mapping
+      // price: isNewAgent ? "$0" : `$${10 + index * 5}`, // Removed mapping
+      // pricePeriod: isNewAgent ? "for first consultation" : "per consultation", // Removed mapping
+      delay: 0,
       isNew: isNewAgent, // Keep the isNew logic if needed elsewhere, though not used by card
     };
   });
-  
-  // Return Carousel instead of grid
+
+  const handleShowMore = () => {
+    // Show all agents when clicked
+    setVisibleCount(aiAgents.length);
+  };
+
+  const visibleAgents = aiAgents.slice(0, visibleCount);
+  const showMoreButtonVisible = visibleCount < aiAgents.length;
+
   return (
-    <Carousel 
-      opts={{
-        align: "start",
-        loop: true, // Loop the carousel
-      }}
-      className="w-full relative" // Added relative positioning for nav buttons
-    >
-      <CarouselContent className="-ml-4"> {/* Negative margin for item spacing */}
-        {aiAgents.map((aiAgent, index) => ( // Use renamed variable
-          <CarouselItem key={aiAgent.id || index} className="pl-4 md:basis-1/2 lg:basis-1/3">
-            <div className="p-1 h-full">
-              {/* Render the new HealthcareCard */}
-              <HealthcareCard
-                // Spread the mapped props
-                {...aiAgent} // Use renamed variable
-                // Add optional favorite handling if needed later
-                // isFavorite={false}
-                // onFavoriteToggle={() => console.log('Toggle favorite for', specialist.id)}
-              />
-            </div>
-          </CarouselItem>
+    <div className="w-full">
+      {/* Responsive Grid Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {visibleAgents.map((aiAgent, index) => (
+          <div key={aiAgent.id || index} className="h-full"> {/* Ensure grid items take full height */}
+            <HealthcareCard
+              {...aiAgent}
+              // Pass delay based on index for staggered animation if needed
+              // delay={index * 0.05}
+            />
+          </div>
         ))}
-      </CarouselContent>
-      {/* Position nav buttons inside the container, slightly offset */}
-      <CarouselPrevious className="absolute left-[-20px] top-1/2 -translate-y-1/2 hidden sm:flex z-10" /> 
-      <CarouselNext className="absolute right-[-20px] top-1/2 -translate-y-1/2 hidden sm:flex z-10" />
-    </Carousel>
+      </div>
+
+      {/* Show More Button */}
+      {showMoreButtonVisible && (
+        <div className="mt-8 text-center">
+          <Button variant="outline" onClick={handleShowMore}>
+            More Agents <ChevronDown className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
+      )}
+    </div>
   );
 };
 export default AIAgentsSection; // Renamed export

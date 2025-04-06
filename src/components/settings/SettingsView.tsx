@@ -1,18 +1,20 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react"; // Combined imports
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useNavigate, useLocation, Navigate } from "react-router-dom";
-import AccountTab from "./tabs/AccountTab";
-import AppearanceTab from "./tabs/AppearanceTab"; // Already imported
-import NotificationsTab from "./tabs/NotificationsTab"; // Already imported
-import SecurityTab from "./tabs/SecurityTab"; // Already imported
-// Removed CallMonitoringTab import as the section is deleted
+// Import the renamed and merged component
+import ProfileSecurityTab from "./tabs/ProfileSecurityTab";
+import AppearanceTab from "./tabs/AppearanceTab";
+import NotificationsTab from "./tabs/NotificationsTab";
+// Removed SecurityTab import
+import AIConfigTab from "./tabs/AIConfigTab";
 
 const SettingsView = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [activeTab, setActiveTab] = useState("account");
-  
+  // Default to the new combined tab value
+  const [activeTab, setActiveTab] = useState("profile-security");
+
   // Extract the path after /settings/
   const settingsPath = location.pathname.split('/').slice(2)[0] || '';
   
@@ -21,50 +23,68 @@ const SettingsView = () => {
     return <Navigate to="/settings/ai-experts" replace />;
   }
   
+  // Sync activeTab state with URL hash on mount and change
+  useEffect(() => {
+    const hash = location.hash.replace('#', '');
+    const validTabs = ['profile-security', 'appearance', 'notifications', 'ai-config'];
+    if (hash && validTabs.includes(hash)) {
+      setActiveTab(hash);
+    } else {
+      // If no hash or invalid hash, set default and update URL
+      setActiveTab('profile-security');
+      navigate(location.pathname + '#profile-security', { replace: true });
+    }
+  }, [location.hash, navigate, location.pathname]);
+
+
   const handleTabChange = (value: string) => {
     setActiveTab(value);
+    // Update URL hash when tab changes
+    navigate(location.pathname + `#${value}`, { replace: true });
   };
-  
+
   return (
     // Apply consistent panel styling
-    <div className="bg-white border border-gray-400 rounded-xl shadow-xl p-6 space-y-8"> 
+    <div className="bg-white border border-gray-400 rounded-xl shadow-xl p-6 space-y-8">
       <div className="flex flex-col space-y-1">
-        <h1 className="text-3xl font-bold text-gray-900">Settings</h1> {/* Adjusted color */}
+        <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
         <p className="text-muted-foreground">
           Manage your account settings and preferences
         </p>
       </div>
-      
-      <div className="flex justify-between items-center">
-        <Tabs defaultValue="account" value={activeTab} onValueChange={handleTabChange}>
+
+      {/* Use the activeTab state for value and defaultValue */}
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
           {/* Updated grid columns to 4 */}
-          <TabsList className="grid w-full grid-cols-4"> 
-            <TabsTrigger value="account">Account</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-4">
+            {/* Updated first trigger */}
+            <TabsTrigger value="profile-security">Profile & Security</TabsTrigger>
             <TabsTrigger value="appearance">Appearance</TabsTrigger>
             <TabsTrigger value="notifications">Notifications</TabsTrigger>
-            {/* Removed Call Monitoring Trigger */}
-            <TabsTrigger value="security">Security</TabsTrigger>
+            {/* Removed Security Trigger */}
+            <TabsTrigger value="ai-config">AI Config</TabsTrigger>
           </TabsList>
-          
-          <TabsContent value="account">
-            <AccountTab />
+
+          {/* Updated first content section */}
+          <TabsContent value="profile-security" className="mt-6">
+            <ProfileSecurityTab />
           </TabsContent>
-          
-          <TabsContent value="appearance">
+
+          <TabsContent value="appearance" className="mt-6">
             <AppearanceTab />
           </TabsContent>
-          
-          <TabsContent value="notifications">
+
+          <TabsContent value="notifications" className="mt-6">
             <NotificationsTab />
           </TabsContent>
-          
-          {/* Removed Call Monitoring Content */}
-          
-          <TabsContent value="security">
-            <SecurityTab />
+
+          {/* Removed Security Content Section */}
+
+          <TabsContent value="ai-config" className="mt-6">
+            <AIConfigTab />
           </TabsContent>
         </Tabs>
-      </div>
+      {/* Removed closing div for flex wrapper */}
     </div>
   );
 };
