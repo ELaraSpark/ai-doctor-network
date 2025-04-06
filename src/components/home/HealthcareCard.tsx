@@ -37,7 +37,7 @@ const HealthcareCard: React.FC<HealthcareCardProps> = ({
   return (
     <div className="w-full max-w-sm rounded-xl overflow-hidden shadow-md bg-white border border-gray-200 h-full flex flex-col">
       {/* Image Container */}
-      <div className="relative w-full h-60 bg-gray-200">
+      <div className="relative w-full h-72 bg-gray-200"> {/* Increased height from h-60 to h-72 */}
         <img
           src={imageUrl || '/api/placeholder/400/320'} // Use provided image or placeholder
           alt={logoText}
