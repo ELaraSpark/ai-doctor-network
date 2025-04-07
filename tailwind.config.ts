@@ -1,5 +1,6 @@
 
 import type { Config } from "tailwindcss";
+import tailwindcssAnimate from "tailwindcss-animate"; // Import the plugin
 
 export default {
   darkMode: ["class"],
@@ -40,12 +41,17 @@ export default {
         muted: {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
-        },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-        },
-        popover: {
+         },
+         accent: {
+           DEFAULT: "hsl(var(--accent))",
+           foreground: "hsl(var(--accent-foreground))",
+         },
+         // Add secondary-accent
+         "secondary-accent": {
+           DEFAULT: "hsl(var(--secondary-accent))",
+           foreground: "hsl(var(--secondary-accent-foreground))",
+         },
+         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
         },
@@ -82,6 +88,36 @@ export default {
           "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
+          selected: "hsl(var(--sidebar-accent))", // Merged selected bg here
+        },
+        // Removed duplicate sidebar key
+        // Refined Perplexity-inspired palette
+        perplexity: {
+          teal: {
+            DEFAULT: '#2A7D68', // Updated primary teal
+            light: '#3E8C74', // Adjusted light variant
+            dark: '#1F6351', // Adjusted dark variant
+            bg: '#F1F8F6', // Updated active/selected background
+          },
+          purple: { // Original accent
+            DEFAULT: '#5436DA', 
+          },
+          accentSecondary: { // New secondary accent
+             DEFAULT: '#5969B1',
+             foreground: '#FFFFFF', // Assuming white text on this
+          },
+          text: {
+            primary: '#262626', // Updated main text
+            secondary: '#6B6C7B', // Kept light text
+            tertiary: '#9CA3AF', // Kept lighter text
+          },
+          bg: {
+            main: '#FAFAF8', // Updated main background
+            sidebar: '#F9FAFB', // Kept sidebar background
+            hover: '#F3F4F6', // Kept hover background
+            active: '#F1F8F6', // Updated active background (same as teal.bg)
+          },
+          border: '#E5E7EB', // Kept border color
         },
       },
       borderRadius: {
@@ -149,5 +185,5 @@ export default {
       }
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [tailwindcssAnimate], // Use the imported plugin
 } satisfies Config;

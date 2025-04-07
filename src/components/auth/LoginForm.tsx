@@ -77,14 +77,11 @@ const LoginForm = () => {
   }
 
   return (
-    <div className="w-full max-w-md">
-      <div className="space-y-6 animate-fadeIn">
-        <div className="space-y-2 text-center">
-          <h1 className="text-3xl font-bold tracking-tight">Sign in to AIDA</h1>
-          <p className="text-md text-muted-foreground">
-            Enter your credentials to access your account
-          </p>
-        </div>
+    // Removed outer max-w-md div, as parent page now controls width
+    <div className="w-full"> 
+      {/* Removed animation and internal header */}
+      <div className="space-y-6"> 
+        {/* Removed header div */}
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -153,9 +150,10 @@ const LoginForm = () => {
               </Button>
             </div>
 
+            {/* Apply Claude-like styling: dark bg, light text */}
             <Button
               type="submit"
-              className="w-full py-6"
+              className="w-full py-6 bg-foreground text-background hover:bg-foreground/90" 
               disabled={isLoading}
             >
               {isLoading ? "Signing in..." : "Sign in"}
@@ -213,10 +211,7 @@ const LoginForm = () => {
           )}
         </Button>
 
-        <div className="flex items-center justify-center text-sm text-muted-foreground space-x-2">
-          <ShieldCheck size={14} />
-          <span>HIPAA-compliant & secure authentication</span>
-        </div>
+        {/* Removed HIPAA text */}
       </div>
     </div>
   );

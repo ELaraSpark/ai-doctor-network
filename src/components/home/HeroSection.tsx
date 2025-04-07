@@ -24,15 +24,15 @@ const HeroSection: React.FC<HeroSectionProps> = ({ isVisible }) => {
       <div className="py-8 md:py-12 container mx-auto px-6 text-center max-w-3xl"> 
         {/* Inner content div */}
         <div>
-          {/* Title */}
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-primary mb-4">
-            Your Time, Finally Your Own
+          {/* Title - Updated text */}
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-wide text-primary mb-4">
+            Be Free Again.
           </h1>
-          {/* Subtitle */}
-          <p className="text-lg text-gray-600 mb-6 italic">
-            AI agents handle paperwork, you handle healing.
+          {/* Subtitle - Updated text */}
+          <p className="text-xl md:text-2xl text-muted-foreground mb-6 leading-relaxed">
+            Get an AI Sidekick. Work Like a Superhuman.
           </p>
-        </div> 
+        </div>
       </div>
     </motion.section> 
   );

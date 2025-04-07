@@ -1,14 +1,21 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { cn } from '@/lib/utils'; // Import cn if needed for logo styling
+
+// Example Logo component (replace with your actual logo SVG or component)
+const Logo = ({ className }: { className?: string }) => (
+  <div className={cn("h-8 w-8 bg-perplexity-teal rounded flex items-center justify-center text-white font-bold text-lg", className)}>
+    L
+  </div>
+);
 
 const SidebarHeader = () => {
   return (
-    <div className="flex items-center justify-center h-16 border-b border-border px-4 shrink-0">
-      {/* Link the logo/name to the homepage or dashboard */}
-      <Link to="/" className="flex items-center gap-2 text-primary font-semibold text-lg">
-        {/* Optional: Add an icon here if desired */}
-        {/* <YourIcon size={24} /> */}
-        <span>Leny.ai</span>
+    // Use new perplexity styles
+    <div className="flex items-center h-16 px-4 border-b border-perplexity-border shrink-0"> 
+      <Link to="/" className="flex items-center gap-2"> {/* Use gap for spacing */}
+        <Logo /> {/* Use the Logo component */}
+        <span className="font-medium text-perplexity-text-primary">Leny.ai</span>
       </Link>
     </div>
   );

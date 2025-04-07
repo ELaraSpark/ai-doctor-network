@@ -73,9 +73,11 @@ const Tasks = () => {
 
   const getStatusBadge = (status: AgentTaskItem['status']) => {
     switch (status) {
-      case 'Success': return <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-200"><CheckCircle2 size={12} className="mr-1" />Success</Badge>;
+      // Use theme colors for success badge
+      case 'Success': return <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-200"><CheckCircle2 size={12} className="mr-1" />Success</Badge>; // Keep green for success
       case 'Failed': return <Badge variant="destructive"><XCircle size={12} className="mr-1" />Failed</Badge>;
-      case 'In Progress': return <Badge variant="outline" className="text-blue-600 border-blue-200"><Loader2 size={12} className="mr-1 animate-spin" />In Progress</Badge>;
+      // Use secondary-accent for In Progress
+      case 'In Progress': return <Badge variant="outline" className="text-secondary-accent border-secondary-accent/40"><Loader2 size={12} className="mr-1 animate-spin" />In Progress</Badge>; 
       default: return <Badge variant="outline">Unknown</Badge>;
     }
   };
@@ -89,7 +91,8 @@ const Tasks = () => {
   return (
     <AppLayout>
       <div className="p-4 sm:p-6 lg:p-8 h-full flex flex-col">
-        <h1 className="text-2xl font-semibold text-gray-900 mb-4">Agent Task Log</h1>
+        {/* Use theme foreground color */}
+        <h1 className="text-2xl font-semibold text-foreground mb-4">Agent Task Log</h1> 
         <p className="text-sm text-muted-foreground mb-6">
           View the history of tasks performed by AI agents.
         </p>
@@ -119,10 +122,12 @@ const Tasks = () => {
               {Object.entries(groupedTasks).map(([groupName, tasksInGroup]) => (
                 tasksInGroup.length > 0 && (
                   <div key={groupName} className="mb-2 last:mb-0">
-                    <h3 className="text-xs font-semibold uppercase text-muted-foreground px-4 py-2 bg-muted/50 border-b border-t">
+                    {/* Increased date group header size */}
+                    <h3 className="text-sm font-semibold uppercase text-muted-foreground px-4 py-2 bg-muted/50 border-b border-t"> 
                       {groupName}
                     </h3>
-                    <div className="divide-y divide-gray-100">
+                    {/* Use theme border color */}
+                    <div className="divide-y divide-border"> 
                       {tasksInGroup.map((task) => (
                         /* Stack vertically by default, row on sm+ */
                         <div key={task.id} className="flex flex-col sm:flex-row sm:items-start p-4 gap-3 sm:gap-4">
@@ -132,8 +137,10 @@ const Tasks = () => {
                            </div>
                            {/* Main content - takes remaining space */}
                            <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium text-gray-900">{task.action}</p>
-                              <p className="text-xs text-muted-foreground">by {task.agentName}</p>
+                              {/* Increased task action size */}
+                              <p className="text-base font-medium text-foreground">{task.action}</p> 
+                              {/* Increased agent name weight */}
+                              <p className="text-xs text-muted-foreground">by <span className="font-medium">{task.agentName}</span></p> 
                               {task.context && <p className="text-xs text-muted-foreground mt-1">Context: {task.context}</p>}
                            </div>
                            {/* Status/Timestamp/Link - align end on sm+, start (default) when stacked */}
@@ -141,7 +148,8 @@ const Tasks = () => {
                               {getStatusBadge(task.status)}
                               <span className="text-muted-foreground">{formatTimestamp(task.timestamp)}</span>
                               {task.outputLink && (
-                                 <Button variant="link" size="sm" className="h-auto p-0 text-xs" asChild>
+                                 /* Use secondary-accent for View Output link */
+                                 <Button variant="link" size="sm" className="h-auto p-0 text-xs text-secondary-accent hover:text-secondary-accent/80" asChild>
                                     <a href={task.outputLink} target="_blank" rel="noopener noreferrer">View Output <LinkIcon size={12} className="ml-1"/></a>
                                  </Button>
                               )}
@@ -154,9 +162,11 @@ const Tasks = () => {
               ))}
               {filteredTasks.length === 0 && (
                  <div className="p-12 text-center">
-                   <ListChecks size={48} className="mx-auto text-gray-400 mb-4" />
-                   <h3 className="text-lg font-medium text-gray-900">No Matching Tasks Found</h3>
-                   <p className="mt-1 text-sm text-gray-500">
+                   {/* Use muted foreground */}
+                   <ListChecks size={48} className="mx-auto text-muted-foreground/50 mb-4" /> 
+                   {/* Use theme foreground/muted */}
+                   <h3 className="text-lg font-medium text-foreground">No Matching Tasks Found</h3> 
+                   <p className="mt-1 text-sm text-muted-foreground"> 
                      Try adjusting your search or filters.
                    </p>
                  </div>

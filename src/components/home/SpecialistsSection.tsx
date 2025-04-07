@@ -1,8 +1,9 @@
-import React, { useState } from 'react'; // Added useState
+import React, { useState, useMemo } from 'react'; // Added useMemo
 import HealthcareCard from "@/components/home/HealthcareCard";
 import { agents } from "@/components/agents/data/agentsData";
-import { Button } from '@/components/ui/button'; // Added Button import
-import { ChevronDown } from 'lucide-react'; // Added icon for button
+import { Button } from '@/components/ui/button'; 
+import { ChevronDown } from 'lucide-react'; 
+import { AgentCategory } from '@/components/agents/AgentCategoryFilters'; // Import category type
 
 // Define interface for the mapped agent object
 interface MappedAgentForHC { // Renamed interface
@@ -20,16 +21,46 @@ interface MappedAgentForHC { // Renamed interface
   reviewCount?: number;
   // availability: string; // Removed
   // price: string; // Removed
-  // pricePeriod: string; // Removed
+  // pricePeriod: string; 
 }
 
-const INITIAL_VISIBLE_COUNT = 3; // Show 3 agents initially
+// Define props for the component - Add searchTerm
+interface AIAgentsSectionProps {
+  activeFilter: AgentCategory | 'all'; 
+  searchTerm?: string; // Add optional searchTerm prop
+}
 
-const AIAgentsSection = () => {
+const INITIAL_VISIBLE_COUNT = 3; 
+
+const AIAgentsSection = ({ activeFilter, searchTerm = "" }: AIAgentsSectionProps) => { // Destructure props
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT);
 
-  // Map agents data
-  const aiAgents: MappedAgentForHC[] = agents.map((agent, index) => {
+  // Filter agents based on activeFilter and searchTerm
+  const filteredAgents = useMemo(() => {
+    const lowerSearchTerm = searchTerm.toLowerCase();
+    
+    let results = agents;
+
+    // Filter by category first
+    if (activeFilter !== 'all') {
+      results = results.filter(agent => agent.category === activeFilter); 
+    }
+
+    // Then filter by search term
+    if (lowerSearchTerm) {
+      results = results.filter(agent => 
+        agent.name.toLowerCase().includes(lowerSearchTerm) ||
+        agent.specialty.toLowerCase().includes(lowerSearchTerm) ||
+        agent.description.toLowerCase().includes(lowerSearchTerm) ||
+        agent.capabilities.some(cap => cap.toLowerCase().includes(lowerSearchTerm))
+      );
+    }
+    
+    return results;
+  }, [activeFilter, searchTerm]); // Re-filter when filter or search term changes
+
+  // Map the filtered agents data
+  const mappedAgents: MappedAgentForHC[] = filteredAgents.map((agent, index) => {
     const isNewAgent = index < 3;
     return {
       id: agent.id,
@@ -49,17 +80,19 @@ const AIAgentsSection = () => {
       // price: isNewAgent ? "$0" : `$${10 + index * 5}`, // Removed mapping
       // pricePeriod: isNewAgent ? "for first consultation" : "per consultation", // Removed mapping
       delay: 0,
-      isNew: isNewAgent, // Keep the isNew logic if needed elsewhere, though not used by card
+      isNew: isNewAgent, 
     };
   });
 
   const handleShowMore = () => {
-    // Show all agents when clicked
-    setVisibleCount(aiAgents.length);
+    // Show all *filtered* agents when clicked
+    setVisibleCount(mappedAgents.length); 
   };
 
-  const visibleAgents = aiAgents.slice(0, visibleCount);
-  const showMoreButtonVisible = visibleCount < aiAgents.length;
+  // Slice the *mapped* (and already filtered) agents for display
+  const visibleAgents = mappedAgents.slice(0, visibleCount); 
+  // Check visibility against the *mapped* (filtered) list
+  const showMoreButtonVisible = visibleCount < mappedAgents.length; 
 
   return (
     <div className="w-full">

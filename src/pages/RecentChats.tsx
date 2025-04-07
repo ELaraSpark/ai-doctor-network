@@ -1,27 +1,32 @@
-import React, { useState, useMemo } from 'react'; // Import useMemo
+import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AppLayout from '@/components/layout/AppLayout';
-import { Card, CardContent } from '@/components/ui/card';
+import AppLayout from '@/components/layout/AppLayout'; // Use the updated layout
+// Remove Card imports if not used directly
+// import { Card, CardContent } from '@/components/ui/card'; 
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+// Remove Avatar imports if handled by ThreadCard
+// import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'; 
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"; // Added Select components
-import { Bot, User, Search, Trash2, Play, Pin, PinOff, ArrowUpDown } from 'lucide-react'; // Added ArrowUpDown
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Search as SearchIcon, Trash2, Play, Pin, PinOff, ArrowUpDown, Bot } from 'lucide-react'; // Use SearchIcon alias
 import { format, isToday, isYesterday, differenceInDays } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { ThreadCard } from '@/components/library/ThreadCard'; // Import the new ThreadCard
+import { EmptyState } from '@/components/library/EmptyState'; // Import EmptyState
+import { CardSkeleton } from '@/components/library/CardSkeleton'; // Import skeleton
 
-// Example data structure
+// Update data structure if needed (ThreadCard expects title, preview, date)
 interface RecentChatItem {
   id: string;
-  agentName: string;
-  lastMessage: string;
-  timestamp: Date;
-  agentAvatar?: string;
+  agentName: string; // Will be used as title
+  lastMessage: string; // Will be used as preview
+  timestamp: Date; // Will be used as date
+  agentAvatar?: string; // Can be passed to ThreadCard if customized
   pinned?: boolean;
 }
 
-// Initial example data
+// Keep example data, but map it to ThreadCard props later
 const now = new Date();
 const initialExampleChats: RecentChatItem[] = [
   { id: '1', agentName: 'Cardiology Consult AI', lastMessage: 'Based on the ECG, consider ruling out...', timestamp: new Date(now.getTime() - 10 * 60 * 1000), agentAvatar: '/agents/cardio.jpg', pinned: true },
@@ -32,8 +37,9 @@ const initialExampleChats: RecentChatItem[] = [
   { id: '4', agentName: 'General Practice AI', lastMessage: 'Patient presents with symptoms consistent with...', timestamp: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000), agentAvatar: '/agents/gen.jpg', pinned: false }, // 2 days ago
 ];
 
-// Helper function to group chats by date (unchanged)
+// Helper function to group chats by date
 const groupChatsByDate = (chats: RecentChatItem[]) => {
+  // Grouping logic remains similar
   const groups: { [key: string]: RecentChatItem[] } = { Today: [], Yesterday: [], 'Previous 7 Days': [], Older: [] };
   const today = new Date();
   chats.forEach(chat => {
@@ -42,7 +48,6 @@ const groupChatsByDate = (chats: RecentChatItem[]) => {
     else if (differenceInDays(today, chat.timestamp) < 7) groups['Previous 7 Days'].push(chat);
     else groups.Older.push(chat);
   });
-  // No sorting here, handled separately by useMemo
   return groups;
 };
 
@@ -51,11 +56,15 @@ type SortOption = 'dateDesc' | 'dateAsc' | 'nameAsc' | 'nameDesc';
 const RecentChats = () => {
   const [chats, setChats] = useState<RecentChatItem[]>(initialExampleChats);
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortOrder, setSortOrder] = useState<SortOption>('dateDesc'); // Default sort
+  const [sortOrder, setSortOrder] = useState<SortOption>('dateDesc');
+  const [isLoading, setIsLoading] = useState(false); // Add loading state
   const navigate = useNavigate();
 
-  // Filter and Sort Logic using useMemo for optimization
+  // Filter and Sort Logic
   const processedChats = useMemo(() => {
+    // Simulate loading on search/sort change
+    setIsLoading(true); 
+    
     let filtered = chats.filter(chat =>
       chat.agentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       chat.lastMessage.toLowerCase().includes(searchTerm.toLowerCase())
@@ -67,7 +76,7 @@ const RecentChats = () => {
         case 'dateAsc': return a.timestamp.getTime() - b.timestamp.getTime();
         case 'nameAsc': return a.agentName.localeCompare(b.agentName);
         case 'nameDesc': return b.agentName.localeCompare(a.agentName);
-        case 'dateDesc': // Fallthrough default
+        case 'dateDesc': 
         default: return b.timestamp.getTime() - a.timestamp.getTime();
       }
     });
@@ -75,6 +84,9 @@ const RecentChats = () => {
     // Separate pinned after sorting
     const pinned = filtered.filter(chat => chat.pinned);
     const unpinned = filtered.filter(chat => !chat.pinned);
+    
+    // Simulate loading finished
+    setTimeout(() => setIsLoading(false), 300); // Short delay for visual feedback
 
     return { pinned, unpinned };
   }, [chats, searchTerm, sortOrder]);
@@ -82,64 +94,40 @@ const RecentChats = () => {
   // Group the unpinned chats
   const groupedUnpinnedChats = groupChatsByDate(processedChats.unpinned);
 
-  const handleContinueChat = (chatId: string) => { navigate('/'); };
-  const handleDeleteChat = (chatId: string) => { setChats(prev => prev.filter(c => c.id !== chatId)); };
-  const handleTogglePin = (chatId: string) => { setChats(prev => prev.map(c => c.id === chatId ? { ...c, pinned: !c.pinned } : c)); };
-  const formatTimestamp = (timestamp: Date): string => {
-    if (isToday(timestamp)) return format(timestamp, 'p');
-    if (isYesterday(timestamp)) return 'Yesterday';
-    return format(timestamp, 'MMM d');
+  // --- Action Handlers ---
+  const handleContinueChat = (chatId: string) => { navigate(`/chat/${chatId}`); }; // Navigate to specific chat
+  const handleDeleteChat = (chatId: string) => { 
+    // Add confirmation dialog here ideally
+    setChats(prev => prev.filter(c => c.id !== chatId)); 
+    // Add API call to delete chat
+  };
+  const handleTogglePin = (chatId: string) => { 
+    setChats(prev => prev.map(c => c.id === chatId ? { ...c, pinned: !c.pinned } : c).sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0) || b.timestamp.getTime() - a.timestamp.getTime())); // Keep pinned on top after toggle
+    // Add API call to update pin status
   };
 
-  // Reusable component for rendering a chat item
-  const ChatListItem = ({ chat }: { chat: RecentChatItem }) => (
-     <div key={chat.id} className={cn("flex items-center p-3 group", chat.pinned ? "bg-amber-50/50 hover:bg-amber-50/80" : "hover:bg-gray-50")}>
-       <Avatar className="h-9 w-9 mr-3">
-         <AvatarImage src={chat.agentAvatar} alt={chat.agentName} />
-         <AvatarFallback className="bg-primary/10 text-primary text-xs">
-           <Bot size={18} />
-         </AvatarFallback>
-       </Avatar>
-       <div className="flex-1 min-w-0 cursor-pointer" onClick={() => handleContinueChat(chat.id)}>
-          <p className="text-sm font-medium text-gray-900 truncate">{chat.agentName}</p>
-          <p className="text-xs text-gray-500 truncate">{chat.lastMessage}</p>
-        </div>
-        {/* Stack timestamp/buttons vertically on mobile, row on sm+ */}
-        {/* Always visible on mobile, hover visible on sm+ */}
-        <div className="ml-auto sm:ml-3 flex flex-col sm:flex-row items-end sm:items-center space-y-1 sm:space-y-0 sm:space-x-1 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
-           {/* Allow timestamp to wrap on mobile */}
-           <span className="text-xs text-gray-400 sm:whitespace-nowrap sm:mr-1">{formatTimestamp(chat.timestamp)}</span>
-           {/* Button container */}
-           <div className="flex space-x-1">
-             <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-amber-600 hover:bg-amber-100/50" onClick={(e) => { e.stopPropagation(); handleTogglePin(chat.id); }}>
-                {chat.pinned ? <PinOff size={14} className="text-amber-600" /> : <Pin size={14} />}
-             </Button>
-             <Button variant="ghost" size="icon" className="h-7 w-7 text-primary hover:bg-primary/10" onClick={(e) => { e.stopPropagation(); handleContinueChat(chat.id); }}>
-                <Play size={14} />
-             </Button>
-             <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:bg-destructive/10" onClick={(e) => { e.stopPropagation(); handleDeleteChat(chat.id); }}>
-                <Trash2 size={14} />
-             </Button>
-           </div>
-           {/* Removed extra </Button> here, added missing one above */}
-        </div>
-      </div>
-  );
-
+  // --- Render Logic ---
   return (
     <AppLayout>
-      <div className="p-4 sm:p-6 lg:p-8 h-full flex flex-col">
-        <h1 className="text-2xl font-semibold text-gray-900 mb-4">Recent Chats</h1>
+      {/* Use container for consistent padding/width */}
+      <div className="container mx-auto max-w-4xl px-4 py-6 h-full flex flex-col"> 
+        <h1 className="text-2xl font-semibold text-perplexity-text-primary mb-4">Recent Chats</h1>
 
-        {/* Search and Sort Controls */}
+        {/* Search and Sort Controls - Use new styles */}
         <div className="flex flex-col sm:flex-row gap-4 mb-4">
           <div className="relative flex-1">
-            <Search size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-            <Input type="search" placeholder="Search chat history..." className="pl-10" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+            <SearchIcon size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-perplexity-text-tertiary pointer-events-none" />
+            <Input 
+              type="search" 
+              placeholder="Search chat history..." 
+              className="w-full rounded-full bg-perplexity-bg-hover border-perplexity-border pl-10 pr-4 py-2 text-sm focus:bg-background focus:ring-1 focus:ring-perplexity-teal focus:border-perplexity-teal" 
+              value={searchTerm} 
+              onChange={(e) => setSearchTerm(e.target.value)} 
+            />
           </div>
           <Select value={sortOrder} onValueChange={(value) => setSortOrder(value as SortOption)}>
-            <SelectTrigger className="w-full sm:w-[180px]">
-              <ArrowUpDown size={14} className="mr-2 text-muted-foreground" />
+            <SelectTrigger className="w-full sm:w-[180px] bg-background border-perplexity-border text-perplexity-text-secondary">
+              <ArrowUpDown size={14} className="mr-2" />
               <SelectValue placeholder="Sort by..." />
             </SelectTrigger>
             <SelectContent>
@@ -151,44 +139,78 @@ const RecentChats = () => {
           </Select>
         </div>
 
-        <Card className="flex-1 flex flex-col overflow-hidden">
-          <CardContent className="flex-1 overflow-hidden p-0">
-            <ScrollArea className="h-full">
-              {/* Pinned Section */}
-              {processedChats.pinned.length > 0 && (
-                <div className="mb-1 last:mb-0">
-                  <h3 className="text-xs font-semibold uppercase text-amber-700 px-3 py-1.5 bg-amber-50 border-b border-t border-amber-100">
-                    Pinned
-                  </h3>
-                  <div className="divide-y divide-amber-100">
-                    {processedChats.pinned.map((chat) => <ChatListItem key={chat.id} chat={chat} />)}
-                  </div>
-                </div>
-              )}
-
-              {/* Date Grouped Section */}
-              {Object.entries(groupedUnpinnedChats).map(([groupName, chatsInGroup]) => (
-                chatsInGroup.length > 0 && (
-                  <div key={groupName} className="mb-1 last:mb-0">
-                    <h3 className="text-xs font-semibold uppercase text-muted-foreground px-3 py-1.5 bg-muted/50 border-b border-t">
-                      {groupName}
+        {/* Remove outer Card, use ScrollArea directly */}
+        <ScrollArea className="flex-1 -mx-4"> {/* Negative margin to extend dividers */}
+          <div className="px-4"> {/* Add padding back inside ScrollArea */}
+            {isLoading ? (
+              <CardSkeleton count={5} />
+            ) : (
+              <>
+                {/* Pinned Section */}
+                {processedChats.pinned.length > 0 && (
+                  <div className="mb-1">
+                    <h3 className="text-xs font-semibold uppercase text-amber-700 px-3 py-1.5 bg-amber-50/50 border-b border-t border-amber-100">
+                      Pinned
                     </h3>
-                    <div className="divide-y divide-gray-200">
-                      {chatsInGroup.map((chat) => <ChatListItem key={chat.id} chat={chat} />)}
+                    <div className="divide-y divide-perplexity-border">
+                      {processedChats.pinned.map((chat) => (
+                        <ThreadCard
+                          key={chat.id}
+                          id={chat.id}
+                          title={chat.agentName}
+                          preview={chat.lastMessage}
+                          date={chat.timestamp}
+                          onClick={() => handleContinueChat(chat.id)}
+                          onDelete={() => handleDeleteChat(chat.id)}
+                          pinned={chat.pinned} // Pass pinned status
+                          onPinToggle={() => handleTogglePin(chat.id)} // Pass toggle handler
+                          className="group" 
+                        /> // Remove children
+                      ))}
                     </div>
                   </div>
-                )
-              ))}
+                )}
 
-              {/* No Results Message */}
-              {processedChats.pinned.length === 0 && processedChats.unpinned.length === 0 && (
-                 <p className="text-gray-500 text-sm p-6 text-center">
-                   {searchTerm ? 'No matching chats found.' : 'No recent chats yet.'}
-                 </p>
-              )}
-            </ScrollArea>
-          </CardContent>
-        </Card>
+                {/* Date Grouped Section */}
+                {Object.entries(groupedUnpinnedChats).map(([groupName, chatsInGroup]) => (
+                  chatsInGroup.length > 0 && (
+                    <div key={groupName} className="mb-1">
+                      <h3 className="text-xs font-semibold uppercase text-perplexity-text-tertiary px-3 py-1.5 bg-perplexity-bg-hover/50 border-b border-t border-perplexity-border">
+                        {groupName}
+                      </h3>
+                      <div className="divide-y divide-perplexity-border">
+                        {chatsInGroup.map((chat) => (
+                           <ThreadCard
+                            key={chat.id}
+                            id={chat.id}
+                            title={chat.agentName}
+                            preview={chat.lastMessage}
+                            date={chat.timestamp}
+                            onClick={() => handleContinueChat(chat.id)}
+                            onDelete={() => handleDeleteChat(chat.id)}
+                            pinned={chat.pinned} // Pass pinned status
+                            onPinToggle={() => handleTogglePin(chat.id)} // Pass toggle handler
+                            className="group" 
+                          /> // Remove children
+                        ))}
+                      </div>
+                    </div>
+                  )
+                ))}
+
+                {/* No Results Message */}
+                {processedChats.pinned.length === 0 && processedChats.unpinned.length === 0 && !isLoading && (
+                   <EmptyState
+                      title="No chats found"
+                      description={searchTerm ? 'Try adjusting your search terms.' : 'Start a new chat to see it here.'}
+                      actionLabel="Ask AI"
+                      onAction={() => navigate('/')}
+                    />
+                )}
+              </>
+            )}
+          </div>
+        </ScrollArea>
       </div>
     </AppLayout>
   );

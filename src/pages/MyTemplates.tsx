@@ -1,204 +1,130 @@
 import React, { useState, useMemo } from 'react';
-import AppLayout from '@/components/layout/AppLayout';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { useNavigate } from 'react-router-dom';
+import AppLayout from '@/components/layout/AppLayout'; // Use new layout
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { PlusCircle, FileText, Edit, Trash2, Search, ArrowUpDown, Copy } from 'lucide-react'; // Added Copy
-import { cn } from '@/lib/utils';
-import EditTemplateDialog, { UpdatedTemplateData } from '@/components/templates/EditTemplateDialog';
-import UseTemplateDialog from '@/components/templates/UseTemplateDialog'; // Import Use dialog
-import { useToast } from "@/hooks/use-toast"; // Import useToast
+import { PlusIcon, Search as SearchIcon } from 'lucide-react';
+import { PageCard } from '@/components/library/PageCard'; // Use PageCard for templates
+import { EmptyState } from '@/components/library/EmptyState'; // Import EmptyState
+import { CardSkeleton } from '@/components/library/CardSkeleton'; // Import skeleton
 
-// Example data structure - Exported
-export interface MyTemplateItem {
+// Example Template Data (replace with actual data fetching)
+interface TemplateData {
   id: string;
-  name: string;
-  description: string;
-  lastUsed: string;
-  content?: string;
+  title: string; 
+  preview: string; 
+  date: Date; // Last modified date
+  category?: string; // Optional category
 }
 
-// Initial example data
-const initialExampleTemplates: MyTemplateItem[] = [
-  { id: '1', name: 'SOAP Note Generator', description: 'Generates a SOAP note based on consultation transcript.', lastUsed: '2h ago', content: 'Generate a SOAP note for the following consultation:\nPatient: {{patient_name}}\nChief Complaint: {{complaint}}\nTranscript:\n{{transcript}}\n\nAssessment:\nPlan:' },
-  { id: '2', name: 'Discharge Summary Template', description: 'Standard template for patient discharge summaries.', lastUsed: 'Yesterday', content: 'Patient Name: {{patient_name}}\nAdmission Date: {{admission_date}}\nDischarge Date: {{discharge_date}}\nDiagnosis: {{diagnosis}}\nHospital Course:\n{{course}}\nDischarge Plan:\n{{plan}}' },
-  { id: '3', name: 'Referral Letter - Cardiology', description: 'Template for referring patients to cardiology.', lastUsed: '3 days ago', content: 'Dear Dr. {{cardiologist_name}},\n\nI am referring {{patient_name}} for evaluation of {{reason}}.\n\nHistory:\n{{history}}\n\nFindings:\n{{findings}}\n\nThank you for your consultation.' },
-  { id: '4', name: 'Pre-Op Checklist Prompt', description: 'Generates checklist items for pre-operative planning.', lastUsed: '1 week ago', content: 'Generate a pre-operative checklist for a patient undergoing {{procedure}} with the following conditions: {{conditions}}.' },
+const exampleTemplates: TemplateData[] = [
+  { id: 'tpl1', title: 'SOAP Note Template', preview: 'Standard SOAP note format for patient encounters.', date: new Date('2025-03-15'), category: 'Clinical Notes' },
+  { id: 'tpl2', title: 'Discharge Summary Template', preview: 'Template for summarizing hospital stay and discharge instructions.', date: new Date('2025-03-10'), category: 'Reports' },
+  { id: 'tpl3', title: 'Consultation Request Template', preview: 'Standard format for requesting specialist consultations.', date: new Date('2025-03-05'), category: 'Referrals' },
+  { id: 'tpl4', title: 'Patient History Intake Form', preview: 'Comprehensive form for gathering new patient history.', date: new Date('2025-02-28'), category: 'Forms' },
 ];
 
-type SortOption = 'nameAsc' | 'nameDesc' | 'dateDesc' | 'dateAsc';
-
 const MyTemplates = () => {
-  const [templates, setTemplates] = useState<MyTemplateItem[]>(initialExampleTemplates);
+  const navigate = useNavigate();
+  const [templates, setTemplates] = useState<TemplateData[]>(exampleTemplates); // Replace with fetched data
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortOrder, setSortOrder] = useState<SortOption>('nameAsc');
-  const [editingTemplate, setEditingTemplate] = useState<MyTemplateItem | null>(null);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [templateToUse, setTemplateToUse] = useState<MyTemplateItem | null>(null); // State for template being used
-  const [isUseDialogOpen, setIsUseDialogOpen] = useState(false); // State for use dialog visibility
-  const { toast } = useToast(); // Initialize toast
+  const [isLoading, setIsLoading] = useState(false); // Add loading state
 
-  // Filter and Sort Logic
-  const filteredAndSortedTemplates = useMemo(() => {
-    let filtered = templates.filter(template =>
-      template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      template.description.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredTemplates = useMemo(() => {
+    setIsLoading(true);
+    const results = templates.filter(template => 
+      template.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      template.preview.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      template.category?.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    const parseLastUsed = (lastUsed: string): number => {
-        if (lastUsed.includes('h ago')) return Date.now() - parseInt(lastUsed) * 60 * 60 * 1000;
-        if (lastUsed === 'Yesterday') return Date.now() - 24 * 60 * 60 * 1000;
-        if (lastUsed.includes('days ago')) return Date.now() - parseInt(lastUsed) * 24 * 60 * 60 * 1000;
-        if (lastUsed.includes('week ago')) return Date.now() - parseInt(lastUsed) * 7 * 24 * 60 * 60 * 1000;
-        return 0;
-     };
-    filtered.sort((a, b) => {
-      switch (sortOrder) {
-        case 'nameDesc': return b.name.localeCompare(a.name);
-        case 'dateAsc': return parseLastUsed(a.lastUsed) - parseLastUsed(b.lastUsed);
-        case 'dateDesc': return parseLastUsed(b.lastUsed) - parseLastUsed(a.lastUsed);
-        case 'nameAsc': default: return a.name.localeCompare(b.name);
-      }
-    });
-    return filtered;
-  }, [templates, searchTerm, sortOrder]);
+    // Simulate loading finished
+    setTimeout(() => setIsLoading(false), 300); 
+    return results;
+  }, [templates, searchTerm]);
 
-   const handleCreateTemplate = () => {
-    alert('Create New Template (Not implemented)');
+  const handleTemplateClick = (templateId: string) => {
+    // Navigate to view/use template? Or open edit modal?
+    console.log(`View/Use template ${templateId}`);
+    // Example: navigate(`/templates/${templateId}`); 
   };
 
-  const handleEditTemplateClick = (template: MyTemplateItem) => {
-    setEditingTemplate(template);
-    setIsEditDialogOpen(true);
+  const handleCreateTemplate = () => {
+    // Navigate to create template page or open modal
+    console.log('Create new template');
+    // Example: navigate('/templates/create');
   };
-
-  const handleUpdateTemplate = (templateId: string, updatedData: UpdatedTemplateData) => {
-    setTemplates(prevTemplates =>
-      prevTemplates.map(template =>
-        template.id === templateId ? { ...template, ...updatedData } : template
-      )
-    );
-    setEditingTemplate(null);
+  
+  const handleEditTemplate = (templateId: string) => {
+     console.log(`Edit template ${templateId}`);
+     // Open EditTemplateDialog or navigate
   };
 
   const handleDeleteTemplate = (templateId: string) => {
-    setTemplates(prev => prev.filter(t => t.id !== templateId));
-    toast({ title: "Template Deleted", variant: "destructive" });
+     console.log(`Delete template ${templateId}`);
+     // Show confirmation, call API
   };
-
-   // Updated handler to open the UseTemplateDialog
-   const handleUseTemplateClick = (template: MyTemplateItem) => {
-     if (!template.content) {
-        toast({ title: "Empty Template", description: "This template has no content.", variant: "destructive" });
-        return;
-     }
-     setTemplateToUse(template);
-     setIsUseDialogOpen(true);
-   };
 
   return (
     <AppLayout>
-      <div className="p-4 sm:p-6 lg:p-8">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
-          <div>
-            <h1 className="text-2xl font-semibold text-gray-900">My Templates</h1>
-            <p className="mt-1 text-sm text-gray-600">
-              Manage your saved prompt templates and workflows.
-            </p>
-          </div>
-          <Button onClick={handleCreateTemplate}>
-            <PlusCircle size={18} className="mr-2" />
-            Create New Template
+      <div className="container mx-auto max-w-4xl px-4 py-6 h-full flex flex-col">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-2xl font-semibold text-perplexity-text-primary">My Templates</h1>
+          <Button 
+            size="sm" 
+            className="bg-perplexity-teal hover:bg-perplexity-teal-dark text-white"
+            onClick={handleCreateTemplate}
+          >
+            <PlusIcon size={16} className="mr-1" />
+            Create Template
           </Button>
         </div>
 
-        {/* Search and Sort Controls */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-6">
-          <div className="relative flex-1">
-            <Search size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-            <Input type="search" placeholder="Search templates..." className="pl-10" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-          </div>
-          <Select value={sortOrder} onValueChange={(value) => setSortOrder(value as SortOption)}>
-            <SelectTrigger className="w-full sm:w-[180px]">
-              <ArrowUpDown size={14} className="mr-2 text-muted-foreground" />
-              <SelectValue placeholder="Sort by..." />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="nameAsc">Name: A-Z</SelectItem>
-              <SelectItem value="nameDesc">Name: Z-A</SelectItem>
-              <SelectItem value="dateDesc">Last Used: Newest</SelectItem>
-              <SelectItem value="dateAsc">Last Used: Oldest</SelectItem>
-            </SelectContent>
-          </Select>
+        {/* Search Bar */}
+        <div className="relative w-full mb-6"> {/* Increased bottom margin */}
+          <SearchIcon 
+            size={18} 
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-perplexity-text-tertiary pointer-events-none" 
+          />
+          <Input
+            type="search"
+            placeholder="Search templates..."
+            className="w-full rounded-full bg-perplexity-bg-hover border-perplexity-border pl-10 pr-4 py-2 text-sm focus:bg-background focus:ring-1 focus:ring-perplexity-teal focus:border-perplexity-teal" 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
 
-        {/* Template Grid */}
-        {filteredAndSortedTemplates.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredAndSortedTemplates.map((template) => (
-              <Card key={template.id} className="flex flex-col">
-                <CardHeader>
-                  <CardTitle className="text-lg">{template.name}</CardTitle>
-                  <CardDescription>{template.description}</CardDescription>
-                </CardHeader>
-                <CardContent className="flex-1">
-                   <p className="text-xs text-muted-foreground bg-muted/50 p-2 rounded border max-h-20 overflow-hidden text-ellipsis">
-                      {template.content || 'No content preview.'}
-                    </p>
-                 </CardContent>
-                 {/* Stack footer vertically by default, row on sm+ */}
-                 <CardFooter className="flex flex-col sm:flex-row sm:justify-between sm:items-center items-start gap-2 pt-4 border-t">
-                    <span className="text-xs text-gray-500">Last used: {template.lastUsed}</span>
-                    {/* Ensure button group doesn't shrink */}
-                    <div className="flex space-x-1 flex-shrink-0">
-                       {/* Updated Use button */}
-                       <Button variant="default" size="sm" onClick={() => handleUseTemplateClick(template)}>
-                         Use
-                      </Button>
-                      <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => handleEditTemplateClick(template)}>
-                         <Edit size={14} />
-                      </Button>
-                      <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:bg-destructive/10" onClick={() => handleDeleteTemplate(template.id)}>
-                         <Trash2 size={16} />
-                      </Button>
-                   </div>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
-        ) : (
-          // Empty State
-          <div className="mt-6 border border-dashed border-gray-300 rounded-lg p-12 text-center">
-            <FileText size={48} className="mx-auto text-gray-400 mb-4" />
-            <h3 className="text-lg font-medium text-gray-900">
-              {searchTerm ? 'No Matching Templates Found' : 'No Templates Yet'}
-            </h3>
-            <p className="mt-1 text-sm text-gray-500">
-              {searchTerm ? 'Try adjusting your search.' : 'Create reusable templates for common tasks.'}
-            </p>
-            {!searchTerm && (
-              <Button className="mt-4" onClick={handleCreateTemplate}>
-                <PlusCircle size={18} className="mr-2" />
-                Create Template
-              </Button>
+        {/* Template List */}
+        <div className="flex-1 overflow-y-auto -mx-4"> {/* Allow list to scroll */}
+           <div className="px-4 divide-y divide-perplexity-border">
+            {isLoading ? (
+              <CardSkeleton count={4} />
+            ) : filteredTemplates.length > 0 ? (
+              filteredTemplates.map((template) => (
+                <PageCard // Using PageCard, could create a specific TemplateCard if needed
+                  key={template.id}
+                  id={template.id}
+                  title={template.title}
+                  preview={template.preview}
+                  date={template.date} // Pass date
+                  onClick={() => handleTemplateClick(template.id)}
+                  onEdit={() => handleEditTemplate(template.id)}
+                  onDelete={() => handleDeleteTemplate(template.id)}
+                  // Add other actions like 'Use Template' via dropdown if needed
+                />
+              ))
+            ) : (
+              <EmptyState
+                title="No templates found"
+                description={searchTerm ? 'Try adjusting your search terms.' : 'Create a new template to reuse common text snippets.'}
+                actionLabel="Create Template"
+                onAction={handleCreateTemplate}
+              />
             )}
           </div>
-        )}
+        </div>
       </div>
-
-       {/* Edit Template Dialog */}
-       <EditTemplateDialog
-         template={editingTemplate}
-         isOpen={isEditDialogOpen}
-         onOpenChange={setIsEditDialogOpen}
-         onTemplateUpdate={handleUpdateTemplate}
-       />
-       {/* Use Template Dialog */}
-       <UseTemplateDialog
-         template={templateToUse}
-         isOpen={isUseDialogOpen}
-         onOpenChange={setIsUseDialogOpen}
-       />
     </AppLayout>
   );
 };
