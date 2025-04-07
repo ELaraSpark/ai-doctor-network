@@ -4,10 +4,11 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion"; // Removed motion import if not used directly here
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
-import Index from "./pages/Index";
+import { RootHandler } from "@/components/auth/RootHandler"; // Import the new RootHandler
+// Index import might not be needed here directly if RootHandler handles it
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 // import Dashboard from "./pages/Dashboard"; // Removed unused import
@@ -37,7 +38,9 @@ import MyTemplates from "./pages/MyTemplates"; // Updated import name
 import Integrations from "./pages/Integrations";
 import Tasks from "./pages/Tasks";
 import CreateAgentPage from "./pages/CreateAgentPage";
-import Referrals from "./pages/Referrals"; // Import Referrals page
+import Referrals from "./pages/Referrals"; 
+import Library from "./pages/Library"; 
+import LandingPage from "./pages/LandingPage"; // Import the new LandingPage
 
 // Import the new page for security logs if needed
 // import SecurityLogs from "./pages/SecurityLogs";
@@ -53,12 +56,17 @@ const App = () => (
         <AuthProvider>
           <AnimatePresence mode="wait">
             <Routes>
-              <Route path="/" element={<Index />} />
+              {/* Public Routes - Login, Register, etc. */}
+              {/* Removed /welcome route */}
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/features" element={<Features />} />
-              <Route path="/about" element={<AboutUs />} />
-              {/* Removed /dashboard route */}
+              <Route path="/features" element={<Features />} /> 
+              <Route path="/about" element={<AboutUs />} /> 
+
+              {/* Root Route - Handled by RootHandler */}
+              <Route path="/" element={<RootHandler />} /> 
+
+              {/* Other Authenticated Routes */}
               <Route 
                 path="/patients" 
                 element={
@@ -149,6 +157,7 @@ const App = () => (
               <Route path="/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
               <Route path="/agents/create" element={<ProtectedRoute><CreateAgentPage /></ProtectedRoute>} />
               <Route path="/referrals" element={<ProtectedRoute><Referrals /></ProtectedRoute>} /> {/* Add route for referrals page */}
+              <Route path="/library" element={<ProtectedRoute><Library /></ProtectedRoute>} /> {/* Add route for Library page */}
               {/* Removed route for Quick Notes (now shown in Index) */}
               {/* Removed route for Chat (now shown in Index) */}
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

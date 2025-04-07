@@ -1,5 +1,6 @@
 
 import { ReactNode } from "react";
+import { AgentCategory } from "../AgentCategoryFilters"; // Import the category type
 
 export interface Agent {
   id: string;
@@ -7,8 +8,9 @@ export interface Agent {
   specialty: string;
   description: string;
   icon: React.FC<{ className?: string }>;
-  color: string;
+  // color: string; // Removed color property
   capabilities: string[];
+  category?: AgentCategory | 'general'; 
 }
 
 export interface Message {

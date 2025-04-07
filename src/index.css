@@ -4,92 +4,115 @@
 
 @layer base {
   :root {
-    --background: 210 45% 98%;
-    --foreground: 224 71% 4%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 224 71% 4%;
-
+    /* Refined Background/Foreground */
+    --background: 40 33% 98%;    /* #FAFAF8 - Subtle Cream */
+    --foreground: 0 0% 15%;      /* #262626 - Darker Gray */
+    
+    /* Card colors (Keep white for now, adjust if needed for contrast) */
+    --card: 0 0% 100%; 
+    --card-foreground: 0 0% 15%; /* Match foreground */
+    
+    /* Popover colors */
     --popover: 0 0% 100%;
-    --popover-foreground: 224 71% 4%;
+    --popover-foreground: 0 0% 15%; /* Match foreground */
+    
+    /* Refined Primary colors - Deeper Teal */
+    --primary: 163 50% 33%;      /* #2A7D68 */
+    --primary-foreground: 0 0% 100%; /* White */
+    
+    /* Secondary colors (Hover state - light gray) */
+    --secondary: 220 14% 96%;    /* #F3F4F6 */
+    --secondary-foreground: 0 0% 15%; /* Match foreground */
+    
+    /* Muted colors (Sidebar bg, lighter text) */
+    --muted: 220 17% 97%;        /* #F9FAFB */
+    --muted-foreground: 220 9% 46%; /* #6B6C7B */
+    
+    /* Original Accent (Purple) - Keep for now */
+    --accent: 255 68% 53%; 
+    --accent-foreground: 0 0% 100%; 
 
-    /* Updated primary color to ~#F85C5C */
-    --primary: 0 93% 67%; 
-    /* Updated primary foreground for contrast */
-    --primary-foreground: 224 71% 4%; 
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    /* Updated accent to match new primary */
-    --accent: 0 93% 67%; 
-    --accent-foreground: 224 71% 4%; /* Ensure contrast */
-
+    /* New Secondary Accent - Blue-Purple */
+    --secondary-accent: 229 36% 52%; /* #5969B1 */
+    --secondary-accent-foreground: 0 0% 100%; /* White */
+    
+    /* Destructive colors (keeping similar to current) */
+    /* Destructive colors (keep as is for now) */
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    /* Updated ring to match new primary */
-    --ring: 0 93% 67%; 
-
+    
+    /* Border and input colors (adjust border slightly for new bg) */
+    --border: 220 13% 91%; /* #E5E7EB */
+    --input: 220 13% 91%; 
+    --ring: 163 50% 33%; /* Match new primary */
+    
     --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 224 71% 4%;
-    --sidebar-primary: 210 100% 50%;
-    --sidebar-primary-foreground: 210 40% 98%;
-    --sidebar-accent: 210 40% 96.1%;
-    --sidebar-accent-foreground: 222.2 47.4% 11.2%;
-    --sidebar-border: 214.3 31.8% 91.4%;
-    --sidebar-ring: 210 100% 50%;
+    /* Sidebar specific colors */
+    --sidebar-background: 220 17% 97%; /* #F9FAFB */
+    --sidebar-foreground: 0 0% 15%; /* Match foreground */
+    --sidebar-primary: 163 50% 33%; /* Match new primary */
+    --sidebar-primary-foreground: 0 0% 100%; 
+    --sidebar-accent: 163 50% 97%; /* #F1F8F6 - Very light teal tint for selected */
+    --sidebar-accent-foreground: 163 50% 33%; /* Use primary for selected text */
+    --sidebar-border: 220 13% 91%; /* Match border */
+    --sidebar-ring: 163 50% 33%; /* Match new primary */
   }
 
   .dark {
-    --background: 224 71% 4%;
-    --foreground: 210 40% 98%;
+    /* Dark Mode Adjustments */
+    --background: 220 10% 12%;    /* Darker Cream/Gray */
+    --foreground: 220 10% 85%;    /* Lighter Gray */
+    
+    --card: 220 10% 16%; 
+    --card-foreground: 220 10% 85%; 
+    
+    --popover: 220 10% 16%;
+    --popover-foreground: 220 10% 85%;
+    
+    --primary: 163 45% 55%;      /* Lighter Teal */
+    --primary-foreground: 0 0% 10%; /* Darker Text */
+    
+    --secondary: 220 10% 20%;    /* Darker Hover Gray */
+    --secondary-foreground: 220 10% 85%; 
+    
+    --muted: 220 10% 15%;        /* Darker Sidebar Bg */
+    --muted-foreground: 220 10% 60%; /* Lighter Muted Text */
+    
+    --accent: 255 60% 70%;       /* Lighter Purple */
+    --accent-foreground: 0 0% 10%; 
 
-    --card: 224 71% 4%;
-    --card-foreground: 210 40% 98%;
+    --secondary-accent: 229 30% 65%; /* Lighter Blue-Purple */
+    --secondary-accent-foreground: 0 0% 10%; 
 
-    --popover: 224 71% 4%;
-    --popover-foreground: 210 40% 98%;
+    --destructive: 0 60% 55%;       /* Lighter Red */
+    --destructive-foreground: 0 0% 10%; 
 
-    /* Updated primary color to ~#F85C5C */
-    --primary: 0 93% 67%; 
-    /* Updated primary foreground for contrast */
-    --primary-foreground: 224 71% 4%; 
+    --border: 220 10% 25%;       /* Darker Border */
+    --input: 220 10% 25%; 
+    --ring: 163 45% 55%;         /* Match dark primary */
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    /* Updated accent to match new primary */
-    --accent: 0 93% 67%; 
-    --accent-foreground: 224 71% 4%; /* Ensure contrast */
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    /* Updated ring to match new primary */
-    --ring: 0 93% 67%; 
+    /* Sidebar dark */
+    --sidebar-background: 220 10% 15%; 
+    --sidebar-foreground: 220 10% 85%; 
+    --sidebar-primary: 163 45% 55%; 
+    --sidebar-primary-foreground: 0 0% 10%; 
+    --sidebar-accent: 163 45% 25%; /* Darker Teal Tint for selected */
+    --sidebar-accent-foreground: 163 45% 75%; /* Lighter Teal Text */
+    --sidebar-border: 220 10% 25%; 
+    --sidebar-ring: 163 45% 55%; 
   }
 }
 
 @layer base {
   * {
-    @apply border-border selection:bg-blue-100 selection:text-blue-900;
+    /* Use new border color, adjust selection colors */
+    @apply border-border selection:bg-primary/20 selection:text-primary; 
   }
   
   body {
-    @apply bg-[#f0f5fa] text-foreground font-sans antialiased;
+    /* Use new background/foreground, increase base font size and line height */
+    @apply bg-background text-foreground font-sans antialiased text-base leading-relaxed; 
     font-feature-settings: "ss01", "ss02", "cv01", "cv02";
   }
 
@@ -112,80 +135,37 @@
     text-wrap: balance;
   }
 
-  .gradient-card {
-    @apply bg-gradient-to-br from-white to-blue-50/80;
-  }
-
-  .gradient-card-purple {
-    @apply bg-gradient-to-br from-white via-purple-50 to-indigo-100;
-  }
-
-  .gradient-card-green {
-    @apply bg-gradient-to-br from-white via-teal-50 to-green-100;
-  }
-
-  .gradient-card-amber {
-    @apply bg-gradient-to-br from-white via-orange-50 to-amber-100;
-  }
-
-  .gradient-card-pink {
-    @apply bg-gradient-to-br from-white via-pink-50 to-red-100;
-  }
-
-  .gradient-text {
-    @apply bg-gradient-to-r from-medical-purple via-indigo-500 to-blue-500 bg-clip-text text-transparent;
-  }
-
-  .gradient-text-blue {
-    @apply bg-gradient-to-r from-medical-teal via-blue-500 to-medical-blue bg-clip-text text-transparent;
-  }
-
-  .gradient-btn-blue {
-    @apply bg-gradient-to-r from-medical-teal to-medical-blue hover:from-teal-600 hover:to-blue-600;
-  }
-
-  .gradient-btn-purple {
-    @apply bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700;
-  }
-
-  .gradient-btn-green {
-    @apply bg-gradient-to-r from-teal-500 to-green-500 hover:from-teal-600 hover:to-green-600;
-  }
-
-  .gradient-btn-amber {
-    @apply bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600;
-  }
+  /* Remove gradient utilities or update them if needed */
+  /* .gradient-card { ... } */
 }
 
-/* Typography Adjustments */
+/* Typography Adjustments - Restore size classes, use new colors */
 @layer components {
   .h1 {
-    @apply text-4xl font-display font-bold tracking-tight text-blue-900;
+    @apply text-4xl font-display font-bold tracking-tight text-foreground; /* Use new foreground */
   }
   
   .h2 {
-    @apply text-3xl font-display font-bold tracking-tight text-blue-900;
+    @apply text-3xl font-display font-bold tracking-tight text-foreground; /* Use new foreground */
   }
   
   .h3 {
-    @apply text-2xl font-display font-semibold tracking-tight text-blue-900;
+    @apply text-2xl font-display font-semibold tracking-tight text-foreground; /* Use new foreground */
   }
   
   .h4 {
-    @apply text-xl font-display font-semibold tracking-tight text-blue-900;
+    @apply text-xl font-display font-semibold tracking-tight text-foreground; /* Use new foreground */
   }
   
   .p-large {
-    @apply text-lg text-slate-600;
+    @apply text-lg text-muted-foreground; /* Use new muted-foreground */
   }
   
   .p-small {
-    @apply text-sm text-slate-600;
+    @apply text-sm text-muted-foreground; /* Use new muted-foreground */
   }
 
-  .card-elevated {
-    @apply border-0 shadow-lg hover:shadow-xl transition-all duration-300;
-  }
+  /* Other component styles can go here */
 }
 
 /* Animation Modifiers */
@@ -247,15 +227,11 @@
 
 /* Form elements with gradients */
 .input-gradient {
-  @apply bg-gradient-to-r from-white to-blue-50/30 border border-blue-100;
+  @apply bg-background border border-input; /* Use new variables */
 }
 
-/* Page backgrounds */
-.page-gradient {
-  @apply bg-gradient-to-br from-[#f0f5fa] to-blue-50;
-}
+/* Remove page-gradient or update */
+/* .page-gradient { ... } */
 
-/* Card hover effects */
-.card-hover-lift {
-  @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
-}
+/* Remove card-hover-lift or update */
+/* .card-hover-lift { ... } */

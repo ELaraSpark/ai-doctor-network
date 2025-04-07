@@ -1,9 +1,9 @@
 
 import { ReactNode } from "react";
 import { motion } from "framer-motion";
-import Sidebar from "./Sidebar"; // Re-added Sidebar import
-import Navbar from "./Navbar";
-import { ActiveCallProvider } from "@/components/followup/context/ActiveCallContext";
+import Sidebar from "./Sidebar"; 
+import Header from "./Header"; // Import the new Header
+import { ActiveCallProvider } from "@/components/followup/context/ActiveCallContext"; // Keep if needed
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -11,23 +11,23 @@ interface AppLayoutProps {
 
 const AppLayout = ({ children }: AppLayoutProps) => {
   return (
-    <ActiveCallProvider>
-      {/* Reverted to original flex row structure */}
-      <div className="flex h-screen bg-background">
-        <Sidebar />
+    <ActiveCallProvider> {/* Keep context provider if still relevant */}
+      <div className="flex h-screen bg-background"> {/* Use new background */}
+        <Sidebar /> {/* Use the updated Sidebar */}
         <div className="flex-1 flex flex-col overflow-hidden">
-          <Navbar />
-          {/* Kept main content area structure */}
-          <main className="flex-1 overflow-y-auto p-6">
-             {/* Re-added motion.div wrapper for transitions */}
+          <Header /> {/* Use the new Header */}
+          {/* Adjust main content area styling */}
+          <main className="flex-1 overflow-y-auto bg-background"> {/* Use background, remove default padding */}
+             {/* Keep motion.div wrapper, adjust container/padding as needed per page */}
+             {/* Removing container/max-width here, apply within specific pages if needed */}
              <motion.div
-               initial={{ opacity: 0, y: 10 }}
-               animate={{ opacity: 1, y: 0 }}
-               exit={{ opacity: 0, y: 10 }}
-               transition={{ duration: 0.3 }}
-               className="container mx-auto max-w-6xl" // Reverted max-width
+               initial={{ opacity: 0 }} // Simpler fade-in
+               animate={{ opacity: 1 }}
+               exit={{ opacity: 0 }}
+               transition={{ duration: 0.2 }}
+               className="h-full" // Allow content to take full height
              >
-               {children}
+               {children} 
              </motion.div>
           </main>
         </div>
