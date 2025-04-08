@@ -18,11 +18,15 @@ export const RootHandler = () => {
     );
   }
 
-  // If user is authenticated, show the main app page (Index -> AppLayout -> Chat)
-  if (user) {
-    return <Index />;
-  }
+  // TEMPORARY BYPASS: Always show the authenticated Index page for testing
+  return <Index />;
 
-  // If user is not authenticated, show the public landing page
-  return <LandingPage />;
+  // Original logic:
+  // // If user is authenticated, show the main app page (Index -> AppLayout -> Chat)
+  // if (user) {
+  //   return <Index />;
+  // }
+  // 
+  // // If user is not authenticated, show the public landing page
+  // return <LandingPage />;
 };

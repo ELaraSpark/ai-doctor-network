@@ -66,7 +66,7 @@ const MyTemplates = () => {
 
   return (
     <AppLayout>
-      <div className="container mx-auto max-w-4xl px-4 py-6 h-full flex flex-col">
+      <div className="container mx-auto max-w-4xl px-4 py-6 h-full flex flex-col bg-background"> {/* Added bg-background */}
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-2xl font-semibold text-perplexity-text-primary">My Templates</h1>

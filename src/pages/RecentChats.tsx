@@ -109,8 +109,8 @@ const RecentChats = () => {
   // --- Render Logic ---
   return (
     <AppLayout>
-      {/* Use container for consistent padding/width */}
-      <div className="container mx-auto max-w-4xl px-4 py-6 h-full flex flex-col"> 
+      {/* Use container for consistent padding/width and add background */}
+      <div className="container mx-auto max-w-4xl px-4 py-6 h-full flex flex-col bg-background"> 
         <h1 className="text-2xl font-semibold text-perplexity-text-primary mb-4">Recent Chats</h1>
 
         {/* Search and Sort Controls - Use new styles */}

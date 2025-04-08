@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AppLayout from '@/components/layout/AppLayout'; 
+import AppLayout from '@/components/layout/AppLayout'; // Import AppLayout
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { PlusIcon, Search as SearchIcon } from 'lucide-react';
@@ -69,11 +69,11 @@ const MyAgents = ({ initialCategory = 'all' }: MyAgentsProps) => {
   };
 
   return (
-    // NOTE: Padding is removed here, assuming parent (Index.tsx) handles it when rendering this component
-    <div className="h-full flex flex-col"> 
-      {/* Header */}
-      <div className="flex items-center justify-between mb-4 px-4 pt-6"> {/* Add padding back here */}
-        <h1 className="text-2xl font-semibold text-perplexity-text-primary">My Agents</h1>
+    <AppLayout> {/* Added AppLayout wrapper */}
+      <div className="h-full flex flex-col p-4 sm:p-6 lg:p-8 bg-background"> {/* Added padding and bg-background */}
+        {/* Header */}
+        <div className="flex items-center justify-between mb-4"> 
+          <h1 className="text-2xl font-semibold text-perplexity-text-primary">My Agents</h1>
         <Button 
           size="sm" 
           className="bg-perplexity-teal hover:bg-perplexity-teal-dark text-white"
@@ -84,11 +84,11 @@ const MyAgents = ({ initialCategory = 'all' }: MyAgentsProps) => {
         </Button>
       </div>
 
-      {/* Search Bar */}
-      <div className="relative w-full mb-6 px-4"> {/* Add padding back here */}
-        <SearchIcon 
-          size={18} 
-          className="absolute left-7 top-1/2 transform -translate-y-1/2 text-perplexity-text-tertiary pointer-events-none" // Adjust left padding for icon
+        {/* Search Bar */}
+        <div className="relative w-full mb-6"> 
+          <SearchIcon 
+            size={18} 
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-perplexity-text-tertiary pointer-events-none" // Adjusted left padding
         />
         <Input
           type="search"
@@ -101,12 +101,12 @@ const MyAgents = ({ initialCategory = 'all' }: MyAgentsProps) => {
 
       {/* Category Filters are rendered in Index.tsx now */}
 
-      {/* Agent List */}
-      <div className="flex-1 overflow-y-auto"> 
-         <div className="divide-y divide-perplexity-border px-4"> {/* Add padding back here */}
-          {isLoading ? (
-            <CardSkeleton count={4} /> 
-          ) : filteredAgents.length > 0 ? (
+        {/* Agent List */}
+        <div className="flex-1 overflow-y-auto -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8"> {/* Adjust padding for scroll area */}
+           <div className="divide-y divide-perplexity-border"> 
+            {isLoading ? (
+              <CardSkeleton count={4} /> 
+            ) : filteredAgents.length > 0 ? (
             filteredAgents.map((agent) => (
               <AgentCard
                 key={agent.id}
@@ -127,11 +127,11 @@ const MyAgents = ({ initialCategory = 'all' }: MyAgentsProps) => {
               actionLabel="Create Agent"
               onAction={handleCreateAgent}
             />
-          )}
+            )}
+          </div>
         </div>
       </div>
-    </div>
-    // Removed AppLayout wrapper as this component is rendered inside Index.tsx which already uses AppLayout
+    </AppLayout>
   );
 };
 

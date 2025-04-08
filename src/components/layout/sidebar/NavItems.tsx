@@ -37,39 +37,17 @@ const NavItems = ({ collapsed }: NavItemsProps) => {
         to="/agents"
         icon={Brain}
         label="AI Agents"
-        collapsed={collapsed}
       />
-      {/* Removed AI Experts NavItem */}
-      <NavItem
-        to="/patients"
-        icon={FileText}
-        label="Patient Records"
-        collapsed={collapsed}
-      />
-      <NavItem
-        to="/followup-scheduler"
-        icon={Phone}
-        label="Follow-up Calls"
-        collapsed={collapsed}
-      />
-      {/* Removed Call Monitoring NavItem */}
-      <NavItem
-        to="/collaboration"
-        icon={Users}
-        label="Collaboration"
-        collapsed={collapsed}
-      />
+      {/* Removed AI Experts, Patient Records, Follow-up Calls, and Collaboration NavItems */}
       <NavItem
         to="/tumor-board" // Route path kept for now
         icon={ClipboardList}
         label="Expert Panel" // Changed label
-        collapsed={collapsed}
       />
       <NavItem
         to="/notifications"
         icon={Bell}
         label="Notifications"
-        collapsed={collapsed}
       />
     </nav>
   );

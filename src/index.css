@@ -4,116 +4,92 @@
 
 @layer base {
   :root {
-    /* Refined Background/Foreground */
-    --background: 40 33% 98%;    /* #FAFAF8 - Subtle Cream */
-    --foreground: 0 0% 15%;      /* #262626 - Darker Gray */
+    /* New harmonized green palette */
+    --primary-raw: 74 146 112; /* RGB for HSL conversion if needed */
+    --primary-hsl: 146 33% 43%; /* #4A9270 - medical-feeling green */
+    --primary-medium-hsl: 146 33% 53%; /* #6AB187 - complementary lighter green */
+    --primary-dark-hsl: 146 33% 33%; /* Darker variant of primary */
+    --primary-light-rgba: rgba(74, 146, 112, 0.05); /* Very light green for hover states */
     
-    /* Card colors (Keep white for now, adjust if needed for contrast) */
-    --card: 0 0% 100%; 
-    --card-foreground: 0 0% 15%; /* Match foreground */
+    /* Warm accent for important actions */
+    --accent-hsl: 33 71% 62%; /* #E09F5A - warm accent */
     
-    /* Popover colors */
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 15%; /* Match foreground */
-    
-    /* Refined Primary colors - Deeper Teal */
-    --primary: 163 50% 33%;      /* #2A7D68 */
-    --primary-foreground: 0 0% 100%; /* White */
-    
-    /* Secondary colors (Hover state - light gray) */
-    --secondary: 220 14% 96%;    /* #F3F4F6 */
-    --secondary-foreground: 0 0% 15%; /* Match foreground */
-    
-    /* Muted colors (Sidebar bg, lighter text) */
-    --muted: 220 17% 97%;        /* #F9FAFB */
-    --muted-foreground: 220 9% 46%; /* #6B6C7B */
-    
-    /* Original Accent (Purple) - Keep for now */
-    --accent: 255 68% 53%; 
-    --accent-foreground: 0 0% 100%; 
+    /* Background and text colors */
+    --sidebar-bg-hsl: 140 10% 97%; /* #F4F7F5 - Light green-tinted background */
+    --sidebar-hover-hsl: 140 10% 94%; /* Slightly darker for hover states */
+    --text-primary-hsl: 150 15% 21%; /* #2D3C35 - Dark green-gray for primary text */
+    --text-secondary-hsl: 150 10% 39%; /* #5A6D64 - Medium green-gray for secondary text */
+    --text-muted-hsl: 150 5% 60%; /* Muted text color */
+    --border-color-hsl: 140 10% 90%; /* #E1EAE5 - Light green-tinted border */
+    --bg-color-hsl: 0 0% 100%; /* #ffffff */
+    --bg-alt-hsl: 140 20% 99%; /* #fafbfa - subtle green tint for body bg */
 
-    /* New Secondary Accent - Blue-Purple */
-    --secondary-accent: 229 36% 52%; /* #5969B1 */
-    --secondary-accent-foreground: 0 0% 100%; /* White */
+    /* Map to existing Tailwind CSS variables */
+    --background: var(--bg-alt-hsl); /* Use #fafbfa for body */
+    --foreground: var(--text-primary-hsl); /* #2D3C35 */
     
-    /* Destructive colors (keeping similar to current) */
-    /* Destructive colors (keep as is for now) */
+    --card: var(--bg-color-hsl); /* #ffffff */
+    --card-foreground: var(--text-primary-hsl); /* #2D3C35 */
+    
+    --popover: var(--bg-color-hsl); /* #ffffff */
+    --popover-foreground: var(--text-primary-hsl); /* #2D3C35 */
+    
+    /* Primary uses the new medical green */
+    --primary: var(--primary-hsl); /* #4A9270 */
+    --primary-foreground: 0 0% 100%; /* White text on primary green */
+    
+    /* Secondary accent - lighter green */
+    --secondary: var(--primary-medium-hsl); /* #6AB187 */
+    --secondary-foreground: 0 0% 100%; /* White text on secondary green */
+    
+    /* Muted uses sidebar bg color */
+    --muted: var(--sidebar-bg-hsl); /* #F4F7F5 */
+    --muted-foreground: var(--text-muted-hsl); /* Muted text */
+    
+    /* Accent - Warm orange for important actions */
+    --accent: var(--accent-hsl); /* #E09F5A */
+    --accent-foreground: 0 0% 100%; /* White text on accent */
+    
+    /* Secondary accent for additional color */
+    --secondary-accent: var(--primary-medium-hsl); /* #6AB187 */
+    --secondary-accent-foreground: 0 0% 100%; /* White text */
+
+    /* Destructive - Keep existing red */
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
     
-    /* Border and input colors (adjust border slightly for new bg) */
-    --border: 220 13% 91%; /* #E5E7EB */
-    --input: 220 13% 91%; 
-    --ring: 163 50% 33%; /* Match new primary */
+    /* Border and input use border-color */
+    --border: var(--border-color-hsl); /* #E1EAE5 */
+    --input: var(--border-color-hsl); /* Use border color for input border */
+    --ring: var(--primary); /* Green focus ring */
     
-    --radius: 0.5rem;
+    --radius: 0.5rem; /* Slightly larger radius for softer feel */
 
     /* Sidebar specific colors */
-    --sidebar-background: 220 17% 97%; /* #F9FAFB */
-    --sidebar-foreground: 0 0% 15%; /* Match foreground */
-    --sidebar-primary: 163 50% 33%; /* Match new primary */
-    --sidebar-primary-foreground: 0 0% 100%; 
-    --sidebar-accent: 163 50% 97%; /* #F1F8F6 - Very light teal tint for selected */
-    --sidebar-accent-foreground: 163 50% 33%; /* Use primary for selected text */
-    --sidebar-border: 220 13% 91%; /* Match border */
-    --sidebar-ring: 163 50% 33%; /* Match new primary */
+    --sidebar-background: var(--sidebar-bg-hsl); /* #F4F7F5 */
+    --sidebar-foreground: var(--text-secondary-hsl); /* #5A6D64 */
+    --sidebar-primary: var(--primary); /* Active text color #4A9270 */
+    --sidebar-primary-foreground: var(--primary); /* Match active text */
+    --sidebar-accent: var(--primary-light-rgba); /* Active background */
+    --sidebar-accent-foreground: var(--primary); /* Active text color */
+    --sidebar-border: var(--border-color-hsl); /* #E1EAE5 */
+    --sidebar-ring: var(--primary); /* Green focus ring */
+    --sidebar-hover-bg: var(--sidebar-hover-hsl); /* Hover background */
+    --sidebar-hover-fg: var(--text-primary-hsl); /* #2D3C35 */
   }
 
-  .dark {
-    /* Dark Mode Adjustments */
-    --background: 220 10% 12%;    /* Darker Cream/Gray */
-    --foreground: 220 10% 85%;    /* Lighter Gray */
-    
-    --card: 220 10% 16%; 
-    --card-foreground: 220 10% 85%; 
-    
-    --popover: 220 10% 16%;
-    --popover-foreground: 220 10% 85%;
-    
-    --primary: 163 45% 55%;      /* Lighter Teal */
-    --primary-foreground: 0 0% 10%; /* Darker Text */
-    
-    --secondary: 220 10% 20%;    /* Darker Hover Gray */
-    --secondary-foreground: 220 10% 85%; 
-    
-    --muted: 220 10% 15%;        /* Darker Sidebar Bg */
-    --muted-foreground: 220 10% 60%; /* Lighter Muted Text */
-    
-    --accent: 255 60% 70%;       /* Lighter Purple */
-    --accent-foreground: 0 0% 10%; 
-
-    --secondary-accent: 229 30% 65%; /* Lighter Blue-Purple */
-    --secondary-accent-foreground: 0 0% 10%; 
-
-    --destructive: 0 60% 55%;       /* Lighter Red */
-    --destructive-foreground: 0 0% 10%; 
-
-    --border: 220 10% 25%;       /* Darker Border */
-    --input: 220 10% 25%; 
-    --ring: 163 45% 55%;         /* Match dark primary */
-
-    /* Sidebar dark */
-    --sidebar-background: 220 10% 15%; 
-    --sidebar-foreground: 220 10% 85%; 
-    --sidebar-primary: 163 45% 55%; 
-    --sidebar-primary-foreground: 0 0% 10%; 
-    --sidebar-accent: 163 45% 25%; /* Darker Teal Tint for selected */
-    --sidebar-accent-foreground: 163 45% 75%; /* Lighter Teal Text */
-    --sidebar-border: 220 10% 25%; 
-    --sidebar-ring: 163 45% 55%; 
-  }
+  /* Remove dark mode block */
 }
 
 @layer base {
   * {
-    /* Use new border color, adjust selection colors */
+    /* Use new border color */
     @apply border-border selection:bg-primary/20 selection:text-primary; 
   }
   
   body {
-    /* Use new background/foreground, increase base font size and line height */
-    @apply bg-background text-foreground font-sans antialiased text-base leading-relaxed; 
-    font-feature-settings: "ss01", "ss02", "cv01", "cv02";
+    /* Use example base size (16px -> text-base), keep existing font-sans */
+    @apply bg-background text-foreground font-sans antialiased text-base leading-normal font-normal; 
   }
 
   html {
@@ -139,31 +115,37 @@
   /* .gradient-card { ... } */
 }
 
-/* Typography Adjustments - Restore size classes, use new colors */
+/* Typography Adjustments - Match example sizes, keep existing font-display */
 @layer components {
-  .h1 {
-    @apply text-4xl font-display font-bold tracking-tight text-foreground; /* Use new foreground */
+  /* Map h1 to welcome-title size (36px) */
+  .h1 { 
+    @apply text-[36px] font-display font-bold tracking-tight text-foreground; 
+  } 
+  /* Map h2 to a reasonable step down (e.g., 30px) */
+  .h2 { 
+    @apply text-3xl font-display font-bold tracking-tight text-foreground; 
+  } 
+  /* Map h3 to a reasonable step down (e.g., 24px) */
+  .h3 { 
+    @apply text-2xl font-display font-semibold tracking-tight text-foreground; 
+  } 
+  /* Map h4 to a reasonable step down (e.g., 20px) */
+  .h4 { 
+    @apply text-xl font-display font-semibold tracking-tight text-foreground; 
+  } 
+  /* Map p-large to welcome-subtitle/chat-input size (16px) */
+  .p-large { 
+    /* Use the CSS variable directly for text color */
+    @apply text-base text-[hsl(var(--text-secondary-hsl))]; 
+  } 
+  /* Map p-small to nav-item/user-name/footer size (13px/14px -> use text-sm) */
+  .p-small { 
+    /* Use the standard text-muted-foreground utility */
+    @apply text-sm text-muted-foreground; 
   }
-  
-  .h2 {
-    @apply text-3xl font-display font-bold tracking-tight text-foreground; /* Use new foreground */
-  }
-  
-  .h3 {
-    @apply text-2xl font-display font-semibold tracking-tight text-foreground; /* Use new foreground */
-  }
-  
-  .h4 {
-    @apply text-xl font-display font-semibold tracking-tight text-foreground; /* Use new foreground */
-  }
-  
-  .p-large {
-    @apply text-lg text-muted-foreground; /* Use new muted-foreground */
-  }
-  
-  .p-small {
-    @apply text-sm text-muted-foreground; /* Use new muted-foreground */
-  }
+
+  /* Remove default link underline added previously */
+  /* a:not(.no-underline) { ... } */
 
   /* Other component styles can go here */
 }

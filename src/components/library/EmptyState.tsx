@@ -2,6 +2,8 @@ import React from 'react';
 import { PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { PicassoIllustration } from '@/components/illustrations/PicassoIllustration';
+import { IllustrationName } from '@/components/illustrations/illustrations';
 
 interface EmptyStateProps {
   title: string;
@@ -9,6 +11,7 @@ interface EmptyStateProps {
   actionLabel: string;
   onAction: () => void;
   icon?: React.ReactNode;
+  illustrationType?: IllustrationName;
   className?: string;
 }
 
@@ -17,13 +20,23 @@ export const EmptyState = ({
   description,
   actionLabel,
   onAction,
-  icon = <PlusCircle size={40} className="text-perplexity-teal/30" />,
+  icon,
+  illustrationType = 'empty',
   className,
 }: EmptyStateProps) => {
+  // Use provided icon or Picasso illustration
+  const displayIcon = icon || (
+    <PicassoIllustration 
+      name={illustrationType} 
+      size="xl" 
+      color="text-perplexity-teal" 
+      className="opacity-80"
+    />
+  );
   return (
     <div className={cn("flex flex-col items-center justify-center py-12 px-4 text-center", className)}>
-      <div className="mb-4">
-        {icon}
+      <div className="mb-6">
+        {displayIcon}
       </div>
       <h3 className="text-lg font-medium text-perplexity-text-primary mb-2">
         {title}

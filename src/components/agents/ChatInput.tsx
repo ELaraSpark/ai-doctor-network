@@ -94,8 +94,8 @@ const ChatInput = ({ onSendMessage, isLoading, agentName }: ChatInputProps) => {
   };
 
   return (
-    // Container is now just a fragment, no outer div needed here
-    <> 
+    // Make default border more visible (70% opacity) and solidify on focus
+    <div className="flex items-center relative rounded-xl border border-primary/70 bg-background px-6 py-0 h-32 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary/20 shadow-sm transition-colors duration-200"> 
       {/* Hidden File Input */}
       <input 
         type="file" 
@@ -106,60 +106,57 @@ const ChatInput = ({ onSendMessage, isLoading, agentName }: ChatInputProps) => {
         aria-hidden="true"
       />
       
-      {/* Textarea styled like .input-field */}
+      {/* Attachment Button - More subtle styling */}
+      <Button 
+        variant="ghost" 
+        size="icon" 
+        className="text-[#92A69B] hover:text-primary p-0 h-8 w-8 mr-3 flex-shrink-0 opacity-70" /* Updated colors */
+        onClick={handleAttachmentClick}
+        aria-label="Add attachment"
+        title="Attach files"
+      >
+        <Paperclip className="h-5 w-5" /> 
+      </Button>
+
+      {/* Textarea - Positioned at top with bolder, more visible text */}
       <Textarea
         ref={textareaRef}
-        placeholder="What can I help you with today?" 
+        placeholder="How can I help you today?" // More conversational placeholder
         value={chatInput}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
         className={cn(
-          "w-full bg-transparent text-base placeholder:text-muted-foreground resize-none border-none focus-visible:ring-0 focus-visible:ring-offset-0 py-3", // Adjusted padding, text size
-          "min-h-[24px] max-h-[150px]" // Min/Max height from example
+          "flex-1 bg-transparent text-[16px] placeholder:text-gray-600 resize-none border-none focus-visible:ring-0 focus-visible:ring-offset-0", /* Removed font-medium and placeholder:font-medium */
+          "min-h-[24px] max-h-[150px] pt-6 pb-0" // Positioned at top with padding-top only
         )}
         id="chat-input-textarea"
-        aria-label="Chat message input" // Generic label
+        aria-label="Chat message input" 
         tabIndex={0}
         rows={1} 
       />
-      {/* Input Actions Row */}
-      <div className="flex justify-between items-center pt-1">
-          {/* Left Action Buttons */}
-          <div className="flex gap-2">
-              {/* Attachment Button - Styled like .icon-button */}
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="text-muted-foreground hover:bg-muted rounded p-2 h-9 w-9" // Style from .icon-button
-                onClick={handleAttachmentClick}
-                aria-label="Add attachment"
-                title="Attach files"
-              >
-                <Paperclip className="h-5 w-5" /> 
-              </Button>
-              {/* Add other icon buttons here if needed */}
-          </div>
-          
-          {/* Send Button - Styled like .send-button */}
-          <Button 
-            onClick={handleSendMessage} 
-            disabled={(!chatInput.trim() && attachments.length === 0) || isLoading}
-            aria-label="Send message"
-            title="Send message"
-            size="icon" 
-            className="bg-muted hover:bg-border rounded-lg w-9 h-9" // Style from .send-button
-          >
-            {/* Using ArrowUp instead of the complex send icon for simplicity */}
-            <ArrowUp className="h-5 w-5 text-muted-foreground" /> 
-          </Button>
-      </div>
-      {/* Display attached file count (optional enhancement) */}
+      
+      {/* Send Button - Using medical teal color for consistency */}
+      <Button 
+        onClick={handleSendMessage} 
+        disabled={(!chatInput.trim() && attachments.length === 0) || isLoading}
+        aria-label="Send message"
+        title="Send message"
+        variant="accentSolid" // Use the updated solid accent variant
+        size="icon" 
+        className="rounded-full w-9 h-9 ml-3 flex-shrink-0 shadow-sm" // Removed inline style
+      >
+        <ArrowUp className="h-5 w-5 text-white" /> {/* Re-confirming white text */}
+      </Button>
+      
+      {/* Display attached file count (optional enhancement - maybe position differently if needed) */}
+      {/* 
       {attachments.length > 0 && (
         <div className="absolute bottom-1 left-1 text-xs text-muted-foreground bg-muted px-1.5 py-0.5 rounded-full flex items-center gap-1 z-10"> 
            <Paperclip size={12} /> {attachments.length} file(s)
         </div>
-      )}
-    </>
+      )} 
+      */}
+    </div> 
   );
 };
 

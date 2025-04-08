@@ -8,6 +8,7 @@ import AppearanceTab from "./tabs/AppearanceTab";
 import NotificationsTab from "./tabs/NotificationsTab";
 // Removed SecurityTab import
 import AIConfigTab from "./tabs/AIConfigTab";
+import IntegrationsTab from "./tabs/IntegrationsTab"; // Import IntegrationsTab
 
 const SettingsView = () => {
   const navigate = useNavigate();
@@ -26,7 +27,8 @@ const SettingsView = () => {
   // Sync activeTab state with URL hash on mount and change
   useEffect(() => {
     const hash = location.hash.replace('#', '');
-    const validTabs = ['profile-security', 'appearance', 'notifications', 'ai-config'];
+    // Added 'integrations' to validTabs
+    const validTabs = ['profile-security', 'appearance', 'notifications', 'ai-config', 'integrations']; 
     if (hash && validTabs.includes(hash)) {
       setActiveTab(hash);
     } else {
@@ -55,14 +57,15 @@ const SettingsView = () => {
 
       {/* Use the activeTab state for value and defaultValue */}
       <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-          {/* Updated grid columns to 4 */}
-          <TabsList className="grid w-full grid-cols-4">
+          {/* Updated grid columns to 5 */}
+          <TabsList className="grid w-full grid-cols-5"> 
             {/* Updated first trigger */}
             <TabsTrigger value="profile-security">Profile & Security</TabsTrigger>
             <TabsTrigger value="appearance">Appearance</TabsTrigger>
             <TabsTrigger value="notifications">Notifications</TabsTrigger>
             {/* Removed Security Trigger */}
             <TabsTrigger value="ai-config">AI Config</TabsTrigger>
+            <TabsTrigger value="integrations">Integrations</TabsTrigger> {/* Added Integrations Trigger */}
           </TabsList>
 
           {/* Updated first content section */}
@@ -82,6 +85,11 @@ const SettingsView = () => {
 
           <TabsContent value="ai-config" className="mt-6">
             <AIConfigTab />
+          </TabsContent>
+
+          {/* Added Integrations Content Section */}
+          <TabsContent value="integrations" className="mt-6">
+            <IntegrationsTab />
           </TabsContent>
         </Tabs>
       {/* Removed closing div for flex wrapper */}

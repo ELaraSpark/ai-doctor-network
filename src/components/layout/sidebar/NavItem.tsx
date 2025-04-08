@@ -38,7 +38,8 @@ const NavItem = ({ to, icon: Icon, label, isSubItem }: NavItemProps) => {
   );
 
   return (
-    <Link to={to} className={linkClasses}>
+    // Removed "no-underline" class to use default link behavior
+    <Link to={to} className={linkClasses}> 
       <Icon size={isSubItem ? 14 : 16} className="mr-3 flex-shrink-0" /> 
       <span className="truncate">{label}</span> 
     </Link>

@@ -13,7 +13,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 // import Dashboard from "./pages/Dashboard"; // Removed unused import
 import PatientRecords from "./pages/PatientRecords";
-import Agents from "./pages/Agents";
+// import Agents from "./pages/Agents"; // Removed import
 import Collaboration from "./pages/Collaboration";
 import Analytics from "./pages/Analytics";
 import NotFound from "./pages/NotFound";
@@ -75,13 +75,10 @@ const App = () => (
                   </ProtectedRoute>
                 } 
               />
+              {/* Redirect from old /agents route to /my-agents */}
               <Route 
                 path="/agents" 
-                element={
-                  <ProtectedRoute>
-                    <Agents />
-                  </ProtectedRoute>
-                } 
+                element={<Navigate to="/my-agents" replace />} 
               />
               <Route 
                 path="/collaboration" 

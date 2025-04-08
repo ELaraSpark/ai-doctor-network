@@ -93,11 +93,12 @@ const MobileNav = () => {
                 <Link 
                   to={`/chat/${chat.id}`} 
                   className={cn(
-                    "flex items-center px-3 py-1.5 rounded-md text-sm transition-colors text-perplexity-text-secondary hover:bg-perplexity-bg-hover hover:text-perplexity-text-primary",
-                    location.pathname === `/chat/${chat.id}` ? "bg-perplexity-bg-active text-perplexity-teal font-medium" : ""
+                    "flex items-center px-3 py-1.5 rounded-md text-sm transition-colors text-perplexity-text-secondary hover:bg-perplexity-bg-hover hover:text-perplexity-text-primary", // Reverted hover
+                    location.pathname === `/chat/${chat.id}` ? "bg-perplexity-bg-active text-perplexity-teal font-medium" : "" // Reverted active to teal
                   )}
                 >
-                  <MessageSquare size={16} className="mr-3 flex-shrink-0" />
+                  {/* TODO: Consider using PicassoIllustration here too for consistency */}
+                  <MessageSquare size={16} className={cn("mr-3 flex-shrink-0", location.pathname === `/chat/${chat.id}` ? "text-perplexity-teal" : "")} /> // Reverted active icon color to teal
                   <span className="truncate">{chat.title}</span>
                 </Link>
               </SheetClose>
