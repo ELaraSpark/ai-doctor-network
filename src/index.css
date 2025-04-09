@@ -1,94 +1,56 @@
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Restore :root CSS variables for the Green Theme */
 @layer base {
   :root {
-    /* New harmonized green palette */
-    --primary-raw: 74 146 112; /* RGB for HSL conversion if needed */
-    --primary-hsl: 146 33% 43%; /* #4A9270 - medical-feeling green */
-    --primary-medium-hsl: 146 33% 53%; /* #6AB187 - complementary lighter green */
-    --primary-dark-hsl: 146 33% 33%; /* Darker variant of primary */
-    --primary-light-rgba: rgba(74, 146, 112, 0.05); /* Very light green for hover states */
+    /* Green Theme Variables (Derived from tailwind.config.ts) */
+    --primary: 146 33% 43%; /* #4A9270 */
+    --primary-foreground: 0 0% 100%; /* White */
     
-    /* Warm accent for important actions */
-    --accent-hsl: 33 71% 62%; /* #E09F5A - warm accent */
+    --secondary: 146 33% 53%; /* #6AB187 - Lighter Green */
+    --secondary-foreground: 0 0% 100%; /* White */
     
-    /* Background and text colors */
-    --sidebar-bg-hsl: 140 10% 97%; /* #F4F7F5 - Light green-tinted background */
-    --sidebar-hover-hsl: 140 10% 94%; /* Slightly darker for hover states */
-    --text-primary-hsl: 150 15% 21%; /* #2D3C35 - Dark green-gray for primary text */
-    --text-secondary-hsl: 150 10% 39%; /* #5A6D64 - Medium green-gray for secondary text */
-    --text-muted-hsl: 150 5% 60%; /* Muted text color */
-    --border-color-hsl: 140 10% 90%; /* #E1EAE5 - Light green-tinted border */
-    --bg-color-hsl: 0 0% 100%; /* #ffffff */
-    --bg-alt-hsl: 140 20% 99%; /* #fafbfa - subtle green tint for body bg */
-
-    /* Map to existing Tailwind CSS variables */
-    --background: var(--bg-alt-hsl); /* Use #fafbfa for body */
-    --foreground: var(--text-primary-hsl); /* #2D3C35 */
+    --accent: 33 71% 62%; /* #E09F5A - Warm Orange */
+    --accent-foreground: 0 0% 100%; /* White */
     
-    --card: var(--bg-color-hsl); /* #ffffff */
-    --card-foreground: var(--text-primary-hsl); /* #2D3C35 */
+    --background: 140 20% 99%; /* #fafbfa - Subtle green tint */
+    --foreground: 150 15% 21%; /* #2D3C35 - Dark green-gray */
     
-    --popover: var(--bg-color-hsl); /* #ffffff */
-    --popover-foreground: var(--text-primary-hsl); /* #2D3C35 */
+    --card: 0 0% 100%; /* White */
+    --card-foreground: 150 15% 21%; /* Dark green-gray */
     
-    /* Primary uses the new medical green */
-    --primary: var(--primary-hsl); /* #4A9270 */
-    --primary-foreground: 0 0% 100%; /* White text on primary green */
+    --popover: 0 0% 100%; /* White */
+    --popover-foreground: 150 15% 21%; /* Dark green-gray */
     
-    /* Secondary accent - lighter green */
-    --secondary: var(--primary-medium-hsl); /* #6AB187 */
-    --secondary-foreground: 0 0% 100%; /* White text on secondary green */
+    --muted: 140 10% 97%; /* #F4F7F5 - Light green-tinted */
+    --muted-foreground: 150 5% 60%; /* Muted text */
     
-    /* Muted uses sidebar bg color */
-    --muted: var(--sidebar-bg-hsl); /* #F4F7F5 */
-    --muted-foreground: var(--text-muted-hsl); /* Muted text */
+    --destructive: 0 84.2% 60.2%; /* Red */
+    --destructive-foreground: 210 40% 98%; /* Light */
     
-    /* Accent - Warm orange for important actions */
-    --accent: var(--accent-hsl); /* #E09F5A */
-    --accent-foreground: 0 0% 100%; /* White text on accent */
+    --border: 140 10% 90%; /* #E1EAE5 - Light green-tinted border */
+    --input: 140 10% 90%; /* Use border color for input */
+    --ring: 146 33% 43%; /* Primary green for focus ring */
     
-    /* Secondary accent for additional color */
-    --secondary-accent: var(--primary-medium-hsl); /* #6AB187 */
-    --secondary-accent-foreground: 0 0% 100%; /* White text */
-
-    /* Destructive - Keep existing red */
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    
-    /* Border and input use border-color */
-    --border: var(--border-color-hsl); /* #E1EAE5 */
-    --input: var(--border-color-hsl); /* Use border color for input border */
-    --ring: var(--primary); /* Green focus ring */
-    
-    --radius: 0.5rem; /* Slightly larger radius for softer feel */
-
-    /* Sidebar specific colors */
-    --sidebar-background: var(--sidebar-bg-hsl); /* #F4F7F5 */
-    --sidebar-foreground: var(--text-secondary-hsl); /* #5A6D64 */
-    --sidebar-primary: var(--primary); /* Active text color #4A9270 */
-    --sidebar-primary-foreground: var(--primary); /* Match active text */
-    --sidebar-accent: var(--primary-light-rgba); /* Active background */
-    --sidebar-accent-foreground: var(--primary); /* Active text color */
-    --sidebar-border: var(--border-color-hsl); /* #E1EAE5 */
-    --sidebar-ring: var(--primary); /* Green focus ring */
-    --sidebar-hover-bg: var(--sidebar-hover-hsl); /* Hover background */
-    --sidebar-hover-fg: var(--text-primary-hsl); /* #2D3C35 */
+    --radius: 0.5rem; 
   }
 
-  /* Remove dark mode block */
+  /* Dark mode variables would go here if needed */
 }
 
 @layer base {
   * {
-    /* Use new border color */
+    /* Use Tailwind's default border or the one defined in config */
     @apply border-border selection:bg-primary/20 selection:text-primary; 
   }
   
   body {
-    /* Use example base size (16px -> text-base), keep existing font-sans */
+    /* Use Tailwind's default background/foreground or the ones defined in config */
     @apply bg-background text-foreground font-sans antialiased text-base leading-normal font-normal; 
   }
 

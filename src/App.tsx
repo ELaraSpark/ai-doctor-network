@@ -156,7 +156,15 @@ const App = () => (
               <Route path="/referrals" element={<ProtectedRoute><Referrals /></ProtectedRoute>} /> {/* Add route for referrals page */}
               <Route path="/library" element={<ProtectedRoute><Library /></ProtectedRoute>} /> {/* Add route for Library page */}
               {/* Removed route for Quick Notes (now shown in Index) */}
-              {/* Removed route for Chat (now shown in Index) */}
+              {/* Add route for Chat */}
+              <Route 
+                path="/chat" 
+                element={
+                  <ProtectedRoute>
+                    <Chat />
+                  </ProtectedRoute>
+                } 
+              />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

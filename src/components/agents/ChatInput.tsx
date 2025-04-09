@@ -17,11 +17,23 @@ const ChatInput = ({ onSendMessage, isLoading, agentName }: ChatInputProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null); // Ref for hidden file input
   const [attachments, setAttachments] = useState<File[]>([]); 
 
-  const handleSendMessage = () => {
+  // Modify to accept event object
+  const handleSendMessage = (e?: React.MouseEvent<HTMLButtonElement>) => { 
+    if (e) {
+      e.preventDefault(); // Prevent default button behavior/navigation
+      e.stopPropagation(); // Stop the event from bubbling up
+    }
+    console.log("ChatInput: handleSendMessage triggered."); // Log start
     // Basic check, might need refinement based on how attachments are handled
-    if (!chatInput.trim() && attachments.length === 0) return; 
+    if (!chatInput.trim() && attachments.length === 0) {
+      console.log("ChatInput: Message empty, returning."); // Log empty case
+      return; 
+    }
     
+    console.log("ChatInput: Calling onSendMessage prop..."); // Log before calling prop
     onSendMessage(chatInput, attachments); 
+    console.log("ChatInput: onSendMessage prop finished."); // Log after calling prop
+    
     setChatInput("");
     setAttachments([]); // Clear attachments after sending
     if (fileInputRef.current) {
@@ -74,7 +86,7 @@ const ChatInput = ({ onSendMessage, isLoading, agentName }: ChatInputProps) => {
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      handleSendMessage();
+      handleSendMessage(); // Call without event object for Enter key press
     }
   };
 
@@ -135,9 +147,11 @@ const ChatInput = ({ onSendMessage, isLoading, agentName }: ChatInputProps) => {
         rows={1} 
       />
       
+      
       {/* Send Button - Using medical teal color for consistency */}
       <Button 
-        onClick={handleSendMessage} 
+        type="button" // Explicitly set type to button
+        onClick={(e) => handleSendMessage(e)} // Pass event object onClick
         disabled={(!chatInput.trim() && attachments.length === 0) || isLoading}
         aria-label="Send message"
         title="Send message"

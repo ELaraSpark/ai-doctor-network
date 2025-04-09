@@ -26,17 +26,44 @@ const Chat = () => {
         { text: "Find dose", icon: Pill },
     ];
 
+    // Restore original handleSendMessage logic with added logging
     const handleSendMessage = (messageText: string, attachments?: File[]) => {
-        if (!messageText.trim() && (!attachments || attachments.length === 0)) return;
+        console.log("[Chat.tsx] handleSendMessage START", { messageText, attachments });
+        if (!messageText.trim() && (!attachments || attachments.length === 0)) {
+            console.log("[Chat.tsx] handleSendMessage: Empty message, returning.");
+            return;
+        }
+        
         const userMessage: ChatMessage = { sender: 'user', text: messageText };
-        setMessages(prev => [...prev, userMessage]);
-        setIsSending(true);
+        
+        console.log("[Chat.tsx] handleSendMessage: Setting user message and isSending=true");
+        try {
+            setMessages(prev => [...prev, userMessage]);
+            setIsSending(true);
+        } catch (error) {
+            console.error("[Chat.tsx] handleSendMessage: Error during initial state update:", error);
+            // Optionally add user feedback here if state update fails
+            return; // Stop processing if initial state update fails
+        }
+
+        console.log("[Chat.tsx] handleSendMessage: Simulating bot response with setTimeout...");
+        // Simulate bot response
         setTimeout(() => {
-            const botResponseText = `Simulated response for: "${userMessage.text}"`;
-            const botMessage: ChatMessage = { sender: 'bot', text: botResponseText };
-            setMessages(prev => [...prev, botMessage]);
-            setIsSending(false);
+            console.log("[Chat.tsx] handleSendMessage: setTimeout callback START");
+            try {
+                const botResponseText = `Simulated response for: "${userMessage.text}"`;
+                const botMessage: ChatMessage = { sender: 'bot', text: botResponseText };
+                
+                console.log("[Chat.tsx] handleSendMessage: Setting bot message and isSending=false");
+                setMessages(prev => [...prev, botMessage]);
+                setIsSending(false);
+                console.log("[Chat.tsx] handleSendMessage: setTimeout callback END");
+            } catch (error) {
+                 console.error("[Chat.tsx] handleSendMessage: Error during bot response state update:", error);
+                 setIsSending(false); // Ensure loading state is reset even on error
+            }
         }, 1000 + Math.random() * 500);
+        console.log("[Chat.tsx] handleSendMessage END (after setTimeout setup)");
     };
 
     useEffect(() => {
@@ -188,12 +215,17 @@ const Chat = () => {
                     </div>
                 </div>
             ) : (
-                <>
-                    <MessageDisplay />
-                    <div className="w-full max-w-3xl mx-auto flex-shrink-0 px-4 pb-2">
-                      <InputArea />
+                // Apply centering to the parent flex container for the active chat state
+                <div className="flex flex-1 flex-col items-center overflow-hidden"> 
+                    {/* Message display area: centered, takes up space, scrolls, has bottom padding */}
+                    <div className="w-full max-w-3xl flex-1 overflow-y-auto px-4 pt-4 pb-24"> {/* Added pb-24 for input spacing */}
+                        <MessageDisplay />
                     </div>
-                </>
+                    {/* Input area: sticky to bottom, centered */}
+                    <div className="w-full max-w-3xl sticky bottom-0 bg-background px-4 pt-2 pb-4 border-t border-border"> {/* Added sticky, bg, padding, border */}
+                        <InputArea />
+                    </div>
+                </div>
             )}
         </div>
     );

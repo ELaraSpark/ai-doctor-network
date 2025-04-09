@@ -57,14 +57,11 @@ const PublicLayout = ({
           <div className="container mx-auto px-6"> 
             {/* Reduced padding py-3 */}
             <nav className="flex items-center justify-between py-3">
-              {/* Simplified Logo */}
+              {/* Logo Link */}
               <Link to="/" className="flex items-center text-decoration-none">
-                {/* Removed icon div */}
-                {/* Removed flex-col div */}
-                <span className="font-bold text-2xl text-primary leading-none"> {/* Adjusted size/leading */}
+                <span className="font-bold text-2xl text-primary leading-none"> 
                   Leny.ai
                 </span>
-                {/* Removed tagline span */}
               </Link>
               
               {/* Updated Nav Links */}

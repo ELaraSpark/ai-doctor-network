@@ -80,9 +80,9 @@ const Sidebar = ({ className }: SidebarProps) => {
       {/* Ask AI Button */}
       <div className="px-3 pt-4 pb-2">
         <Button 
-          variant="outline" 
+          variant="outline"
           className="w-full justify-start text-[#5A6D64] border-[#E1EAE5] font-medium hover:bg-primary/5 hover:text-primary hover:border-primary group transition-all duration-200 ease-in-out"
-          onClick={() => navigate('/')} // Navigate to home/Ask AI page
+          onClick={() => navigate('/chat')} // Navigate to the chat page
         >
           <div className="mr-2 w-4 h-4">
               <PicassoIllustration 
