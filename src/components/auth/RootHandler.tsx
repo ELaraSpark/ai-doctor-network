@@ -1,6 +1,7 @@
 import React from 'react';
+import { Navigate } from 'react-router-dom'; // Import Navigate
 import { useAuth } from '@/contexts/AuthContext';
-import Index from '@/pages/Index'; // Authenticated App main page (Chat UI)
+// import Index from '@/pages/Index'; // No longer needed as we redirect
 import LandingPage from '@/pages/LandingPage'; // Public Landing Page
 
 // This component decides whether to show the public landing page 
@@ -22,9 +23,10 @@ export const RootHandler = () => {
   // return <Index />;
 
   // Original logic: RESTORED
-  // If user is authenticated, show the main app page (Index -> AppLayout -> Chat)
+  // If user is authenticated, redirect to the default authenticated route (e.g., /chat)
   if (user) {
-    return <Index />;
+    // Redirecting to /chat, which is handled by the nested layout route in App.tsx
+    return <Navigate to="/chat" replace />; 
   }
   
   // If user is not authenticated, show the public landing page

@@ -3,7 +3,8 @@ import { useState, useEffect } from "react"; // Combined imports
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useNavigate, useLocation, Navigate } from "react-router-dom";
 // Import the renamed and merged component
-import ProfileSecurityTab from "./tabs/ProfileSecurityTab";
+import AccountTab from "./tabs/AccountTab";
+import SecurityTab from "./tabs/SecurityTab";
 import AppearanceTab from "./tabs/AppearanceTab";
 import NotificationsTab from "./tabs/NotificationsTab";
 // Removed SecurityTab import
@@ -13,8 +14,8 @@ import IntegrationsTab from "./tabs/IntegrationsTab"; // Import IntegrationsTab
 const SettingsView = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  // Default to the new combined tab value
-  const [activeTab, setActiveTab] = useState("profile-security");
+  // Default to account tab
+  const [activeTab, setActiveTab] = useState("account");
 
   // Extract the path after /settings/
   const settingsPath = location.pathname.split('/').slice(2)[0] || '';
@@ -28,13 +29,13 @@ const SettingsView = () => {
   useEffect(() => {
     const hash = location.hash.replace('#', '');
     // Added 'integrations' to validTabs
-    const validTabs = ['profile-security', 'appearance', 'notifications', 'ai-config', 'integrations']; 
+    const validTabs = ['account', 'security', 'appearance', 'notifications', 'ai-config', 'integrations']; 
     if (hash && validTabs.includes(hash)) {
       setActiveTab(hash);
     } else {
       // If no hash or invalid hash, set default and update URL
-      setActiveTab('profile-security');
-      navigate(location.pathname + '#profile-security', { replace: true });
+      setActiveTab('account');
+      navigate(location.pathname + '#account', { replace: true });
     }
   }, [location.hash, navigate, location.pathname]);
 
@@ -57,10 +58,10 @@ const SettingsView = () => {
 
       {/* Use the activeTab state for value and defaultValue */}
       <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-          {/* Updated grid columns to 5 */}
-          <TabsList className="grid w-full grid-cols-5"> 
-            {/* Updated first trigger */}
-            <TabsTrigger value="profile-security">Profile & Security</TabsTrigger>
+          {/* Updated grid columns to 6 */}
+          <TabsList className="grid w-full grid-cols-6"> 
+            <TabsTrigger value="account">Account</TabsTrigger>
+            <TabsTrigger value="security">Security</TabsTrigger>
             <TabsTrigger value="appearance">Appearance</TabsTrigger>
             <TabsTrigger value="notifications">Notifications</TabsTrigger>
             {/* Removed Security Trigger */}
@@ -68,9 +69,12 @@ const SettingsView = () => {
             <TabsTrigger value="integrations">Integrations</TabsTrigger> {/* Added Integrations Trigger */}
           </TabsList>
 
-          {/* Updated first content section */}
-          <TabsContent value="profile-security" className="mt-6">
-            <ProfileSecurityTab />
+          <TabsContent value="account" className="mt-6">
+            <AccountTab />
+          </TabsContent>
+
+          <TabsContent value="security" className="mt-6">
+            <SecurityTab />
           </TabsContent>
 
           <TabsContent value="appearance" className="mt-6">

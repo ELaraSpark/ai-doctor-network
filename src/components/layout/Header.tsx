@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import MobileNav from './MobileNav'; // Keep MobileNav for hamburger menu
 import { cn } from '@/lib/utils';
-import { History } from 'lucide-react';
+import { History, Coffee, Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ChatHistoryModal, ChatHistoryEntry } from '@/components/agents/ChatHistoryModal';
+import { useAuth } from '@/contexts/AuthContext'; // Import useAuth to get user info
+import { getMedicalJoke, getMedicalFact, getHealthcareTip } from '@/lib/personalityUtils'; // Import personality utilities
 
 // Mock data for chat history
 const mockChatHistory: ChatHistoryEntry[] = [
@@ -45,11 +47,58 @@ interface HeaderProps {
 
 const Header = ({ className }: HeaderProps) => {
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
+  const [showTip, setShowTip] = useState(false);
+  const [currentTip, setCurrentTip] = useState("");
+  const { user } = useAuth(); // Get user from auth context
+  const tipButtonRef = useRef<HTMLButtonElement>(null);
+  const tipPopupRef = useRef<HTMLDivElement>(null);
+
+  // Get user's first name from email (temporary until we have proper user profiles)
+  const getUserFirstName = () => {
+    if (!user?.email) return undefined;
+    // Extract name from email (e.g., john.doe@example.com -> John)
+    const emailName = user.email.split('@')[0].split('.')[0];
+    return emailName.charAt(0).toUpperCase() + emailName.slice(1);
+  };
+
+  // Initialize random tip on first load
+  useEffect(() => {
+    setCurrentTip(getHealthcareTip());
+  }, []);
+
+  // Add click outside handler for tip popup
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        showTip &&
+        tipPopupRef.current &&
+        tipButtonRef.current &&
+        !tipPopupRef.current.contains(event.target as Node) &&
+        !tipButtonRef.current.contains(event.target as Node)
+      ) {
+        setShowTip(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showTip]);
 
   const handleSelectChat = (chatId: string) => {
     console.log(`Selected chat: ${chatId}`);
     // Here you would load the selected chat
     setIsHistoryModalOpen(false);
+  };
+
+  // Toggle tip visibility
+  const toggleTip = () => {
+    if (!showTip) {
+      // Get a new tip when showing
+      setCurrentTip(getHealthcareTip());
+    }
+    setShowTip(!showTip);
   };
 
   return (
@@ -62,8 +111,57 @@ const Header = ({ className }: HeaderProps) => {
       {/* Texture is now handled by AppLayout, removed from here */}
       <MobileNav /> {/* Hamburger menu for mobile */}
       
+      {/* Welcome message removed as requested */}
+      
+      {/* Spacer to push items to right */}
+      <div className="flex-1"></div>
+      
       {/* Right-aligned actions */}
-      <div className="flex-1 flex justify-end items-center gap-2"> 
+      <div className="flex items-center gap-2"> 
+        {/* Quick tip button */}
+        <Button 
+          ref={tipButtonRef}
+          variant="ghost" 
+          size="icon"
+          onClick={toggleTip}
+          className="text-muted-foreground hover:text-foreground relative"
+          title="Healthcare Tip"
+        >
+          <Coffee className="h-5 w-5" />
+          
+          {/* Tip popup */}
+          {showTip && (
+            <div 
+              ref={tipPopupRef}
+              className="absolute right-0 top-full mt-2 w-64 p-3 bg-green-50 border border-green-100 rounded-lg shadow-lg z-50"
+            >
+              <div className="flex items-start gap-2">
+                <div className="bg-green-100 rounded-full p-1.5 text-green-700 flex-shrink-0">
+                  <Coffee size={14} />
+                </div>
+                <div>
+                  <h4 className="text-xs font-medium text-green-800 mb-1">Healthcare Pro Tip</h4>
+                  <p className="text-xs text-green-700">{currentTip}</p>
+                </div>
+              </div>
+              <div className="mt-2 text-right">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="text-xs text-green-700 hover:text-green-900 p-1 h-auto"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setCurrentTip(getHealthcareTip());
+                  }}
+                >
+                  New Tip
+                </Button>
+              </div>
+            </div>
+          )}
+        </Button>
+        
+        {/* History button */}
         <Button 
           variant="ghost" 
           size="icon"
@@ -72,6 +170,18 @@ const Header = ({ className }: HeaderProps) => {
           title="Chat History"
         >
           <History className="h-5 w-5" />
+        </Button>
+        
+        {/* Notifications button - just for show */}
+        <Button 
+          variant="ghost" 
+          size="icon"
+          className="text-muted-foreground hover:text-foreground relative"
+          title="Notifications"
+        >
+          <Bell className="h-5 w-5" />
+          {/* Notification indicator */}
+          <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
         </Button>
         
         {/* Chat History Modal */}

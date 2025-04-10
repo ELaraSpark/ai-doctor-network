@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton
 import { toast } from "sonner"; // Assuming sonner is available globally or provided via context if needed here
+import { cn } from '@/lib/utils'; // Import cn utility
 
 // --- Helper Data & Functions ---
 
@@ -224,13 +225,16 @@ const ConsultationSetup: React.FC<ConsultationSetupProps> = ({ onStart }) => {
             <p className="text-xs text-gray-500 mb-2">
               Enter patient case details below. Our AI will suggest relevant AI agents for a collaborative review in the expert panel. {/* Updated text */}
             </p>
-            <Textarea
-              id="case-summary"
-              value={caseDetails}
-              onChange={(e) => setCaseDetails(e.target.value)}
-              placeholder="Enter patient case summary, medical history, relevant findings, and specific questions..."
-              className="flex-grow resize-none text-sm p-3 border rounded-lg min-h-[250px] md:min-h-[300px]" // Adjusted min-height
-            />
+            {/* Apply wrapper style similar to ChatInput */}
+            <div className="relative rounded-xl border border-primary/70 bg-background focus-within:border-primary focus-within:ring-1 focus-within:ring-primary/20 shadow-sm transition-colors duration-200 flex-grow min-h-[250px] md:min-h-[300px]">
+              <Textarea
+                id="case-summary"
+                value={caseDetails}
+                onChange={(e) => setCaseDetails(e.target.value)}
+                placeholder="Enter patient case summary, medical history, relevant findings, and specific questions..."
+                className="absolute inset-0 w-full h-full resize-none text-sm p-3 bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0" // Remove default border/ring, adjust padding
+              />
+            </div>
           </div>
 
           <Button
@@ -351,7 +355,7 @@ const ConsultationSetup: React.FC<ConsultationSetupProps> = ({ onStart }) => {
           <Button
             onClick={() => onStart(localSelectedAgents, caseDetails)}
             disabled={!canStart}
-            className="w-full bg-green-600 hover:bg-green-700"
+            className="w-full" // Use default primary variant
           >
             Start AI Consultation ({localSelectedAgents.length})
             <ChevronRight size={18} className="ml-1.5" />
@@ -392,6 +396,7 @@ const ParticipantListHeader: React.FC<ParticipantListHeaderProps> = ({ agents, a
 };
 
 const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
+    const [selectedAction, setSelectedAction] = useState<'agree' | 'disagree' | 'more' | null>(null); // Add state for interaction
     const agent = getAgentById(message.agentId); // Use getAgentById
     const isSystem = message.agentId === 'system';
     const isConsensus = message.type === 'consensus_poll';
@@ -435,9 +440,29 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
                 </p>
                  {isConsensus && (
                     <div className="mt-2.5 pl-7 flex flex-wrap gap-2">
-                        <button className="text-xs bg-green-100 text-green-700 px-2.5 py-1 rounded-md hover:bg-green-200 transition-colors">Agree</button>
-                        <button className="text-xs bg-red-100 text-red-700 px-2.5 py-1 rounded-md hover:bg-red-200 transition-colors">Disagree</button>
-                        <button className="text-xs bg-gray-100 text-gray-700 px-2.5 py-1 rounded-md hover:bg-gray-200 transition-colors">More Info</button>
+                        {/* Make buttons interactive */}
+                        <Button 
+                            variant={selectedAction === 'agree' ? 'default' : 'outline'} 
+                            size="sm" 
+                            className={cn("h-auto px-2.5 py-1 text-xs", 
+                                selectedAction === 'agree' ? 'bg-green-600 hover:bg-green-700 text-white' : 'border-green-300 text-green-700 hover:bg-green-50 hover:text-green-800'
+                            )}
+                            onClick={() => setSelectedAction('agree')}
+                        >Agree</Button>
+                        <Button 
+                            variant={selectedAction === 'disagree' ? 'destructive' : 'outline'} 
+                            size="sm" 
+                            className={cn("h-auto px-2.5 py-1 text-xs",
+                                selectedAction === 'disagree' ? '' : 'border-red-300 text-red-700 hover:bg-red-50 hover:text-red-800'
+                            )}
+                            onClick={() => setSelectedAction('disagree')}
+                        >Disagree</Button>
+                        <Button 
+                            variant={selectedAction === 'more' ? 'secondary' : 'outline'} 
+                            size="sm" 
+                            className="h-auto px-2.5 py-1 text-xs"
+                            onClick={() => setSelectedAction('more')}
+                        >More Info</Button>
                     </div>
                  )}
             </div>
@@ -543,21 +568,24 @@ const ConsultationView: React.FC<ConsultationViewProps> = ({ agents, caseInfo, o
       <div className="bg-white border-t border-gray-200 p-3 sticky bottom-0">
           <div className="flex justify-between items-center">
               <span className="text-xs text-gray-500 font-medium">{sessionStatus}</span>
-              {sessionStatus === 'Consultation complete.' && generatedConsensusData && (
-                  <div className="flex gap-2">
-                       <button
-                          onClick={() => onProceed(generatedConsensusData)}
-                          className="px-3 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700 transition-colors font-medium flex items-center"
-                      >
-                          <Save size={12} className="mr-1"/>
-                          Proceed
-                      </button>
-                      <button
-                          onClick={onGoBack}
-                          className="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 transition-colors font-medium" // Kept blue for contrast
-                      >
-                          New Consultation
-                      </button>
+               {sessionStatus === 'Consultation complete.' && generatedConsensusData && (
+                   <div className="flex gap-2">
+                        <Button
+                           onClick={() => onProceed(generatedConsensusData)}
+                           size="sm" // Changed from xs to sm
+                           className="font-medium" // Use default primary variant
+                       >
+                           <Save size={12} className="mr-1"/>
+                           Proceed
+                       </Button>
+                       <Button
+                           onClick={onGoBack}
+                           size="sm" // Changed from xs to sm
+                           variant="secondary" // Use secondary variant
+                           className="font-medium" 
+                       >
+                           New Consultation
+                       </Button>
                   </div>
               )}
           </div>

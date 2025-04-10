@@ -32,9 +32,14 @@ const HeroSection: React.FC<HeroSectionProps> = ({ isVisible }) => {
         <div className="mb-8">
           {/* Title with inline icon */}
           <div className="flex items-center justify-center gap-4 mb-4">
-             <PicassoIllustration name="healing" size="lg" className="text-primary" /> 
-             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-wide text-primary">
-               Be Free Again.
+              {/* Replace PicassoIllustration with the animation image */}
+              <img 
+                src="/illustrations/animation.webp" 
+                alt="Animation" 
+                className="h-24 w-24 object-contain" // Increased size
+              />
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-wide text-primary">
+                Be Free Again.
              </h1>
           </div>
           {/* Subtitle - Use handwritten font */}

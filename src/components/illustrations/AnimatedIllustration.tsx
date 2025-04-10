@@ -92,21 +92,29 @@ export const LoadingIllustration: React.FC<{
   };
 
   const illustration = illustrationMap[type];
-  const animation = animationMap[type];
+  // Size mappings for the new image
+  const sizeClasses = {
+    sm: 'w-10 h-10', // Adjust sizes as needed for the webp animation
+    md: 'w-16 h-16',
+    lg: 'w-24 h-24',
+    xl: 'w-32 h-32',
+  };
 
   return (
     <div className={cn("flex flex-col items-center justify-center p-4", className)}>
-      <AnimatedIllustration 
-        name={illustration} 
-        size={size} 
-        animation={animation} 
-      />
-      <p className="mt-4 text-sm text-perplexity-text-secondary animate-pulse">
-        {type === 'patient' && 'Loading patient data...'}
-        {type === 'chat' && 'Loading conversation...'}
-        {type === 'data' && 'Processing data...'}
-        {type === 'ai' && 'AI is thinking...'}
-      </p>
-    </div>
+      {/* Replace AnimatedIllustration with an img tag for the webp animation */}
+      <img 
+        src="/animation.webp" // Path relative to the public folder
+        alt="Loading..." 
+         className={cn(sizeClasses[size], "object-contain")} // Apply size and object-contain
+       />
+       {/* More engaging loading text */}
+       <p className="mt-4 text-sm text-muted-foreground animate-pulse"> 
+         {type === 'patient' && 'Accessing patient records...'}
+         {type === 'chat' && 'Loading conversation history...'}
+         {type === 'data' && 'Analyzing data points...'}
+         {type === 'ai' && 'Consulting knowledge base...'} 
+       </p>
+     </div>
   );
 };

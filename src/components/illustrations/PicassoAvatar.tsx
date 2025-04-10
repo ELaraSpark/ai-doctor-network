@@ -33,7 +33,7 @@ export const PicassoAvatar: React.FC<PicassoAvatarProps> = ({
   variant = 'circle',
   className,
   illustrationType,
-  color = 'text-perplexity-teal',
+  color = 'text-primary', // Default to primary theme color
   onClick,
 }) => {
   // Size mappings
@@ -113,7 +113,7 @@ export const PicassoAvatar: React.FC<PicassoAvatarProps> = ({
   return (
     <div
       className={cn(
-        'flex items-center justify-center bg-perplexity-bg-hover',
+        'flex items-center justify-center bg-muted', // Use standard muted background
         sizeClasses[size],
         variantClasses[variant],
         'overflow-hidden',

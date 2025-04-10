@@ -58,13 +58,14 @@ const Referrals = () => {
    };
 
   return (
-    <AppLayout>
+    // <AppLayout> // Removed AppLayout wrapper
       <div className="p-4 sm:p-6 lg:p-8 space-y-8"> {/* Increased spacing */}
         <h1 className="text-3xl font-bold text-gray-900">Referrals</h1>
 
         {/* Main Referral Card */}
         <Card className="shadow-lg border-primary/20">
-          <CardHeader className="bg-gradient-to-br from-primary/10 to-primary/5 p-6 rounded-t-lg">
+          {/* Removed gradient background from header */}
+          <CardHeader className="p-6 rounded-t-lg"> 
             <div className="flex items-center gap-3">
                 <Gift size={24} className="text-primary" />
                 <CardTitle className="text-xl">Refer Colleagues, Earn Rewards!</CardTitle>
@@ -123,7 +124,7 @@ const Referrals = () => {
         </Card>
 
         {/* Stats and Milestones Card */}
-        <Card>
+        <Card className="shadow-sm border"> {/* Added subtle shadow and border */}
            <CardHeader>
               <CardTitle className="text-lg">Your Progress & Milestones</CardTitle>
             </CardHeader>
@@ -168,7 +169,7 @@ const Referrals = () => {
         </Card>
 
       </div>
-    </AppLayout>
+    // </AppLayout> // Removed AppLayout wrapper
   );
 };
 

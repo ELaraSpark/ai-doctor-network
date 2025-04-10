@@ -5,17 +5,17 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Restore :root CSS variables for the Green Theme */
+/* CSS variables for themes */
 @layer base {
   :root {
-    /* Green Theme Variables (Derived from tailwind.config.ts) */
-    --primary: 146 33% 43%; /* #4A9270 */
+    /* Default Light Mode Variables */
+    --primary: 146 33% 43%; /* #4A9270 - Will be overridden by theme context */
     --primary-foreground: 0 0% 100%; /* White */
     
-    --secondary: 146 33% 53%; /* #6AB187 - Lighter Green */
+    --secondary: 146 33% 53%; /* #6AB187 - Will be overridden by theme context */
     --secondary-foreground: 0 0% 100%; /* White */
     
-    --accent: 33 71% 62%; /* #E09F5A - Warm Orange */
+    --accent: 33 71% 62%; /* #E09F5A - Will be overridden by theme context */
     --accent-foreground: 0 0% 100%; /* White */
     
     --background: 140 20% 99%; /* #fafbfa - Subtle green tint */
@@ -40,7 +40,34 @@
     --radius: 0.5rem; 
   }
 
-  /* Dark mode variables would go here if needed */
+  /* Dark mode variables */
+  .dark {
+    --background: 150 15% 10%; /* Dark background with slight green tint */
+    --foreground: 140 10% 90%; /* Light text with slight green tint */
+    
+    --card: 150 15% 15%; /* Slightly lighter than background */
+    --card-foreground: 140 10% 90%; /* Same as foreground */
+    
+    --popover: 150 15% 15%; /* Same as card */
+    --popover-foreground: 140 10% 90%; /* Same as foreground */
+    
+    --muted: 150 15% 20%; /* Slightly lighter than card */
+    --muted-foreground: 140 10% 70%; /* Slightly darker than foreground */
+    
+    --border: 150 15% 25%; /* Slightly lighter than muted */
+    --input: 150 15% 25%; /* Same as border */
+    
+    /* Primary, secondary, and accent colors are set by the theme context */
+    /* But we need to adjust their foreground colors for dark mode */
+    --primary-foreground: 0 0% 100%; /* White */
+    --secondary-foreground: 0 0% 100%; /* White */
+    --accent-foreground: 0 0% 100%; /* White */
+    
+    --destructive: 0 84.2% 60.2%; /* Same as light mode */
+    --destructive-foreground: 210 40% 98%; /* Same as light mode */
+    
+    --ring: var(--primary); /* Use primary color for focus ring */
+  }
 }
 
 @layer base {
@@ -62,7 +89,7 @@
 /* Custom Utilities */
 @layer utilities {
   .glass-card {
-    @apply bg-white/80 backdrop-blur-sm border border-white/20 shadow-sm;
+    @apply bg-background/80 backdrop-blur-sm border border-border/20 shadow-sm;
   }
   
   .subtle-shadow {
@@ -133,17 +160,34 @@
   animation-delay: 500ms;
 }
 
+/* Float animation for illustrations */
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
 /* Modern card designs */
 .card-modern {
-  @apply rounded-lg border border-blue-100 bg-white p-6 shadow-sm transition-all hover:shadow-md;
+  @apply rounded-lg border border-border bg-card p-6 shadow-sm transition-all hover:shadow-md;
 }
 
 .card-modern-gradient {
-  @apply bg-gradient-to-br from-white to-blue-50;
+  @apply bg-gradient-to-br from-card to-muted;
 }
 
 .card-glass {
-  @apply bg-white/30 backdrop-blur-lg border border-white/20;
+  @apply bg-background/30 backdrop-blur-lg border border-border/20;
 }
 
 /* Button effects */
@@ -162,16 +206,66 @@
 
 /* Feature card styles */
 .feature-card {
-  @apply relative overflow-hidden rounded-lg border border-blue-100 bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-md;
+  @apply relative overflow-hidden rounded-lg border border-border bg-card p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-md;
 }
 
 .feature-icon-container {
-  @apply mb-5 flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-blue-600;
+  @apply mb-5 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary;
 }
 
 /* Form elements with gradients */
 .input-gradient {
-  @apply bg-background border border-input; /* Use new variables */
+  @apply bg-background border border-input; /* Use theme variables */
+}
+
+/* Gradient backgrounds for different themes */
+.bg-gradient-green {
+  @apply bg-gradient-to-br from-[#f8f9fa] to-[#e8f5e9];
+}
+
+.dark .bg-gradient-green {
+  @apply bg-gradient-to-br from-[#1a2e22] to-[#0d1912];
+}
+
+/* Add gradients for other themes */
+.bg-gradient-clinical {
+  @apply bg-gradient-to-br from-[#f8f9fa] to-[#e1f5fe];
+}
+
+.dark .bg-gradient-clinical {
+  @apply bg-gradient-to-br from-[#0d2534] to-[#051620];
+}
+
+.bg-gradient-surgical {
+  @apply bg-gradient-to-br from-[#f8f9fa] to-[#e0f2f1];
+}
+
+.dark .bg-gradient-surgical {
+  @apply bg-gradient-to-br from-[#0d2a27] to-[#051916];
+}
+
+.bg-gradient-pediatric {
+  @apply bg-gradient-to-br from-[#f8f9fa] to-[#fff8e1];
+}
+
+.dark .bg-gradient-pediatric {
+  @apply bg-gradient-to-br from-[#2d2105] to-[#1a1408];
+}
+
+.bg-gradient-cardiology {
+  @apply bg-gradient-to-br from-[#f8f9fa] to-[#fce4ec];
+}
+
+.dark .bg-gradient-cardiology {
+  @apply bg-gradient-to-br from-[#2d0a16] to-[#1a060d];
+}
+
+.bg-gradient-neurology {
+  @apply bg-gradient-to-br from-[#f8f9fa] to-[#ede7f6];
+}
+
+.dark .bg-gradient-neurology {
+  @apply bg-gradient-to-br from-[#1a0d2e] to-[#0d071a];
 }
 
 /* Remove page-gradient or update */

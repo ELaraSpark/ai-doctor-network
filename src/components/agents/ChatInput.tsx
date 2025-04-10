@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef, ChangeEvent, KeyboardEvent } from "react";
 import { ArrowUp, Paperclip } from "lucide-react"; // Removed Plus, Send. Kept Paperclip, ArrowUp
 import { Textarea } from "@/components/ui/textarea";
@@ -9,9 +8,11 @@ interface ChatInputProps {
   onSendMessage: (message: string, attachments?: File[]) => void; // Allow attachments later
   isLoading: boolean;
   agentName: string;
+  onTypingChange?: (isTyping: boolean) => void; // Add callback for typing state
+  isAnchored?: boolean; // Add prop to indicate if the chatbot is anchored
 }
 
-const ChatInput = ({ onSendMessage, isLoading, agentName }: ChatInputProps) => {
+const ChatInput = ({ onSendMessage, isLoading, agentName, onTypingChange, isAnchored = false }: ChatInputProps) => {
   const [chatInput, setChatInput] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null); // Ref for hidden file input
@@ -39,6 +40,12 @@ const ChatInput = ({ onSendMessage, isLoading, agentName }: ChatInputProps) => {
     if (fileInputRef.current) {
       fileInputRef.current.value = ""; // Reset file input value
     }
+    
+    // Notify that user is no longer typing
+    if (onTypingChange) {
+      onTypingChange(false);
+    }
+    
     adjustTextareaHeight(); // Reset textarea height
   };
 
@@ -57,6 +64,13 @@ const ChatInput = ({ onSendMessage, isLoading, agentName }: ChatInputProps) => {
   useEffect(() => {
     adjustTextareaHeight();
   }, [chatInput]); // Adjust height when input changes
+  
+  // Auto-focus the textarea when the component mounts
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  }, []);
 
   // Listen for addToChat events (Keep existing logic)
   useEffect(() => {
@@ -80,7 +94,16 @@ const ChatInput = ({ onSendMessage, isLoading, agentName }: ChatInputProps) => {
   }, []);
 
   const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setChatInput(e.target.value);
+    const newValue = e.target.value;
+    setChatInput(newValue);
+    
+    // Call onTypingChange callback if provided
+    if (onTypingChange) {
+      onTypingChange(newValue.trim().length > 0);
+    }
+    
+    // Log for debugging
+    console.log("Input changed:", newValue);
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -106,8 +129,9 @@ const ChatInput = ({ onSendMessage, isLoading, agentName }: ChatInputProps) => {
   };
 
   return (
-    // Make default border more visible (70% opacity) and solidify on focus
-    <div className="flex items-center relative rounded-xl border border-primary/70 bg-background px-6 py-0 h-32 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary/20 shadow-sm transition-colors duration-200"> 
+    // Keep the outer wrapper with border styling, but change to flex-col to stack elements
+    // Removed focus-within:ring-2, focus-within:ring-primary/30, and shadow-sm to prevent double border effect
+    <div className="flex flex-col relative rounded-xl border border-primary/70 bg-background px-6 py-4 h-32 focus-within:border-primary transition-all duration-200"> 
       {/* Hidden File Input */}
       <input 
         type="file" 
@@ -118,58 +142,75 @@ const ChatInput = ({ onSendMessage, isLoading, agentName }: ChatInputProps) => {
         aria-hidden="true"
       />
       
-      {/* Attachment Button - More subtle styling */}
-      <Button 
-        variant="ghost" 
-        size="icon" 
-        className="text-[#92A69B] hover:text-primary p-0 h-8 w-8 mr-3 flex-shrink-0 opacity-70" /* Updated colors */
-        onClick={handleAttachmentClick}
-        aria-label="Add attachment"
-        title="Attach files"
-      >
-        <Paperclip className="h-5 w-5" /> 
-      </Button>
-
-      {/* Textarea - Positioned at top with bolder, more visible text */}
-      <Textarea
-        ref={textareaRef}
-        placeholder="How can I help you today?" // More conversational placeholder
-        value={chatInput}
-        onChange={handleInputChange}
-        onKeyDown={handleKeyDown}
-        className={cn(
-          "flex-1 bg-transparent text-[16px] placeholder:text-gray-600 resize-none border-none focus-visible:ring-0 focus-visible:ring-offset-0", /* Removed font-medium and placeholder:font-medium */
-          "min-h-[24px] max-h-[150px] pt-6 pb-0" // Positioned at top with padding-top only
-        )}
-        id="chat-input-textarea"
-        aria-label="Chat message input" 
-        tabIndex={0}
-        rows={1} 
-      />
+      {/* Textarea - Moved to the top */}
+      <div className="flex-1 w-full px-3 pt-2">
+        {/* Use a native textarea instead of the component to avoid default styles */}
+        <textarea
+          ref={textareaRef}
+          placeholder={isAnchored ? "Reply to Leny..." : "Ask Leny anything..."} // Change placeholder based on isAnchored
+          value={chatInput}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
+          className={cn(
+            "w-full bg-transparent text-[16px] placeholder:text-gray-600 resize-none", 
+            "min-h-[24px] max-h-[80px] py-0 px-0", // Removed all padding
+            "border-0 outline-none shadow-none", // Remove all borders
+            "focus:border-0 focus:outline-none focus:ring-0 focus:shadow-none", // Remove all focus styles
+            "focus-visible:border-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-none", // Remove all focus-visible styles
+            "hover:border-0 hover:outline-none hover:ring-0 hover:shadow-none", // Remove all hover styles
+            "active:border-0 active:outline-none active:ring-0 active:shadow-none" // Remove all active styles
+          )}
+          style={{ 
+            border: 'none', 
+            outline: 'none', 
+            boxShadow: 'none',
+            background: 'transparent'
+          }} 
+          id="chat-input-textarea"
+          aria-label="Chat message input" 
+          tabIndex={0}
+          rows={1}
+          autoFocus // Add autofocus to ensure the textarea is focused on load
+        />
+      </div>
       
-      
-      {/* Send Button - Using medical teal color for consistency */}
-      <Button 
-        type="button" // Explicitly set type to button
-        onClick={(e) => handleSendMessage(e)} // Pass event object onClick
-        disabled={(!chatInput.trim() && attachments.length === 0) || isLoading}
-        aria-label="Send message"
-        title="Send message"
-        variant="accentSolid" // Use the updated solid accent variant
-        size="icon" 
-        className="rounded-full w-9 h-9 ml-3 flex-shrink-0 shadow-sm" // Removed inline style
-      >
-        <ArrowUp className="h-5 w-5 text-white" /> {/* Re-confirming white text */}
-      </Button>
-      
-      {/* Display attached file count (optional enhancement - maybe position differently if needed) */}
-      {/* 
-      {attachments.length > 0 && (
-        <div className="absolute bottom-1 left-1 text-xs text-muted-foreground bg-muted px-1.5 py-0.5 rounded-full flex items-center gap-1 z-10"> 
-           <Paperclip size={12} /> {attachments.length} file(s)
+      {/* Bottom controls - Attachment button and Send button */}
+      <div className="flex items-center justify-between mt-auto px-3 pb-2">
+        {/* Attachment Button - Moved to bottom left */}
+        <div className="flex items-center">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="text-[#92A69B] hover:text-primary p-0 h-8 w-8 flex-shrink-0 opacity-70" /* Updated colors */
+            onClick={handleAttachmentClick}
+            aria-label="Add attachment"
+            title="Attach files"
+          >
+            <Paperclip className="h-5 w-5" /> 
+          </Button>
+          
+          {/* Display attached file count */}
+          {attachments.length > 0 && (
+            <span className="text-xs text-muted-foreground ml-1 bg-muted px-1.5 py-0.5 rounded">
+              {attachments.length} file(s)
+            </span>
+          )}
         </div>
-      )} 
-      */}
+        
+        {/* Send Button - Bottom right */}
+        <Button 
+          type="button" // Explicitly set type to button
+          onClick={(e) => handleSendMessage(e)} // Pass event object onClick
+          disabled={(!chatInput.trim() && attachments.length === 0) || isLoading}
+          aria-label="Send message"
+          title="Send message"
+          variant="accentSolid" // Use the updated solid accent variant
+          size="icon" 
+          className="rounded-full w-9 h-9 flex-shrink-0 shadow-sm" // Removed inline style
+        >
+          <ArrowUp className="h-5 w-5 text-white" /> {/* Re-confirming white text */}
+        </Button>
+      </div>
     </div> 
   );
 };

@@ -28,18 +28,24 @@ import {
   Plus,
   MoreVertical,
   Clock,
+  ClipboardList,
+  Coffee,
 } from 'lucide-react';
 
 // Define navigation items (same as Sidebar)
 const mainNavItems = [
-  { to: '/library', label: 'Library', icon: BookOpen },
+  { to: '/chat', label: 'Ask AI', icon: MessageSquare, subItems: [
+      { to: '/recent-chats', label: 'View all chats', icon: Clock }
+    ]
+  },
   { to: '/my-agents', label: 'My Agents', icon: Users, subItems: [
       { to: '/tasks', label: 'My Tasks', icon: List } 
     ] 
   },
   { to: '/my-templates', label: 'Templates', icon: FileText },
-  { to: '/integrations', label: 'Integrations', icon: Zap },
   { to: '/referrals', label: 'Referrals', icon: Gift },
+  { to: '/tumor-board', label: 'Expert Panel', icon: ClipboardList },
+  { to: '/doctors-lounge', label: 'Doctor\'s Lounge', icon: Coffee },
 ];
 
 // Example recent chats (should match Sidebar)
@@ -71,19 +77,7 @@ const MobileNav = () => {
         {/* Replicate Sidebar structure */}
         <SidebarHeader />
 
-        {/* Ask AI Button */}
-        <div className="px-3 pt-4 pb-2">
-          <SheetClose asChild>
-            <Button 
-              variant="outline" 
-              className="w-full justify-start text-perplexity-text-secondary border-perplexity-border hover:bg-perplexity-bg-hover"
-              onClick={() => navigate('/')} 
-            >
-              <Plus size={16} className="mr-2" />
-              <span>Ask AI</span>
-            </Button>
-          </SheetClose>
-        </div>
+        {/* Removed separate Ask AI Button since it's now in the main navigation */}
 
         <ScrollArea className="flex-1 px-3 py-2">
           {/* Recent Chats Section */}
@@ -121,11 +115,12 @@ const MobileNav = () => {
             {mainNavItems.map((item) => (
               <React.Fragment key={item.to}>
                 <SheetClose asChild>
-                  <NavItem
-                    to={item.to}
-                    icon={item.icon}
-                    label={item.label}
-                  />
+                <NavItem
+                  to={item.to}
+                  icon={item.icon}
+                  label={item.label}
+                  hoverAccent={true}
+                />
                 </SheetClose>
                 {item.subItems && item.subItems.length > 0 && (
                   <div className="pl-6 space-y-1 mt-1">

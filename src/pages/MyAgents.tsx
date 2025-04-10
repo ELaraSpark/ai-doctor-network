@@ -25,7 +25,8 @@ interface MyAgentsProps {
   initialCategory?: AgentCategory | 'general'; // Make it optional, default to 'all'
 }
 
-const exampleAgents: AgentData[] = [
+// Move exampleAgents outside the component and export it
+export const exampleAgents: AgentData[] = [
   { id: 'agent1', title: 'Cardiology Specialist', preview: 'Specialized in cardiovascular disease diagnosis and treatment recommendations.', date: new Date('2025-03-10'), avatarUrl: '/agents/male-doctor-labcoat.jpg', specialty: 'Cardiology', category: 'general' },
   { id: 'agent2', title: 'Radiology Assistant', preview: 'Helps interpret imaging studies and generate preliminary reports for review.', date: new Date('2025-03-08'), avatarUrl: '/agents/female-doctor-scrubs.jpg', specialty: 'Radiology', category: 'research' },
   { id: 'agent3', title: 'Med Student Tutor', preview: 'Assists medical students with study materials and case reviews.', date: new Date('2025-03-05'), avatarUrl: '', specialty: 'Education', category: 'med_student' },
@@ -69,14 +70,14 @@ const MyAgents = ({ initialCategory = 'all' }: MyAgentsProps) => {
   };
 
   return (
-    <AppLayout> {/* Added AppLayout wrapper */}
+    // <AppLayout> // Removed AppLayout wrapper
       <div className="h-full flex flex-col p-4 sm:p-6 lg:p-8 bg-background"> {/* Added padding and bg-background */}
         {/* Header */}
         <div className="flex items-center justify-between mb-4"> 
-          <h1 className="text-2xl font-semibold text-perplexity-text-primary">My Agents</h1>
+          <h1 className="text-2xl font-semibold text-foreground">My Agents</h1> {/* Use foreground */}
         <Button 
           size="sm" 
-          className="bg-perplexity-teal hover:bg-perplexity-teal-dark text-white"
+          className="bg-primary hover:bg-primary/90 text-primary-foreground" /* Use primary */
           onClick={handleCreateAgent}
         >
           <PlusIcon size={16} className="mr-1" />
@@ -88,12 +89,12 @@ const MyAgents = ({ initialCategory = 'all' }: MyAgentsProps) => {
         <div className="relative w-full mb-6"> 
           <SearchIcon 
             size={18} 
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-perplexity-text-tertiary pointer-events-none" // Adjusted left padding
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground pointer-events-none" /* Use muted-foreground */
         />
         <Input
           type="search"
           placeholder="Search agents..."
-          className="w-full rounded-full bg-perplexity-bg-hover border-perplexity-border pl-10 pr-4 py-2 text-sm focus:bg-background focus:ring-1 focus:ring-perplexity-teal focus:border-perplexity-teal" 
+          className="w-full rounded-full bg-muted border-border pl-10 pr-4 py-2 text-sm focus:bg-background focus:ring-1 focus:ring-primary focus:border-primary" /* Use standard theme colors */
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -103,7 +104,7 @@ const MyAgents = ({ initialCategory = 'all' }: MyAgentsProps) => {
 
         {/* Agent List */}
         <div className="flex-1 overflow-y-auto -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8"> {/* Adjust padding for scroll area */}
-           <div className="divide-y divide-perplexity-border"> 
+           <div className="divide-y divide-border"> {/* Use standard border */}
             {isLoading ? (
               <CardSkeleton count={4} /> 
             ) : filteredAgents.length > 0 ? (
@@ -126,12 +127,13 @@ const MyAgents = ({ initialCategory = 'all' }: MyAgentsProps) => {
               description={searchTerm || selectedCategory !== 'all' ? 'Try adjusting your search or filter.' : 'Create a new agent to get started.'}
               actionLabel="Create Agent"
               onAction={handleCreateAgent}
+              illustrationType="agent" // Add illustration prop
             />
             )}
           </div>
         </div>
       </div>
-    </AppLayout>
+    // </AppLayout> // Removed AppLayout wrapper
   );
 };
 
