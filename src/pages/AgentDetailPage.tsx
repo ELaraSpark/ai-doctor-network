@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import AgentProfile from '@/components/agents/AgentProfile';
 import { Agent } from '@/components/agents/types/agentTypes'; // Assuming type definition location
-import { exampleAgents } from './MyAgents'; // Import example data for now
+// Import the actual agent data source
+import { agents as allAgentsData } from '@/components/agents/data/agentsData'; 
 import { LoadingIllustration } from '@/components/illustrations/AnimatedIllustration'; // Import LoadingIllustration
 
 const AgentDetailPage = () => {
@@ -16,14 +17,14 @@ const AgentDetailPage = () => {
     setLoading(true);
     setError(null);
     console.log("Fetching agent with ID:", agentId); 
-    const foundAgent = exampleAgents.find(a => a.id === agentId);
+    // Find the agent in the imported data source
+    const foundAgent = allAgentsData.find(a => a.id === agentId); 
     
     // Simulate API delay
     setTimeout(() => {
       if (foundAgent) {
-        // Map example data structure to Agent type if necessary
-        // Assuming Agent type matches exampleAgents structure for now
-        setAgent(foundAgent as unknown as Agent); 
+        // The foundAgent should already conform to the Agent type
+        setAgent(foundAgent); 
       } else {
         setError(`Agent with ID ${agentId} not found.`);
         console.error(`Agent with ID ${agentId} not found.`);

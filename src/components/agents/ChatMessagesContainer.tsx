@@ -1,16 +1,17 @@
 
 import { useEffect, useRef } from "react";
 import { Loader2 } from "lucide-react";
-import { Message } from "./types/agentTypes";
+import { Message, Agent } from "./types/agentTypes";
 import ChatMessage from "./ChatMessage";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface ChatMessagesContainerProps {
   messages: Message[];
   isLoading: boolean;
+  selectedAgent?: Agent; // Add selectedAgent prop
 }
 
-const ChatMessagesContainer = ({ messages, isLoading }: ChatMessagesContainerProps) => {
+const ChatMessagesContainer = ({ messages, isLoading, selectedAgent }: ChatMessagesContainerProps) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to the bottom when messages change or when loading
@@ -21,10 +22,14 @@ const ChatMessagesContainer = ({ messages, isLoading }: ChatMessagesContainerPro
   }, [messages, isLoading]);
 
   return (
-    <ScrollArea className="h-[400px] pr-4">
+    <ScrollArea className="h-[600px] pr-4">
       <div className="space-y-6 pb-3">
         {messages.map((message) => (
-          <ChatMessage key={message.id} message={message} />
+          <ChatMessage 
+            key={message.id} 
+            message={message} 
+            selectedAgent={selectedAgent} // Pass selectedAgent to ChatMessage
+          />
         ))}
         
         {isLoading && (

@@ -26,26 +26,39 @@ const HeroSection: React.FC<HeroSectionProps> = ({ isVisible }) => {
       {/* Add Picasso Background */}
       <PicassoBackground /> 
       
+      {/* Add subtle background pattern */}
+      <div className="absolute inset-0 opacity-5 pointer-events-none">
+        <div className="h-full w-full bg-pattern-dots"></div>
+      </div>
+      
       {/* Apply padding to this inner container instead */}
       <div className="relative z-10 py-12 md:py-16 container mx-auto px-6 text-center max-w-4xl"> 
         {/* Inner content div */}
         <div className="mb-8">
           {/* Title with inline icon */}
-          <div className="flex items-center justify-center gap-4 mb-4">
-              {/* Replace PicassoIllustration with the animation image */}
-              <img 
-                src="/illustrations/animation.webp" 
-                alt="Animation" 
-                className="h-24 w-24 object-contain" // Increased size
-              />
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-wide text-primary">
-                Be Free Again.
-             </h1>
-          </div>
-          {/* Subtitle - Use handwritten font */}
-          <p className="text-xl md:text-2xl text-muted-foreground mb-6 leading-relaxed font-handwritten">
+          <motion.div 
+            className="flex items-center justify-center gap-4 mb-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
+            <img 
+              src="/illustrations/animation.webp" 
+              alt="Animation" 
+              className="h-24 w-24 object-contain"
+            />
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-wide text-primary">
+              Be Free Again.
+            </h1>
+          </motion.div>
+          <motion.p 
+            className="text-xl md:text-2xl text-muted-foreground mb-6 leading-relaxed font-handwritten"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+          >
             Get an AI Sidekick. Work Like a Superhuman.
-          </p>
+          </motion.p>
         </div>
         
         {/* Removed large illustration from here */}

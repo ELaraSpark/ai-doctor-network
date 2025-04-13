@@ -5,6 +5,25 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Custom animations */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 10s linear infinite;
+}
+
 /* CSS variables for themes */
 @layer base {
   :root {
@@ -16,25 +35,25 @@
     --secondary-foreground: 0 0% 100%; /* White */
     
     --accent: 33 71% 62%; /* #E09F5A - Will be overridden by theme context */
-    --accent-foreground: 0 0% 100%; /* White */
+    --accent-foreground: 0 0% 100%;
     
-    --background: 140 20% 99%; /* #fafbfa - Subtle green tint */
-    --foreground: 150 15% 21%; /* #2D3C35 - Dark green-gray */
+    --background: 140 20% 99%;
+    --foreground: 0 0% 15%;
     
-    --card: 0 0% 100%; /* White */
-    --card-foreground: 150 15% 21%; /* Dark green-gray */
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 15%;
     
-    --popover: 0 0% 100%; /* White */
-    --popover-foreground: 150 15% 21%; /* Dark green-gray */
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 15%;
     
-    --muted: 140 10% 97%; /* #F4F7F5 - Light green-tinted */
-    --muted-foreground: 150 5% 60%; /* Muted text */
+    --muted: 140 10% 97%;
+    --muted-foreground: 0 0% 45%;
     
-    --destructive: 0 84.2% 60.2%; /* Red */
-    --destructive-foreground: 210 40% 98%; /* Light */
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
     
-    --border: 140 10% 90%; /* #E1EAE5 - Light green-tinted border */
-    --input: 140 10% 90%; /* Use border color for input */
+    --border: 140 10% 90%;
+    --input: 140 10% 90%;
     --ring: 146 33% 43%; /* Primary green for focus ring */
     
     --radius: 0.5rem; 
@@ -77,9 +96,10 @@
   }
   
   body {
-    /* Use Tailwind's default background/foreground or the ones defined in config */
+    /* Reverted: Use Tailwind's default background/foreground or the ones defined in config */
     @apply bg-background text-foreground font-sans antialiased text-base leading-normal font-normal; 
   }
+  /* .dark body rule is not needed if body uses bg-background */
 
   html {
     @apply scroll-smooth;
@@ -88,6 +108,7 @@
 
 /* Custom Utilities */
 @layer utilities {
+  /* Removed .bg-beige-layout utility */
   .glass-card {
     @apply bg-background/80 backdrop-blur-sm border border-border/20 shadow-sm;
   }
@@ -158,6 +179,46 @@
 
 .animate-delay-500 {
   animation-delay: 500ms;
+}
+
+/* Personality-driven animations */
+@keyframes pulse-subtle {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.01); }
+  100% { transform: scale(1); }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s ease-in-out infinite;
+}
+
+@keyframes bounce-subtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+.hover\:animate-bounce-subtle:hover {
+  animation: bounce-subtle 1s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+.animate-breathe {
+  animation: breathe 3s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  25% { transform: scale(1.015); }
+  35% { transform: scale(1); }
+  45% { transform: scale(1.015); }
+}
+
+.animate-heartbeat {
+  animation: heartbeat 1.5s ease-in-out infinite;
 }
 
 /* Float animation for illustrations */

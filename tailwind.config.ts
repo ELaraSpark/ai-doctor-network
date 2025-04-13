@@ -29,6 +29,7 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))", // Use CSS variable for primary (green)
           foreground: "hsl(var(--primary-foreground))",
+          light: "#6366F1", // Lighter shade of primary for gradients
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -72,12 +73,15 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        // Add other keyframes if they were present
+        "gradient-x": {
+          "0%, 100%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        // Add other animations if they were present
+        "gradient-x": "gradient-x 15s ease infinite",
       },
       fontFamily: {
         sans: ["Inter var", "Inter", "system-ui", "sans-serif"],

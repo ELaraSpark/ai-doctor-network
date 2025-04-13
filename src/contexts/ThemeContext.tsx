@@ -101,10 +101,8 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     return (savedMode as ThemeMode) || 'light';
   });
   
-  const [colorTheme, setColorThemeState] = useState<string>(() => {
-    const savedTheme = localStorage.getItem('colorTheme');
-    return savedTheme || 'classic';
-  });
+  // Always use classic theme as default
+  const [colorTheme, setColorThemeState] = useState<string>('classic');
 
   // Apply theme mode to document
   useEffect(() => {

@@ -33,7 +33,7 @@ import {
 } from 'lucide-react';
 
 // Define navigation items (same as Sidebar)
-const mainNavItems = [
+const navItems = [
   { to: '/chat', label: 'Ask AI', icon: MessageSquare, subItems: [
       { to: '/recent-chats', label: 'View all chats', icon: Clock }
     ]
@@ -43,8 +43,9 @@ const mainNavItems = [
     ] 
   },
   { to: '/my-templates', label: 'Templates', icon: FileText },
-  { to: '/referrals', label: 'Referrals', icon: Gift },
   { to: '/tumor-board', label: 'Expert Panel', icon: ClipboardList },
+  // Small gap before non-medical items
+  { to: '/referrals', label: 'Referrals', icon: Gift, topMargin: true },
   { to: '/doctors-lounge', label: 'Doctor\'s Lounge', icon: Coffee },
 ];
 
@@ -112,8 +113,10 @@ const MobileNav = () => {
 
           {/* Main Navigation Section */}
           <nav className="space-y-1">
-            {mainNavItems.map((item) => (
+            {navItems.map((item) => (
               <React.Fragment key={item.to}>
+                {/* Add margin top for items that need separation */}
+                {item.topMargin && <div className="mt-6"></div>}
                 <SheetClose asChild>
                 <NavItem
                   to={item.to}

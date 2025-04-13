@@ -92,9 +92,11 @@ export const LoadingIllustration: React.FC<{
   };
 
   const illustration = illustrationMap[type];
-  // Size mappings for the new image
+  const animation = animationMap[type];
+  
+  // Size mappings for the Picasso illustration
   const sizeClasses = {
-    sm: 'w-10 h-10', // Adjust sizes as needed for the webp animation
+    sm: 'w-10 h-10',
     md: 'w-16 h-16',
     lg: 'w-24 h-24',
     xl: 'w-32 h-32',
@@ -102,19 +104,22 @@ export const LoadingIllustration: React.FC<{
 
   return (
     <div className={cn("flex flex-col items-center justify-center p-4", className)}>
-      {/* Replace AnimatedIllustration with an img tag for the webp animation */}
-      <img 
-        src="/animation.webp" // Path relative to the public folder
-        alt="Loading..." 
-         className={cn(sizeClasses[size], "object-contain")} // Apply size and object-contain
-       />
-       {/* More engaging loading text */}
-       <p className="mt-4 text-sm text-muted-foreground animate-pulse"> 
-         {type === 'patient' && 'Accessing patient records...'}
-         {type === 'chat' && 'Loading conversation history...'}
-         {type === 'data' && 'Analyzing data points...'}
-         {type === 'ai' && 'Consulting knowledge base...'} 
-       </p>
-     </div>
+      {/* Use PicassoIllustration with animation instead of webp */}
+      <div className={cn(sizeClasses[size], `animate-${animation}`)}>
+        <PicassoIllustration 
+          name={illustration}
+          size={size}
+          color="text-primary"
+          className="w-full h-full"
+        />
+      </div>
+      {/* More engaging loading text */}
+      <p className="mt-4 text-sm text-muted-foreground animate-pulse"> 
+        {type === 'patient' && 'Accessing patient records...'}
+        {type === 'chat' && 'Loading conversation history...'}
+        {type === 'data' && 'Analyzing data points...'}
+        {type === 'ai' && 'Consulting knowledge base...'} 
+      </p>
+    </div>
   );
 };

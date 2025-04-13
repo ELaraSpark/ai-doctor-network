@@ -35,8 +35,18 @@ export const getPersonalizedGreeting = (name?: string): string => {
     return `${greeting}, Doctor`;
   }
   
-  // Return a consistent greeting instead of a random one
-  return `${greeting}, Dr. ${name}`;
+  // Add more greeting variations
+  const variations = [
+    `${greeting}, Dr. ${name}. How can I assist you today?`,
+    `Ready when you are, Dr. ${name}. ${greeting}.`,
+    `${greeting}! What medical insights can I help you uncover, Dr. ${name}?`,
+    `Welcome back, Dr. ${name}. ${greeting}. Let's get started.`
+  ];
+  
+  // Return a consistent greeting for a session, but vary across sessions (simple approach)
+  // A more robust approach might involve session IDs or timestamps
+  const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000);
+  return variations[dayOfYear % variations.length]; 
 };
 
 /**
@@ -116,7 +126,16 @@ export const getLoadingMessage = (): string => {
     "Checking treatment protocols...",
     "Analyzing clinical pathways...",
     "Consulting specialist knowledge...",
-    "Preparing your results..."
+    "Preparing your results...",
+    "Checking the latest publications...",
+    "Cross-referencing clinical databases...",
+    "Engaging neural networks...",
+    "Warming up the algorithms...",
+    "Just a moment, accessing relevant protocols...",
+    "Synthesizing data streams...",
+    "Let me think...", // Simple and direct
+    "Processing... like a well-oiled EMR.", // Subtle humor
+    "Fetching insights from the digital ether..."
   ]);
 };
 
@@ -246,7 +265,13 @@ export const getSuccessMessage = (): string => {
     "Bravo! Your medical acumen is impressive.",
     "Superb! Your clinical expertise is evident.",
     "Wonderful! Your medical insight is valuable.",
-    "Impressive! Your clinical skills are exceptional."
+    "Impressive! Your clinical skills are exceptional.",
+    "Nicely done, Doctor!",
+    "Task completed successfully.",
+    "Consider it done.",
+    "Affirmative. Operation successful.", // Slightly robotic wit
+    "Executed flawlessly.",
+    "That's the power of collaboration (human + AI)!"
   ]);
 };
 
@@ -264,6 +289,11 @@ export const getErrorMessage = (): string => {
     "That didn't go as planned. Let's try a different technique.",
     "We've encountered an unexpected result. Let's reevaluate.",
     "That wasn't successful. Let's consider a different strategy.",
-    "We need to pivot. Let's try another approach."
+    "We need to pivot. Let's try another approach.",
+    "Apologies, encountered a slight anomaly. Could you try again?", // AI-themed
+    "My diagnostic algorithm seems to be disagreeing with reality. Let's re-run that.", // Self-deprecating wit
+    "Error: Unexpected variable encountered. Please try rephrasing.",
+    "Request timed out. Perhaps the server needed a coffee break?", // Gentle humor
+    "Could not compute. Please check input or try a different query."
   ]);
 };

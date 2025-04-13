@@ -1,97 +1,82 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { User, Bot, Clock, FileText, Search as SearchIcon, Pill, Sparkles, Coffee, Brain } from 'lucide-react'; // Added more icons
-import ChatInput from '@/components/agents/ChatInput'; // Assuming this is styled appropriately or needs update
-import { cn } from '@/lib/utils'; // Import cn
+import { Brain } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { PicassoIllustration } from '@/components/illustrations/PicassoIllustration';
 import { PicassoBackground } from '@/components/illustrations/PicassoBackground';
 import { PicassoAvatar } from '@/components/illustrations/PicassoAvatar';
-import { AnimatedIllustration, LoadingIllustration } from '@/components/illustrations/AnimatedIllustration';
-import { useAuth } from '@/contexts/AuthContext'; // Import useAuth to get user info
 import { 
     getPersonalizedGreeting, 
     getMedicalJoke, 
-    getLoadingMessage, 
     getMedicalFact, 
     getSpecialtyBasedSuggestions,
     getMedicalQuote,
-    getHealthcareTip
-} from '@/lib/personalityUtils'; // Import our new personality utilities
+    getHealthcareTip,
+    getLoadingMessage // Import loading message utility
+} from '@/lib/personalityUtils';
+import { useNavigate } from 'react-router-dom';
+import ChatInput from '@/components/agents/ChatInput'; // Import the shared ChatInput
 
 interface ChatMessage {
     sender: 'user' | 'bot';
     text: string;
 }
 
-// This component now renders the core chat UI, assuming parent handles layout
-const Chat = () => {
+// This component renders a simplified version of the chat UI for public users
+const PublicChat = () => {
+    const navigate = useNavigate();
     const [messages, setMessages] = useState<ChatMessage[]>([]);
+    const [chatInput, setChatInput] = useState("");
     const [isSending, setIsSending] = useState(false);
     const [loadingMessage, setLoadingMessage] = useState<string>("");
-    const [showJoke, setShowJoke] = useState<boolean>(false);
     const [currentJoke, setCurrentJoke] = useState<string>("");
     const [currentFact, setCurrentFact] = useState<string>("");
     const [currentQuote, setCurrentQuote] = useState<string>("");
     const [currentTip, setCurrentTip] = useState<string>("");
-    // This state is only used to control the visibility of suggestions, not the greeting
     const [isTyping, setIsTyping] = useState<boolean>(false);
-    // Store the personalized greeting in state so it doesn't change during the session
     const [personalizedGreeting, setPersonalizedGreeting] = useState<string>("");
     const messagesEndRef = useRef<HTMLDivElement>(null);
-    const { user } = useAuth(); // Get user from auth context
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-    // Get user's first name from email (temporary until we have proper user profiles)
-    const getUserFirstName = () => {
-        if (!user?.email) return undefined;
-        // Extract name from email (e.g., john.doe@example.com -> John)
-        const emailName = user.email.split('@')[0].split('.')[0];
-        return emailName.charAt(0).toUpperCase() + emailName.slice(1);
-    };
-
-    // Dynamic suggestions based on specialty (could be expanded to use user's actual specialty)
+    // Dynamic suggestions based on specialty
     const suggestions = getSpecialtyBasedSuggestions();
 
-    // Restore original handleSendMessage logic with added logging
-    const handleSendMessage = (messageText: string, attachments?: File[]) => {
-        console.log("[Chat.tsx] handleSendMessage START", { messageText, attachments });
-        if (!messageText.trim() && (!attachments || attachments.length === 0)) {
-            console.log("[Chat.tsx] handleSendMessage: Empty message, returning.");
+    // Refined message handler for public view
+    const handleSendMessage = (messageText: string, attachments?: File[]) => { // Match ChatInput signature
+        if (!messageText.trim()) {
             return;
         }
         
         const userMessage: ChatMessage = { sender: 'user', text: messageText };
         
-        console.log("[Chat.tsx] handleSendMessage: Setting user message and isSending=true");
-        try {
-            setMessages(prev => [...prev, userMessage]);
-            setIsSending(true);
-            // Set a random loading message (already using the function)
-            setLoadingMessage(getLoadingMessage()); 
-        } catch (error) {
-            console.error("[Chat.tsx] handleSendMessage: Error during initial state update:", error);
-            // Optionally add user feedback here if state update fails
-            return; // Stop processing if initial state update fails
-        }
+        setMessages(prev => [...prev, userMessage]);
+        // ChatInput handles clearing its own state via onSendMessage callback
+        setIsSending(true);
+        setLoadingMessage(getLoadingMessage()); // Show a loading message
 
-        console.log("[Chat.tsx] handleSendMessage: Simulating bot response with setTimeout...");
-        // Simulate bot response
+        // Simulate a brief "thinking" period
         setTimeout(() => {
-            console.log("[Chat.tsx] handleSendMessage: setTimeout callback START");
-            try {
-                const botResponseText = `Simulated response for: "${userMessage.text}"`;
-                const botMessage: ChatMessage = { sender: 'bot', text: botResponseText };
-                
-                console.log("[Chat.tsx] handleSendMessage: Setting bot message and isSending=false");
-                setMessages(prev => [...prev, botMessage]);
-                setIsSending(false);
-                console.log("[Chat.tsx] handleSendMessage: setTimeout callback END");
-            } catch (error) {
-                 console.error("[Chat.tsx] handleSendMessage: Error during bot response state update:", error);
-                 setIsSending(false); // Ensure loading state is reset even on error
-            }
-        }, 1000 + Math.random() * 500);
-        console.log("[Chat.tsx] handleSendMessage END (after setTimeout setup)");
+            let botResponseText = "";
+            // Generate a response based on the user's question
+            botResponseText = `Thanks for your question about "${messageText.substring(0, 30)}...". Here's what I can tell you:
+
+Based on medical literature, this is a common question. While I can provide general information, please note that this is not a substitute for professional medical advice.
+
+${getHealthcareTip()}
+
+Is there anything specific about this topic you'd like me to elaborate on?`;
+
+            const botMessage: ChatMessage = { 
+                sender: 'bot', 
+                text: botResponseText
+            };
+            setMessages(prev => [...prev, botMessage]);
+            setIsSending(false);
+        }, 1200 + Math.random() * 600); // Slightly longer delay
     };
+
+    // Removed handleKeyDown, handleInputChange, adjustTextareaHeight, and related useEffect 
+    // as these are now handled by ChatInput component
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -103,37 +88,32 @@ const Chat = () => {
         setCurrentFact(getMedicalFact());
         setCurrentQuote(getMedicalQuote());
         setCurrentTip(getHealthcareTip());
-        // Set the personalized greeting once on component mount (already using the function)
-        setPersonalizedGreeting(getPersonalizedGreeting(getUserFirstName())); 
-    }, []); // Added user dependency to update greeting if user logs in/out during session
+        setPersonalizedGreeting(getPersonalizedGreeting());
+        
+        // Auto-focus the textarea when the component mounts
+        if (textareaRef.current) {
+            textareaRef.current.focus();
+        }
+    }, []);
 
     const showInitialState = messages.length === 0;
 
     // Enhanced Greeting Component with personality
     const Greeting = () => (
-        <div className="mb-12"> {/* Removed text-center */}
-            {/* Flex container to place illustration next to text */}
-            <div className="flex items-center justify-center gap-4"> {/* Added flex container */}
-                {/* Decorative element */}
-                <div className="text-primary"> {/* Use new primary color */}
-                    <PicassoIllustration
-                        name="healing"
-                        size="lg"
-                        color="text-primary"
-                        className="animate-float" // Removed mx-auto
-                    />
-                </div>
-                 {/* Personal greeting - Use state variable directly */}
-                 <h1 className="text-[32px] font-bold text-foreground"> 
-                     {personalizedGreeting} 
-                 </h1>
-             </div>
+        <div className="mb-12">
+             {/* Centered the greeting text */}
+            <div className="flex items-center justify-center">
+                {/* Removed Logo Span */}
+                <h1 className="text-[32px] font-bold text-foreground"> 
+                    {personalizedGreeting} 
+                </h1> 
+            </div>
         </div>
     );
 
     const MessageDisplay = () => (
         <PicassoBackground
-            pattern="abstractArt" // Use the new Picasso-style pattern
+            pattern="abstractArt"
             color="text-primary"
             opacity={5}
             className="w-full flex-1 overflow-y-auto space-y-4 pb-4"
@@ -157,6 +137,7 @@ const Chat = () => {
                        : 'bg-muted text-foreground rounded-bl-none'
                    )}>
                        <p className="leading-relaxed">{msg.text}</p>
+                       {/* Removed sign-in button */}
                    </div>
                     </div>
                 </div>
@@ -171,9 +152,15 @@ const Chat = () => {
                         color="text-primary"
                         className="flex-shrink-0"
                      />
-                     {/* Display the random loading message */}
-                     <div className="p-3 rounded-lg bg-muted text-sm text-muted-foreground italic">
-                        {loadingMessage}
+                     <div className="p-3 rounded-lg bg-muted">
+                        <div className="flex justify-center">
+                            <PicassoIllustration
+                                name="healing"
+                                size="sm"
+                                color="text-primary"
+                                className="w-8 h-8 animate-float"
+                            />
+                        </div>
                      </div>
                    </div>
                  </div>
@@ -182,22 +169,24 @@ const Chat = () => {
         </PicassoBackground>
     );
 
+    // Use the shared ChatInput component
     const InputArea = ({ isAnchored = false }) => (
-        <div className="w-full bg-background">
+       <div className="w-full bg-background">
            <ChatInput
-             onSendMessage={handleSendMessage}
+             onSendMessage={handleSendMessage} // Pass the refined handler
              isLoading={isSending}
-             agentName="Leny"
+             agentName="Leny" // Keep agent name consistent
              onTypingChange={setIsTyping}
              isAnchored={isAnchored}
+             // Note: Attachments are passed to handleSendMessage but not explicitly handled in public view beyond the prompt
            />
        </div>
     );
 
-    // Enhanced Suggestions Component with dynamic content and "More" button
+    // Enhanced Suggestions Component with dynamic content
     const Suggestions = () => {
         const [showAllSuggestions, setShowAllSuggestions] = useState(false);
-        const initialSuggestionsCount = 8; // Show approximately 2 lines of suggestions initially
+        const initialSuggestionsCount = 8;
         
         const displayedSuggestions = showAllSuggestions 
             ? suggestions 
@@ -216,7 +205,6 @@ const Chat = () => {
                                 "Differential diagnosis": "healing",
                             };
                             
-                            // Find the matching illustration based on text content
                             let illustrationType = "empty";
                             for (const [key, value] of Object.entries(illustrationMap)) {
                                 if (suggestion.includes(key)) {
@@ -230,9 +218,9 @@ const Chat = () => {
                                     key={index}
                                     variant="outline"
                                     size="sm"
-                                    // Make default border more visible (primary with 50% opacity) and darken on hover
                                     className="rounded-full px-4 py-2 text-sm font-medium text-foreground bg-background border-primary/50 hover:bg-primary/5 hover:border-primary hover:text-foreground group transition-colors duration-200" 
-                                    onClick={() => handleSendMessage(suggestion)}
+                                    // Use handleSendMessage to trigger the public flow when suggestion is clicked
+                                    onClick={() => handleSendMessage(suggestion)} 
                                 >
                                     <div className="mr-2 w-4 h-4">
                                         <PicassoIllustration
@@ -263,24 +251,21 @@ const Chat = () => {
                 
                 {/* Fun content cards REMOVED */}
                 
-                {/* Refresh button for fun content REMOVED */}
-                {/* Refresh button was here */}
-            </div> // This closes the main div for Suggestions
+                {/* Medical Information box removed */}
+            </div>
         );
     };
 
     return (
         <div className="flex flex-col h-full">
             {showInitialState ? (
-                // Re-applying flex properties to center content vertically and horizontally
                 <div className="flex flex-1 flex-col items-center justify-center p-5"> 
-                    {/* Background is handled by AppLayout */}
                     <div className="w-full max-w-[700px] flex flex-col items-center"> 
                         <Greeting />
                         <div className="w-full relative mb-[30px]">
-                            <InputArea isAnchored={false} />
+                            {/* Pass isAnchored prop */}
+                            <InputArea isAnchored={false} /> 
                         </div>
-                        {/* Only fade out suggestions, not the greeting */}
                         <div className={cn(
                             "transition-opacity duration-300",
                             isTyping ? "opacity-0" : "opacity-100"
@@ -290,14 +275,12 @@ const Chat = () => {
                     </div>
                 </div>
             ) : (
-                // Apply centering to the parent flex container for the active chat state
-                <div className="flex flex-1 flex-col items-center overflow-hidden"> 
-                    {/* Message display area: centered, takes up space, scrolls, has bottom padding */}
-                    <div className="w-full max-w-3xl flex-1 overflow-y-auto px-4 pt-4 pb-24"> {/* Added pb-24 for input spacing */}
+                <div className="flex flex-1 flex-col items-center overflow-hidden relative h-full"> 
+                    <div className="w-full max-w-3xl flex-1 overflow-y-auto px-4 pt-4 pb-24">
                         <MessageDisplay />
                     </div>
-                    {/* Input area: sticky to bottom, centered */}
-                    <div className="w-full max-w-3xl sticky bottom-4 bg-background p-0 border-t border-border"> {/* Added bottom-4 to lift it up from the bottom */}
+                    <div className="w-full max-w-3xl fixed bottom-0 left-0 right-0 mx-auto bg-background p-0 border-t border-border z-10">
+                         {/* Pass isAnchored prop */}
                         <InputArea isAnchored={true} />
                     </div>
                 </div>
@@ -306,4 +289,4 @@ const Chat = () => {
     );
 };
 
-export default Chat;
+export default PublicChat;

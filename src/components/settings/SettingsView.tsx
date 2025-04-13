@@ -4,10 +4,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useNavigate, useLocation, Navigate } from "react-router-dom";
 // Import the renamed and merged component
 import AccountTab from "./tabs/AccountTab";
-import SecurityTab from "./tabs/SecurityTab";
 import AppearanceTab from "./tabs/AppearanceTab";
 import NotificationsTab from "./tabs/NotificationsTab";
-// Removed SecurityTab import
 import AIConfigTab from "./tabs/AIConfigTab";
 import IntegrationsTab from "./tabs/IntegrationsTab"; // Import IntegrationsTab
 
@@ -28,8 +26,8 @@ const SettingsView = () => {
   // Sync activeTab state with URL hash on mount and change
   useEffect(() => {
     const hash = location.hash.replace('#', '');
-    // Added 'integrations' to validTabs
-    const validTabs = ['account', 'security', 'appearance', 'notifications', 'ai-config', 'integrations']; 
+    // Removed 'security' from validTabs
+    const validTabs = ['account', 'appearance', 'notifications', 'ai-config', 'integrations']; 
     if (hash && validTabs.includes(hash)) {
       setActiveTab(hash);
     } else {
@@ -58,23 +56,17 @@ const SettingsView = () => {
 
       {/* Use the activeTab state for value and defaultValue */}
       <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-          {/* Updated grid columns to 6 */}
-          <TabsList className="grid w-full grid-cols-6"> 
+          {/* Updated grid columns to 5 */}
+          <TabsList className="grid w-full grid-cols-5"> 
             <TabsTrigger value="account">Account</TabsTrigger>
-            <TabsTrigger value="security">Security</TabsTrigger>
             <TabsTrigger value="appearance">Appearance</TabsTrigger>
             <TabsTrigger value="notifications">Notifications</TabsTrigger>
-            {/* Removed Security Trigger */}
             <TabsTrigger value="ai-config">AI Config</TabsTrigger>
-            <TabsTrigger value="integrations">Integrations</TabsTrigger> {/* Added Integrations Trigger */}
+            <TabsTrigger value="integrations">Integrations</TabsTrigger>
           </TabsList>
 
           <TabsContent value="account" className="mt-6">
             <AccountTab />
-          </TabsContent>
-
-          <TabsContent value="security" className="mt-6">
-            <SecurityTab />
           </TabsContent>
 
           <TabsContent value="appearance" className="mt-6">

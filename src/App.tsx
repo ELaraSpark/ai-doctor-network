@@ -37,7 +37,6 @@ import EditAIExpert from "./pages/EditAIExpert";
 import DocumentTransformer from "./pages/DocumentTransformer";
 import CollaborationHub from "./pages/CollaborationHub";
 import ExpertPanelView from "@/components/tumor-board/TumorBoardView"; // Updated import name
-import QuickNotes from "./pages/QuickNotes";
 import Chat from "./pages/Chat";
 // Import new placeholder pages
 import RecentChats from "./pages/RecentChats";
@@ -54,6 +53,7 @@ import AgentDetailPage from "./pages/AgentDetailPage";
 import CreateTemplatePage from "./pages/CreateTemplatePage"; 
 import EditTemplatePage from "./pages/EditTemplatePage"; // Import edit template page
 import DoctorsLounge from "./pages/DoctorsLounge"; // Import Doctor's Lounge page
+import CardComparisonPage from "./pages/CardComparisonPage"; // Import card comparison page
 
 // Import the new page for security logs if needed
 // import SecurityLogs from "./pages/SecurityLogs";
@@ -109,6 +109,7 @@ const App = () => (
                 <Route path="/recent-chats" element={<RecentChats />} />
                 <Route path="/my-agents" element={<MyAgents />} />
                 <Route path="/my-templates" element={<MyTemplates />} />
+                <Route path="/quick-notes" element={<Navigate to="/my-templates" replace />} /> {/* Redirect to MyTemplates */}
                 <Route path="/integrations" element={<Integrations />} />
                 <Route path="/tasks" element={<Tasks />} />
                 <Route path="/agents/create" element={<CreateAgentPage />} />
@@ -119,6 +120,7 @@ const App = () => (
                 <Route path="/templates/create" element={<CreateTemplatePage />} /> {/* Added create template route */}
                 <Route path="/templates/:templateId/edit" element={<EditTemplatePage />} /> {/* Added edit template route */}
                 <Route path="/doctors-lounge" element={<DoctorsLounge />} /> {/* Added Doctor's Lounge route */}
+                <Route path="/card-comparison" element={<CardComparisonPage />} /> {/* Added Card Comparison route */}
                 {/* Add other authenticated routes as needed */}
               </Route>
 

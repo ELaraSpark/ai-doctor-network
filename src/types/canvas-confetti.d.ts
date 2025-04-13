@@ -13,26 +13,24 @@ declare module 'canvas-confetti' {
       y?: number;
     };
     colors?: string[];
-    shapes?: ('square' | 'circle')[];
+    shapes?: string[];
     scalar?: number;
     zIndex?: number;
     disableForReducedMotion?: boolean;
   }
 
+  type ConfettiFunction = (options?: ConfettiOptions) => Promise<null>;
+
   interface ConfettiCannon {
-    fire(options?: ConfettiOptions): Promise<null>;
-    reset(): void;
+    fire: ConfettiFunction;
+    reset: () => void;
   }
 
-  function confetti(options?: ConfettiOptions): Promise<null>;
-  
-  namespace confetti {
-    function reset(): void;
-    function create(
-      canvas: HTMLCanvasElement,
-      options?: { resize?: boolean; useWorker?: boolean }
-    ): ConfettiCannon;
+  interface ConfettiModule extends ConfettiFunction {
+    create: (canvas: HTMLCanvasElement, options?: { resize?: boolean; useWorker?: boolean }) => ConfettiCannon;
+    reset: () => void;
   }
 
+  const confetti: ConfettiModule;
   export = confetti;
 }
