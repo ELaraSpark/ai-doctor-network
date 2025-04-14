@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Brain } from 'lucide-react';
+import { Paperclip, ArrowUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PicassoIllustration } from '@/components/illustrations/PicassoIllustration';
 import { PicassoBackground } from '@/components/illustrations/PicassoBackground';
@@ -16,6 +16,10 @@ import {
 } from '@/lib/personalityUtils';
 import { useNavigate } from 'react-router-dom';
 import ChatInput from '@/components/agents/ChatInput'; // Import the shared ChatInput
+import BenefitsSection from "@/components/home/BenefitsSection";
+import FeaturesSection from "@/components/home/FeaturesSection";
+import SecurityBanner from "@/components/home/SecurityBanner"; 
+import CTASection from "@/components/home/CTASection";
 
 interface ChatMessage {
     sender: 'user' | 'bot';
@@ -26,7 +30,6 @@ interface ChatMessage {
 const PublicChat = () => {
     const navigate = useNavigate();
     const [messages, setMessages] = useState<ChatMessage[]>([]);
-    const [chatInput, setChatInput] = useState("");
     const [isSending, setIsSending] = useState(false);
     const [loadingMessage, setLoadingMessage] = useState<string>("");
     const [currentJoke, setCurrentJoke] = useState<string>("");
@@ -75,9 +78,6 @@ Is there anything specific about this topic you'd like me to elaborate on?`;
         }, 1200 + Math.random() * 600); // Slightly longer delay
     };
 
-    // Removed handleKeyDown, handleInputChange, adjustTextareaHeight, and related useEffect 
-    // as these are now handled by ChatInput component
-
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
@@ -101,23 +101,27 @@ Is there anything specific about this topic you'd like me to elaborate on?`;
     // Enhanced Greeting Component with personality
     const Greeting = () => (
         <div className="mb-12">
-             {/* Centered the greeting text */}
-            <div className="flex items-center justify-center">
-                {/* Removed Logo Span */}
-                <h1 className="text-[32px] font-bold text-foreground"> 
-                    {personalizedGreeting} 
-                </h1> 
+            <div className="flex flex-col items-center justify-center">
+                {/* Clean, bold title in black */}
+                <h1 className="text-center text-[42px] font-bold mb-4 text-gray-900">
+                    Medical Genius at Your Fingertips
+                </h1>
+                
+                {/* Simple subtitle */}
+                <p className="text-center text-xl text-gray-600 max-w-md">
+                    Clinical answers without the endless searching
+                </p>
             </div>
         </div>
     );
 
     const MessageDisplay = () => (
-        <PicassoBackground
-            pattern="abstractArt"
-            color="text-primary"
-            opacity={5}
-            className="w-full flex-1 overflow-y-auto space-y-4 pb-4"
-        >
+    <PicassoBackground
+      pattern="abstractArt"
+      color="text-primary"
+      opacity={5}
+      className="w-full h-full flex-1 overflow-y-auto space-y-4 pb-4 bg-[#FFFFFF] flex flex-col justify-center"
+    >
             {messages.map((msg, index) => (
                 <div key={index} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
                     <div className={`flex items-start gap-2.5 max-w-[85%]`}>
@@ -158,7 +162,7 @@ Is there anything specific about this topic you'd like me to elaborate on?`;
                                 name="healing"
                                 size="sm"
                                 color="text-primary"
-                                className="w-8 h-8 animate-float"
+                                className="w-8 h-8"
                             />
                         </div>
                      </div>
@@ -170,7 +174,7 @@ Is there anything specific about this topic you'd like me to elaborate on?`;
     );
 
     // Use the shared ChatInput component
-    const InputArea = ({ isAnchored = false }) => (
+    const InputArea = ({ isAnchored = false, submitButtonColor = 'primary' }: { isAnchored?: boolean; submitButtonColor?: 'primary' | 'accent' }) => ( // Added prop type definition
        <div className="w-full bg-background">
            <ChatInput
              onSendMessage={handleSendMessage} // Pass the refined handler
@@ -178,113 +182,108 @@ Is there anything specific about this topic you'd like me to elaborate on?`;
              agentName="Leny" // Keep agent name consistent
              onTypingChange={setIsTyping}
              isAnchored={isAnchored}
+             submitButtonColor={submitButtonColor} // Pass the prop down
              // Note: Attachments are passed to handleSendMessage but not explicitly handled in public view beyond the prompt
            />
        </div>
     );
 
-    // Enhanced Suggestions Component with dynamic content
+    // Enhanced Suggestions Component with dynamic content - showing only 3 shortened suggestions
     const Suggestions = () => {
-        const [showAllSuggestions, setShowAllSuggestions] = useState(false);
-        const initialSuggestionsCount = 8;
+        // Get the original first three suggestions
+        const firstThreeSuggestions = suggestions.slice(0, 3);
         
-        const displayedSuggestions = showAllSuggestions 
-            ? suggestions 
-            : suggestions.slice(0, initialSuggestionsCount);
-            
-        return (
-            <div className="space-y-6 mt-6">
-                {/* Chat suggestions */}
-                <div className="flex flex-col items-center">
-                    <div className="flex flex-wrap justify-center gap-3 max-h-[88px] overflow-hidden">
-                        {displayedSuggestions.map((suggestion, index) => {
-                            const illustrationMap: Record<string, string> = {
-                                "What's the latest research": "chart",
-                                "Help me interpret": "brain",
-                                "What are the side effects": "stethoscope",
-                                "Differential diagnosis": "healing",
-                            };
-                            
-                            let illustrationType = "empty";
-                            for (const [key, value] of Object.entries(illustrationMap)) {
-                                if (suggestion.includes(key)) {
-                                    illustrationType = value;
-                                    break;
-                                }
-                            }
+        // Define shortened versions and corresponding original text for illustration mapping
+        const shortenedSuggestionsMap = [
+            { short: "Latest Research?", original: "What's the latest research", illustration: "chart" },
+            { short: "Interpret Labs?", original: "Help me interpret", illustration: "brain" },
+            { short: "Draft a note", original: "Draft a clinical note about", illustration: "pencil" }
+        ];
 
-                            return (
-                                <Button
-                                    key={index}
-                                    variant="outline"
-                                    size="sm"
-                                    className="rounded-full px-4 py-2 text-sm font-medium text-foreground bg-background border-primary/50 hover:bg-primary/5 hover:border-primary hover:text-foreground group transition-colors duration-200" 
-                                    // Use handleSendMessage to trigger the public flow when suggestion is clicked
-                                    onClick={() => handleSendMessage(suggestion)} 
-                                >
-                                    <div className="mr-2 w-4 h-4">
-                                        <PicassoIllustration
-                                            name={illustrationType as any}
-                                            size="xs"
-                                            color="text-primary"
-                                            className="group-hover:animate-pulse"
-                                        />
-                                    </div>
-                                    {suggestion}
-                                </Button>
-                            );
-                        })}
-                    </div>
-                    
-                    {/* More/Less button */}
-                    {suggestions.length > initialSuggestionsCount && (
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            className="mt-2 text-muted-foreground hover:text-foreground"
-                            onClick={() => setShowAllSuggestions(!showAllSuggestions)}
-                        >
-                            {showAllSuggestions ? "Show Less" : "More Suggestions"}
-                        </Button>
-                    )}
+        // Ensure we only map if we have enough original suggestions
+        const displayedShortenedSuggestions = firstThreeSuggestions.length === 3 ? shortenedSuggestionsMap : [];
+
+        return (
+            <div className="mt-6">
+                {/* Chat suggestions */}
+                <div className="flex flex-wrap justify-center gap-2.5">
+                    {displayedShortenedSuggestions.map((item, index) => {
+                        // Get the original suggestion text for the onClick handler
+                        const originalSuggestionText = firstThreeSuggestions[index]; 
+
+                        return (
+                            <div 
+                                key={index}
+                                className="px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-full flex items-center gap-2 cursor-pointer transition-all hover:bg-primary/5 hover:border-primary"
+                                onClick={() => handleSendMessage(originalSuggestionText)}
+                            >
+                                <div className="flex items-center justify-center text-primary">
+                                    <PicassoIllustration
+                                        name={item.illustration as any}
+                                        size="xs"
+                                        color="text-primary"
+                                    />
+                                </div>
+                                <span className="text-sm font-medium text-gray-700">{item.short}</span>
+                            </div>
+                        );
+                    })}
                 </div>
-                
-                {/* Fun content cards REMOVED */}
-                
-                {/* Medical Information box removed */}
             </div>
         );
     };
 
     return (
-        <div className="flex flex-col h-full">
-            {showInitialState ? (
-                <div className="flex flex-1 flex-col items-center justify-center p-5"> 
-                    <div className="w-full max-w-[700px] flex flex-col items-center"> 
-                        <Greeting />
-                        <div className="w-full relative mb-[30px]">
-                            {/* Pass isAnchored prop */}
-                            <InputArea isAnchored={false} /> 
+        <div className="flex flex-col">
+            <div className="flex flex-col h-full">
+                {showInitialState ? (
+                    <>
+                        <div className="flex flex-1 flex-col items-center justify-center p-5 min-h-screen mt-[-64px]"> {/* Added negative margin to account for header height */}
+                            <div className="w-full max-w-[700px] flex flex-col items-center"> {/* Removed pt-16 */}
+                                <Greeting />
+                                <div className="w-full relative mb-[30px]">
+                                    {/* Use the ChatInput component directly and set submit button color to accent */}
+                                    <InputArea isAnchored={false} submitButtonColor="accent" />
+                                </div>
+                                <div className={cn(
+                                    "transition-opacity duration-300",
+                                    isTyping ? "opacity-0" : "opacity-100"
+                                )}>
+                                    <Suggestions />
+                                </div>
+                            </div>
                         </div>
-                        <div className={cn(
-                            "transition-opacity duration-300",
-                            isTyping ? "opacity-0" : "opacity-100"
-                        )}>
-                            <Suggestions />
+                        
+                        {/* Landing Page Sections - Only shown in initial state */}
+                        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl pt-40 mt-40"> {/* Increased spacing to pt-40 and mt-40 */}
+                            <div className="my-12 md:my-16"> 
+                                <BenefitsSection />
+                            </div>
+                            <div className="my-12 md:my-16">
+                                <FeaturesSection />
+                            </div>
+                            <div className="mb-16">
+                                <CTASection />
+                            </div>
+                            <div className="mb-16">
+                                <SecurityBanner />
+                            </div>
+                        </div>
+                    </>
+                ) : (
+                    <div className="flex flex-1 flex-col items-center justify-center overflow-hidden relative"> 
+                        <div className="w-full max-w-3xl flex-1 overflow-y-auto px-4 pt-4 pb-24 flex flex-col">
+                            <div className="flex-1 flex items-center justify-center min-h-[calc(100vh-200px)]">
+                                <MessageDisplay />
+                            </div>
+                        </div>
+                        <div className="w-full max-w-3xl fixed bottom-0 left-0 right-0 mx-auto bg-background p-0 border-t border-border z-10">
+                             {/* Pass isAnchored prop and default submit button color */}
+                            <InputArea isAnchored={true} />
                         </div>
                     </div>
-                </div>
-            ) : (
-                <div className="flex flex-1 flex-col items-center overflow-hidden relative h-full"> 
-                    <div className="w-full max-w-3xl flex-1 overflow-y-auto px-4 pt-4 pb-24">
-                        <MessageDisplay />
-                    </div>
-                    <div className="w-full max-w-3xl fixed bottom-0 left-0 right-0 mx-auto bg-background p-0 border-t border-border z-10">
-                         {/* Pass isAnchored prop */}
-                        <InputArea isAnchored={true} />
-                    </div>
-                </div>
-            )}
+                )}
+            </div>
         </div>
     );
 };

@@ -18,6 +18,8 @@ interface ChatInterfaceProps {
 const ChatInterface = ({ selectedAgent }: ChatInterfaceProps) => {
   // State for mobile profile visibility
   const [showProfileOnMobile, setShowProfileOnMobile] = useState(false);
+  // State for chat style
+  const [chatStyle, setChatStyle] = useState("Professional");
   
   const { 
     messages, 
@@ -103,6 +105,7 @@ const ChatInterface = ({ selectedAgent }: ChatInterfaceProps) => {
               messages={messages}
               isLoading={isLoading}
               selectedAgent={selectedAgent} // Pass selectedAgent to ChatMessagesContainer
+              chatStyle={chatStyle} // Pass the selected chat style
             />
           </CardContent>
           
@@ -111,6 +114,8 @@ const ChatInterface = ({ selectedAgent }: ChatInterfaceProps) => {
               onSendMessage={sendMessage}
               isLoading={isLoading}
               agentName={selectedAgent.name}
+              onStyleChange={setChatStyle} // Handle style changes
+              initialStyle={chatStyle} // Pass the current style
             />
           </CardFooter>
         </Card>

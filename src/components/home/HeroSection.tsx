@@ -23,8 +23,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({ isVisible }) => {
       className="relative" // Add relative positioning for background
       style={{ overflow: 'hidden' }} 
     >
-      {/* Add Picasso Background */}
-      <PicassoBackground /> 
+      {/* Add Picasso Background with white background */}
+      <PicassoBackground className="bg-[#FFFFFF]" /> 
       
       {/* Add subtle background pattern */}
       <div className="absolute inset-0 opacity-5 pointer-events-none">

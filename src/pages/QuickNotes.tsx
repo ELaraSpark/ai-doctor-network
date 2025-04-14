@@ -212,7 +212,7 @@ const QuickNotes: React.FC<QuickNotesProps> = () => { // Removed props
                             value={inputText}
                             onChange={(e) => setInputText(e.target.value)}
                             placeholder="Paste or type your medical text here..."
-                            className="flex-grow resize-none text-base p-4 border border-input rounded-lg min-h-[300px] bg-background text-foreground"
+                            className="flex-grow resize-none text-base p-4 border border-input rounded-lg min-h-[300px] bg-[#FFFFFF] text-foreground"
                         />
                     </div>
                     <div className="input-actions flex flex-wrap gap-2 mt-4 pt-4 border-t border-border">
@@ -244,7 +244,7 @@ const QuickNotes: React.FC<QuickNotesProps> = () => { // Removed props
                             placeholder="Search actions (e.g., 'summarize', 'SOAP')..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="pl-10 pr-4 py-2 text-base bg-background border-input"
+                            className="pl-10 pr-4 py-2 text-base bg-[#FFFFFF] border-input"
                         />
                     </div>
 
@@ -289,7 +289,7 @@ const QuickNotes: React.FC<QuickNotesProps> = () => { // Removed props
                                 id="documentOutput"
                                 contentEditable={isOutputEditable}
                                 dangerouslySetInnerHTML={{ __html: outputText }}
-                                className={`border border-input rounded-lg p-4 bg-background flex-grow overflow-y-auto text-base leading-relaxed min-h-[200px] text-foreground ${isOutputEditable ? 'ring-2 ring-primary focus:outline-none' : ''}`}
+                                className={`border border-input rounded-lg p-4 bg-[#FFFFFF] flex-grow overflow-y-auto text-base leading-relaxed min-h-[200px] text-foreground ${isOutputEditable ? 'ring-2 ring-primary focus:outline-none' : ''}`}
                             >
                             </div>
                         </div>

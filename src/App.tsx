@@ -17,6 +17,7 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { RootHandler } from "@/components/auth/RootHandler"; 
 import AppLayout from "@/components/layout/AppLayout"; // Import the main AppLayout
+import PublicLayout from "@/components/layout/PublicLayout"; // Import the PublicLayout
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 // import Dashboard from "./pages/Dashboard"; // Removed unused import
@@ -42,13 +43,14 @@ import Chat from "./pages/Chat";
 import RecentChats from "./pages/RecentChats";
 import RecentSearches from "./pages/RecentSearches"; // This import might be unused now
 import MyAgents from "./pages/MyAgents";
-import MyTemplates from "./pages/MyTemplates"; // Updated import name
+import QuickNotes from "./pages/MyTemplates"; // Import as QuickNotes since that's the exported name
 import Integrations from "./pages/Integrations";
 import Tasks from "./pages/Tasks";
 import CreateAgentPage from "./pages/CreateAgentPage";
 import Referrals from "./pages/Referrals"; 
 import Library from "./pages/Library"; 
-import LandingPage from "./pages/LandingPage"; 
+import LandingPage from "./pages/LandingPage";
+import PublicChat from "@/components/home/PublicChat"; // Import PublicChat component
 import AgentDetailPage from "./pages/AgentDetailPage"; 
 import CreateTemplatePage from "./pages/CreateTemplatePage"; 
 import EditTemplatePage from "./pages/EditTemplatePage"; // Import edit template page
@@ -77,6 +79,12 @@ const App = () => (
               <Route path="/register" element={<Register />} />
               <Route path="/features" element={<Features />} /> 
               <Route path="/about" element={<AboutUs />} /> 
+              
+              {/* Public access to AI agents, smart notes, expert panel, and chat */}
+              <Route path="/my-agents" element={<PublicLayout><MyAgents isPublicView={true} /></PublicLayout>} />
+              <Route path="/my-templates" element={<PublicLayout><QuickNotes isPublicView={true} /></PublicLayout>} />
+              <Route path="/tumor-board" element={<PublicLayout><ExpertPanelView isPublicView={true} /></PublicLayout>} />
+              <Route path="/chat" element={<PublicLayout><PublicChat /></PublicLayout>} />
 
               {/* Root Route - Handled by RootHandler (Redirects to /login or /chat) */}
               <Route path="/" element={<RootHandler />} /> 
@@ -108,7 +116,7 @@ const App = () => (
                 <Route path="/tumor-board" element={<ExpertPanelView />} /> 
                 <Route path="/recent-chats" element={<RecentChats />} />
                 <Route path="/my-agents" element={<MyAgents />} />
-                <Route path="/my-templates" element={<MyTemplates />} />
+                <Route path="/my-templates" element={<QuickNotes />} />
                 <Route path="/quick-notes" element={<Navigate to="/my-templates" replace />} /> {/* Redirect to MyTemplates */}
                 <Route path="/integrations" element={<Integrations />} />
                 <Route path="/tasks" element={<Tasks />} />

@@ -5,7 +5,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext"; // Added useTheme (removed duplicate)
 import { 
   User, Settings, LogOut, Clock, Search as SearchIcon, 
-  Users as UsersIcon, Bookmark, Zap, List, Gift, Menu, X
+  Users as UsersIcon, Bookmark, Zap, List, Gift, Menu, X,
+  MessageSquare
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -37,6 +38,7 @@ const PublicLayout: React.FC<PublicLayoutProps> = ({
   const { user, signOut } = useAuth();
   const isAuthenticated = !!user;
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -73,14 +75,101 @@ const PublicLayout: React.FC<PublicLayoutProps> = ({
           <div className="container mx-auto px-4 sm:px-6">
             <nav className="flex items-center justify-between py-4">
               {/* Logo Link */}
-              <Link to="/" className="flex items-center text-decoration-none">
-                <span className="font-bold text-2xl text-primary leading-none">
-                  Leny.ai
+              <Link to="/" className="flex items-center gap-2 text-decoration-none">
+                {/* Logo */}
+                <img 
+                  src="/illustrations/animation.webp"
+                  alt="Leny.ai Logo" 
+                  className="h-8 w-8 object-contain"
+                />
+                
+                {/* Text */}
+                <span className="font-bold text-2xl text-primary">
+                  Leny
                 </span>
               </Link>
               
+              {/* Navigation Menu */}
+              <div className="flex items-center gap-2 md:gap-5">
+                {/* Ask Leny */}
+                <Link
+                  to="/chat"
+                  className={`flex items-center gap-2 px-3 py-2 rounded-md transition-colors duration-200 text-sm font-medium ${
+                    location.pathname === '/chat' || location.pathname === '/'
+                      ? "text-primary bg-primary/10"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                  }`}
+                >
+                  <div className="flex items-center justify-center">
+                    <MessageSquare size={18} className={
+                      location.pathname === '/chat' || location.pathname === '/'
+                        ? "text-primary"
+                        : "text-muted-foreground"
+                    } />
+                  </div>
+                  <span className="hidden md:inline">Ask Leny</span>
+                </Link>
+
+                {/* AI Agents */}
+                <Link
+                  to="/my-agents"
+                  className={`flex items-center gap-2 px-3 py-2 rounded-md transition-colors duration-200 text-sm font-medium ${
+                    location.pathname === '/my-agents'
+                      ? "text-primary bg-primary/10"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                  }`}
+                >
+                  <div className="flex items-center justify-center">
+                    <UsersIcon size={18} className={
+                      location.pathname === '/my-agents'
+                        ? "text-primary"
+                        : "text-muted-foreground"
+                    } />
+                  </div>
+                  <span className="hidden md:inline">AI Agents</span>
+                </Link>
+
+                {/* Smart Notes */}
+                <Link
+                  to="/my-templates"
+                  className={`flex items-center gap-2 px-3 py-2 rounded-md transition-colors duration-200 text-sm font-medium ${
+                    location.pathname === '/my-templates'
+                      ? "text-primary bg-primary/10"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                  }`}
+                >
+                  <div className="flex items-center justify-center">
+                    <Zap size={18} className={
+                      location.pathname === '/my-templates'
+                        ? "text-primary"
+                        : "text-muted-foreground"
+                    } />
+                  </div>
+                  <span className="hidden md:inline">Smart Notes</span>
+                </Link>
+
+                {/* Expert Panel */}
+                <Link
+                  to="/tumor-board"
+                  className={`flex items-center gap-2 px-3 py-2 rounded-md transition-colors duration-200 text-sm font-medium ${
+                    location.pathname === '/tumor-board'
+                      ? "text-primary bg-primary/10"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                  }`}
+                >
+                  <div className="flex items-center justify-center">
+                    <List size={18} className={
+                      location.pathname === '/tumor-board'
+                        ? "text-primary"
+                        : "text-muted-foreground"
+                    } />
+                  </div>
+                  <span className="hidden md:inline">Expert Panel</span>
+                </Link>
+              </div>
+              
               {/* User Actions */}
-              <div className="flex items-center gap-3 ml-auto">
+              <div className="flex items-center gap-3">
                 {isAuthenticated ? (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -163,11 +252,8 @@ const PublicLayout: React.FC<PublicLayoutProps> = ({
                   </DropdownMenu>
                 ) : (
                   <>
-                    <Link to="/login" className="hidden sm:block">
-                      <Button variant="ghost" className="text-sm font-medium rounded-lg px-4 py-2">Log in</Button>
-                    </Link>
-                    <Link to="/register">
-                      <Button className="bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-medium rounded-lg px-4 py-2">Sign up</Button>
+                    <Link to="/login">
+                      <Button className="bg-accent hover:bg-accent/90 text-accent-foreground text-sm font-medium rounded-lg px-4 py-2">Sign up</Button>
                     </Link>
                     
                     {/* Mobile menu button */}
@@ -195,17 +281,74 @@ const PublicLayout: React.FC<PublicLayoutProps> = ({
                 className="md:hidden bg-background/95 backdrop-blur-md border-t border-border"
               >
                 <div className="container py-4 px-4 flex flex-col gap-3">
-                  {/* Mobile Nav Links Removed */}
-                  {!isAuthenticated && (
-                    <Link
-                      to="/login"
-                      className="flex items-center gap-2 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      <LogOut size={18} />
-                      <span>Log in</span>
-                    </Link>
-                  )}
+                  {/* Navigation Links */}
+                  <Link
+                    to="/chat"
+                    className={`flex items-center gap-2 py-2 text-sm font-medium rounded-md px-3 transition-colors ${
+                      location.pathname === '/chat' || location.pathname === '/'
+                        ? "text-primary bg-primary/10"
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                    }`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <MessageSquare size={18} className={
+                      location.pathname === '/chat' || location.pathname === '/'
+                        ? "text-primary"
+                        : "text-muted-foreground"
+                    } />
+                    <span>Ask Leny</span>
+                  </Link>
+                  <Link
+                    to="/my-agents"
+                    className={`flex items-center gap-2 py-2 text-sm font-medium rounded-md px-3 transition-colors ${
+                      location.pathname === '/my-agents'
+                        ? "text-primary bg-primary/10"
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                    }`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <UsersIcon size={18} className={
+                      location.pathname === '/my-agents'
+                        ? "text-primary"
+                        : "text-muted-foreground"
+                    } />
+                    <span>AI Agents</span>
+                  </Link>
+                  <Link
+                    to="/my-templates"
+                    className={`flex items-center gap-2 py-2 text-sm font-medium rounded-md px-3 transition-colors ${
+                      location.pathname === '/my-templates'
+                        ? "text-primary bg-primary/10"
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                    }`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <Zap size={18} className={
+                      location.pathname === '/my-templates'
+                        ? "text-primary"
+                        : "text-muted-foreground"
+                    } />
+                    <span>Smart Notes</span>
+                  </Link>
+                  <Link
+                    to="/tumor-board"
+                    className={`flex items-center gap-2 py-2 text-sm font-medium rounded-md px-3 transition-colors ${
+                      location.pathname === '/tumor-board'
+                        ? "text-primary bg-primary/10"
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                    }`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <List size={18} className={
+                      location.pathname === '/tumor-board'
+                        ? "text-primary"
+                        : "text-muted-foreground"
+                    } />
+                    <span>Expert Panel</span>
+                  </Link>
+                  
+                  {/* Separator */}
+                  <div className="border-t border-border my-2"></div>
                 </div>
               </motion.div>
             )}

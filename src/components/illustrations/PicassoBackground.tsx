@@ -124,7 +124,7 @@ export const PicassoBackground: React.FC<PicassoBackgroundProps> = ({
     backgroundImage: dataUrl,
     backgroundRepeat: 'repeat',
     backgroundSize: pattern === 'abstractArt' ? '200px 200px' : (pattern === 'medical' ? '100px 100px' : (pattern === 'childishScribbles' ? '100px 100px' : '40px 40px')), // Adjust size for patterns
-    backgroundColor: 'transparent',
+    backgroundColor: '#FFFFFF',
     color: colorValue, // Used for stroke/fill="currentColor" in SVGs
     opacity: opacity / 100,
   };

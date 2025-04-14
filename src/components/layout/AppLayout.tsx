@@ -47,10 +47,8 @@ const AppLayout = () => {
     <ActiveCallProvider> {/* Keep context provider if still relevant */}
       {/* Main flex container */}
       <div className="flex h-screen overflow-hidden relative"> {/* Added relative back */} 
-        {/* Dedicated Background Container with dynamic gradient based on theme */}
-        <div className={`absolute inset-0 -z-10 ${getGradientClass()}`}> 
-          {/* Background elements re-added, removed pattern */}
-        </div>
+        {/* Background Container - Now uses the global --background variable */}
+        {/* Removed the div that applied the gradient */}
         
         {/* Sidebar - Added relative and z-index back */}
         <Sidebar 

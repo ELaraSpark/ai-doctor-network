@@ -77,7 +77,7 @@ export const colorThemes: ColorTheme[] = [
       primary: "#2d6a4f",
       secondary: "#40916c",
       accent: "#E09F5A", // Changed to orange accent
-      background: "#f8f9fa"
+      background: "#FDFBF5" // Updated background to beige
     }
   }
 ];
@@ -172,6 +172,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       root.style.setProperty('--primary', hexToHSL(selectedTheme.colors.primary));
       root.style.setProperty('--secondary', hexToHSL(selectedTheme.colors.secondary));
       root.style.setProperty('--accent', hexToHSL(selectedTheme.colors.accent));
+      // Removed the line setting --background dynamically to allow index.css default to apply
       
       // Save to localStorage
       localStorage.setItem('colorTheme', colorTheme);

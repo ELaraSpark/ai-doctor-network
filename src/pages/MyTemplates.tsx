@@ -146,7 +146,12 @@ Exercise Habits:
   },
 ];
 
-const QuickNotes = () => {
+// Define props to accept isPublicView
+interface MyTemplatesProps {
+  isPublicView?: boolean;
+}
+
+const QuickNotes: React.FC<MyTemplatesProps> = ({ isPublicView = false }) => {
   const navigate = useNavigate();
   const [templates, setTemplates] = useState<Template[]>(exampleTemplates);
   const [searchTerm, setSearchTerm] = useState('');
@@ -572,7 +577,7 @@ ${inputText}`;
         {/* Main content area - Flexible layout with input first, then templates */}
         <div className="flex-1 grid grid-cols-12 gap-4 overflow-hidden">
           {/* Left area - Input */}
-          <div className={`${showOutput ? 'col-span-3 bg-white/80' : 'col-span-7 bg-white'} rounded-xl shadow-md p-3 flex flex-col transition-all duration-300`}>
+          <div className={`${showOutput ? 'col-span-3 bg-background/80' : 'col-span-7 bg-background'} rounded-xl shadow-lg p-3 flex flex-col transition-all duration-300`}>
             <div className="flex justify-between items-center mb-2">
               <h3 className="text-base font-medium">Tell me what you're working on...</h3>
               <Button 
@@ -596,12 +601,12 @@ ${inputText}`;
                 <Trash2 size={14} className="mr-1.5" /> Start Fresh
               </Button>
             </div>
-            <div className="flex-1 flex flex-col">
+            <div className="flex-1 flex flex-col"> {/* Re-added flex-1 */}
               <Textarea
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 placeholder="Paste or type your medical text here..."
-                className="flex-1 resize-none text-base p-4 border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
+                className="flex-1 resize-none text-base p-4 focus:ring-2 focus:ring-primary focus:border-primary min-h-[150px]" // Removed shadow-sm, border, rounded-lg
                 autoFocus
               />
               
@@ -611,7 +616,7 @@ ${inputText}`;
               {inputText && (
                 <div className="command-chips flex flex-wrap gap-2 mt-3">
                   {['Summarize', 'Simplify', 'Translate', 'Format as Bullets'].map((cmd) => (
-                    <Button 
+                      <Button 
                       key={cmd}
                       variant="outline" 
                       size="sm" 
@@ -624,17 +629,12 @@ ${inputText}`;
                 </div>
               )}
               
-              <div className="input-actions flex flex-wrap gap-2 mt-4">
-                <input type="file" ref={fileInputRef} onChange={handleFileUpload} accept=".txt,.md" style={{ display: 'none' }} />
-                <Button variant="outline" size="sm" onClick={() => fileInputRef.current?.click()}>
-                  <Upload size={16} className="mr-2" /> Upload File
-                </Button>
-              </div>
+              {/* Removed Upload File button and input */}
             </div>
           </div>
           
           {/* Center area - Templates - Always visible */}
-          <div className={`${showOutput ? 'col-span-3 bg-white/80' : 'col-span-5 bg-white'} rounded-xl shadow-md p-3 flex flex-col transition-all duration-300`}>
+          <div className={`${showOutput ? 'col-span-3 bg-background/80' : 'col-span-5 bg-background'} rounded-xl shadow-lg p-3 flex flex-col transition-all duration-300`}>
             <div className="flex justify-between items-center mb-2">
               <h3 className="text-base font-medium">Leny's Magic Templates</h3>
               <Button 
@@ -653,7 +653,7 @@ ${inputText}`;
               <Input
                 type="search"
                 placeholder="Search templates or type a command..."
-                className="pl-9 pr-3 py-1.5 text-sm w-full"
+                className="pl-9 pr-3 py-1.5 text-sm w-full" // Removed shadow-sm
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onFocus={() => setShowSuggestions(true)}
@@ -719,7 +719,7 @@ ${inputText}`;
                 <button
                   key={template.id}
                   onClick={() => handleTemplateClick(template)}
-                  className={`template-card text-left bg-white border border-gray-200 rounded-lg p-3 cursor-pointer transition-all duration-200 hover:shadow-md hover:border-primary w-full flex flex-col ${
+                  className={`template-card text-left bg-white border-2 border-gray-500 rounded-lg p-3 cursor-pointer transition-all duration-200 shadow-sm hover:shadow-md hover:border-primary w-full flex flex-col ${
                     selectedTemplate?.id === template.id ? 'ring-2 ring-primary border-primary bg-primary/5' : ''
                   }`}
                 >
@@ -771,7 +771,7 @@ ${inputText}`;
           
           {/* Right area - Output (only shown when there's output) */}
           {showOutput && (
-            <div className="col-span-6 bg-gradient-to-br from-white to-primary/5 rounded-xl shadow-lg p-4 flex flex-col animate-fadeIn">
+            <div className="col-span-6 bg-gradient-to-br from-background to-primary/5 rounded-xl shadow-lg p-4 flex flex-col animate-fadeIn">
               <div className="mb-3">
                 <h3 className="text-lg font-medium text-primary">Here's what I've created for you ✨</h3>
               </div>
@@ -859,38 +859,7 @@ ${inputText}`;
                   <Button variant="ghost" size="sm" onClick={handleDownloadOutput} disabled={!outputText} className="h-7 px-2">
                     <Download size={14} />
                   </Button>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={() => {
-                      if (!outputText.trim()) {
-                        toast.error('Cannot save empty document as template.');
-                        return;
-                      }
-                      
-                      const title = prompt('Enter a title for your template:', outputTitle || 'New Template');
-                      if (title) {
-                        const newTemplate: Template = {
-                          id: `tpl${Date.now()}`,
-                          title,
-                          content: outputText,
-                          date: new Date(),
-                          category: 'Custom'
-                        };
-                        setTemplates(prev => [...prev, newTemplate]);
-                        setSelectedTemplate(newTemplate);
-                        toast.success('Saved as new template!');
-                      }
-                    }} 
-                    disabled={!outputText} 
-                    className="h-7 px-2 group relative"
-                    title="Save as Template"
-                  >
-                    <Save size={14} />
-                    <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
-                      Save as Template
-                    </span>
-                  </Button>
+                  {/* Removed Save as Template button */}
                 </div>
               </div>
               
@@ -899,17 +868,10 @@ ${inputText}`;
                   ref={outputRef}
                   contentEditable="true"
                   dangerouslySetInnerHTML={{ __html: outputText }}
-                  className={`border border-gray-200 rounded-lg p-5 bg-white h-full overflow-y-auto text-base leading-relaxed shadow-inner ${
+                  className={`border-2 border-gray-500 rounded-lg p-5 bg-white h-full overflow-y-auto text-base leading-relaxed shadow-inner ${
                     isOutputEditable ? 'ring-2 ring-primary focus:outline-none' : ''
                   } ${getStyleClass(outputStyle)}`}
                 />
-                
-                {/* Word count display */}
-                {outputText && (
-                  <div className="absolute bottom-2 right-3 text-xs text-gray-400 bg-white/80 px-2 py-1 rounded-md">
-                    <span className="font-medium">Word Count:</span> {outputText.replace(/<[^>]*>/g, '').split(/\s+/).filter(Boolean).length}
-                  </div>
-                )}
               </div>
             </div>
           )}

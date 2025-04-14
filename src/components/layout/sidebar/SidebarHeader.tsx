@@ -4,12 +4,12 @@ import { cn } from '@/lib/utils';
 import { ChevronLeft, ChevronRight } from 'lucide-react'; // Import icons for toggle button
 import { Button } from '@/components/ui/button';
 
-// Logo component now uses the animation.webp image
+// Logo component
 const Logo = ({ className }: { className?: string }) => (
   <img 
-    src="/illustrations/animation.webp" // Corrected path relative to the public folder
+    src="/illustrations/animation.webp"
     alt="Leny.ai Logo" 
-    className={cn("h-8 w-8 object-contain", className)} // Adjust size as needed
+    className={cn("h-8 w-8 object-contain", className)}
   />
 );
 
@@ -32,7 +32,11 @@ const SidebarHeader = ({ isCollapsed = false, onToggle }: SidebarHeaderProps) =>
           isCollapsed ? "justify-center" : "gap-2"
         )}> 
           <Logo />
-          {!isCollapsed && <span className="font-semibold text-[#2D3C35]">Leny.ai</span>}
+          {!isCollapsed && (
+            <span className="font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              Leny.ai
+            </span>
+          )}
         </Link>
       </div>
       

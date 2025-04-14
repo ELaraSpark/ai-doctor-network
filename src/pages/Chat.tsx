@@ -120,12 +120,12 @@ const Chat = () => {
                         name="healing"
                         size="lg"
                         color="text-primary"
-                        className="animate-float" // Removed mx-auto
                     />
                 </div>
-                 {/* Personal greeting - Use state variable directly */}
-                 <h1 className="text-[32px] font-bold text-foreground"> 
-                     {personalizedGreeting} 
+                 {/* Changed to "Find clinical answers instantly" with larger, bold font */}
+                 <h1 className="text-[42px] font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent text-center"> 
+                     Find clinical answers instantly
+                     <span className="block text-lg font-normal text-muted-foreground mt-2">Your friendly AI medical assistant is here to help</span>
                  </h1>
              </div>
         </div>
@@ -136,7 +136,7 @@ const Chat = () => {
             pattern="abstractArt" // Use the new Picasso-style pattern
             color="text-primary"
             opacity={5}
-            className="w-full flex-1 overflow-y-auto space-y-4 pb-4"
+            className="w-full h-full flex-1 overflow-y-auto space-y-4 pb-4 flex flex-col justify-center"
         >
             {messages.map((msg, index) => (
                 <div key={index} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
@@ -239,7 +239,7 @@ const Chat = () => {
                                             name={illustrationType as any}
                                             size="xs"
                                             color="text-primary"
-                                            className="group-hover:animate-pulse"
+                                            className=""
                                         />
                                     </div>
                                     {suggestion}
@@ -273,7 +273,7 @@ const Chat = () => {
         <div className="flex flex-col h-full">
             {showInitialState ? (
                 // Re-applying flex properties to center content vertically and horizontally
-                <div className="flex flex-1 flex-col items-center justify-center p-5"> 
+                <div className="flex flex-1 flex-col items-center justify-center p-5 mt-24"> 
                     {/* Background is handled by AppLayout */}
                     <div className="w-full max-w-[700px] flex flex-col items-center"> 
                         <Greeting />
@@ -291,13 +291,15 @@ const Chat = () => {
                 </div>
             ) : (
                 // Apply centering to the parent flex container for the active chat state
-                <div className="flex flex-1 flex-col items-center overflow-hidden"> 
+                <div className="flex flex-1 flex-col items-center justify-center overflow-hidden h-full"> 
                     {/* Message display area: centered, takes up space, scrolls, has bottom padding */}
-                    <div className="w-full max-w-3xl flex-1 overflow-y-auto px-4 pt-4 pb-24"> {/* Added pb-24 for input spacing */}
-                        <MessageDisplay />
+                    <div className="w-full max-w-3xl flex-1 overflow-y-auto px-4 pt-4 pb-24 flex flex-col"> 
+                        <div className="flex-1 flex items-center justify-center min-h-[calc(100vh-200px)]">
+                            <MessageDisplay />
+                        </div>
                     </div>
                     {/* Input area: sticky to bottom, centered */}
-                    <div className="w-full max-w-3xl sticky bottom-4 bg-background p-0 border-t border-border"> {/* Added bottom-4 to lift it up from the bottom */}
+                    <div className="w-full max-w-3xl sticky bottom-4 bg-background p-0 border-t border-border"> 
                         <InputArea isAnchored={true} />
                     </div>
                 </div>

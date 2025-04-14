@@ -5,6 +5,25 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  /* Custom animation for floating elements */
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+    100% {
+      transform: translateY(0px);
+    }
+  }
+}
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-10px); }
   to { opacity: 1; transform: translateY(0); }
@@ -27,17 +46,17 @@
 /* CSS variables for themes */
 @layer base {
   :root {
-    /* Default Light Mode Variables */
-    --primary: 146 33% 43%; /* #4A9270 - Will be overridden by theme context */
+    /* Friendly Innovation Palette */
+    --primary: 190 100% 43%; /* #00B8D9 - Vibrant Teal */
     --primary-foreground: 0 0% 100%; /* White */
     
-    --secondary: 146 33% 53%; /* #6AB187 - Will be overridden by theme context */
-    --secondary-foreground: 0 0% 100%; /* White */
+    --secondary: 36 100% 50%; /* #FFAB00 - Sunshine Yellow */
+    --secondary-foreground: 0 0% 15%; /* Dark text for contrast */
     
-    --accent: 33 71% 62%; /* #E09F5A - Will be overridden by theme context */
-    --accent-foreground: 0 0% 100%;
+    --accent: 9 100% 60%; /* #FF5630 - Energetic Coral */
+    --accent-foreground: 0 0% 100%; /* White */
     
-    --background: 140 20% 99%;
+    --background: 48 67% 98%; /* #FDFBF5 beige */
     --foreground: 0 0% 15%;
     
     --card: 0 0% 100%;
@@ -49,41 +68,45 @@
     --muted: 140 10% 97%;
     --muted-foreground: 0 0% 45%;
     
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 9 100% 60%; /* #FF5630 - Same as accent for consistency */
     --destructive-foreground: 0 0% 98%;
     
-    --border: 140 10% 90%;
-    --input: 140 10% 90%;
-    --ring: 146 33% 43%; /* Primary green for focus ring */
+    --border: 190 30% 90%;
+    --input: 190 30% 90%;
+    --ring: 190 100% 43%; /* Teal for focus ring */
     
     --radius: 0.5rem; 
   }
 
-  /* Dark mode variables */
+  /* Dark mode variables - Friendly Innovation Dark Theme */
   .dark {
-    --background: 150 15% 10%; /* Dark background with slight green tint */
-    --foreground: 140 10% 90%; /* Light text with slight green tint */
+    --background: 190 30% 10%; /* Dark teal background */
+    --foreground: 190 15% 90%; /* Light text with slight teal tint */
     
-    --card: 150 15% 15%; /* Slightly lighter than background */
-    --card-foreground: 140 10% 90%; /* Same as foreground */
+    --card: 190 25% 15%; /* Slightly lighter than background */
+    --card-foreground: 190 15% 90%; /* Same as foreground */
     
-    --popover: 150 15% 15%; /* Same as card */
-    --popover-foreground: 140 10% 90%; /* Same as foreground */
+    --popover: 190 25% 15%; /* Same as card */
+    --popover-foreground: 190 15% 90%; /* Same as foreground */
     
-    --muted: 150 15% 20%; /* Slightly lighter than card */
-    --muted-foreground: 140 10% 70%; /* Slightly darker than foreground */
+    --muted: 190 20% 20%; /* Slightly lighter than card */
+    --muted-foreground: 190 10% 70%; /* Slightly darker than foreground */
     
-    --border: 150 15% 25%; /* Slightly lighter than muted */
-    --input: 150 15% 25%; /* Same as border */
+    --border: 190 20% 25%; /* Slightly lighter than muted */
+    --input: 190 20% 25%; /* Same as border */
     
-    /* Primary, secondary, and accent colors are set by the theme context */
-    /* But we need to adjust their foreground colors for dark mode */
+    /* Friendly Innovation colors for dark mode */
+    --primary: 190 90% 50%; /* #00B8D9 - Brighter in dark mode */
     --primary-foreground: 0 0% 100%; /* White */
-    --secondary-foreground: 0 0% 100%; /* White */
+    
+    --secondary: 36 90% 55%; /* #FFAB00 - Brighter in dark mode */
+    --secondary-foreground: 0 0% 15%; /* Dark text for contrast */
+    
+    --accent: 9 90% 65%; /* #FF5630 - Brighter in dark mode */
     --accent-foreground: 0 0% 100%; /* White */
     
-    --destructive: 0 84.2% 60.2%; /* Same as light mode */
-    --destructive-foreground: 210 40% 98%; /* Same as light mode */
+    --destructive: 9 90% 65%; /* Same as accent */
+    --destructive-foreground: 0 0% 100%; /* White */
     
     --ring: var(--primary); /* Use primary color for focus ring */
   }
@@ -96,8 +119,8 @@
   }
   
   body {
-    /* Reverted: Use Tailwind's default background/foreground or the ones defined in config */
-    @apply bg-background text-foreground font-sans antialiased text-base leading-normal font-normal; 
+    /* Increased base font size for better visibility */
+    @apply bg-background text-foreground font-sans antialiased text-xl leading-normal font-normal; 
   }
   /* .dark body rule is not needed if body uses bg-background */
 
@@ -125,33 +148,33 @@
   /* .gradient-card { ... } */
 }
 
-/* Typography Adjustments - Match example sizes, keep existing font-display */
+/* Typography Adjustments - Increased font sizes for better visibility */
 @layer components {
-  /* Map h1 to welcome-title size (36px) */
+  /* Map h1 to welcome-title size (increased from 36px to 48px) */
   .h1 { 
-    @apply text-[36px] font-display font-bold tracking-tight text-foreground; 
+    @apply text-[48px] font-display font-bold tracking-tight text-foreground; 
   } 
-  /* Map h2 to a reasonable step down (e.g., 30px) */
+  /* Map h2 to a reasonable step down (increased from 30px to 40px) */
   .h2 { 
-    @apply text-3xl font-display font-bold tracking-tight text-foreground; 
+    @apply text-5xl font-display font-bold tracking-tight text-foreground; 
   } 
-  /* Map h3 to a reasonable step down (e.g., 24px) */
+  /* Map h3 to a reasonable step down (increased from 24px to 32px) */
   .h3 { 
-    @apply text-2xl font-display font-semibold tracking-tight text-foreground; 
+    @apply text-4xl font-display font-semibold tracking-tight text-foreground; 
   } 
-  /* Map h4 to a reasonable step down (e.g., 20px) */
+  /* Map h4 to a reasonable step down (increased from 20px to 28px) */
   .h4 { 
-    @apply text-xl font-display font-semibold tracking-tight text-foreground; 
+    @apply text-3xl font-display font-semibold tracking-tight text-foreground; 
   } 
-  /* Map p-large to welcome-subtitle/chat-input size (16px) */
+  /* Map p-large to welcome-subtitle/chat-input size (increased from 16px to 20px) */
   .p-large { 
     /* Use the CSS variable directly for text color */
-    @apply text-base text-[hsl(var(--text-secondary-hsl))]; 
+    @apply text-2xl text-[hsl(var(--text-secondary-hsl))]; 
   } 
-  /* Map p-small to nav-item/user-name/footer size (13px/14px -> use text-sm) */
+  /* Map p-small to nav-item/user-name/footer size (increased from 13px/14px to 18px) */
   .p-small { 
     /* Use the standard text-muted-foreground utility */
-    @apply text-sm text-muted-foreground; 
+    @apply text-xl text-muted-foreground; 
   }
 
   /* Remove default link underline added previously */
@@ -238,6 +261,38 @@
   animation: float 3s ease-in-out infinite;
 }
 
+/* Blinking cursor animation for typing effect */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.animate-blink {
+  animation: blink 0.8s step-end infinite;
+}
+
+/* Text shadow animation for typing effect */
+@keyframes text-shadow-pulse {
+  0% { text-shadow: 0 0 0 rgba(0,184,217,0); }
+  50% { text-shadow: 0 0 5px rgba(0,184,217,0.3); }
+  100% { text-shadow: 0 0 0 rgba(0,184,217,0); }
+}
+
+.typing-text {
+  animation: text-shadow-pulse 2s ease-in-out infinite;
+}
+
+/* Shadow animation for the typing container */
+@keyframes box-shadow-pulse {
+  0% { box-shadow: 0 0 0 rgba(0,184,217,0); }
+  50% { box-shadow: 0 0 10px rgba(0,184,217,0.2); }
+  100% { box-shadow: 0 0 0 rgba(0,184,217,0); }
+}
+
+.shadow-pulse {
+  animation: box-shadow-pulse 2s ease-in-out infinite;
+}
+
 /* Modern card designs */
 .card-modern {
   @apply rounded-lg border border-border bg-card p-6 shadow-sm transition-all hover:shadow-md;
@@ -279,7 +334,39 @@
   @apply bg-background border border-input; /* Use theme variables */
 }
 
-/* Gradient backgrounds for different themes */
+/* Gradient backgrounds for Friendly Innovation palette */
+.bg-gradient-teal {
+  @apply bg-gradient-to-br from-[#f8f9fa] to-[#e1f5fe];
+}
+
+.dark .bg-gradient-teal {
+  @apply bg-gradient-to-br from-[#0d2534] to-[#051620];
+}
+
+.bg-gradient-coral {
+  @apply bg-gradient-to-br from-[#f8f9fa] to-[#ffebe5];
+}
+
+.dark .bg-gradient-coral {
+  @apply bg-gradient-to-br from-[#2d1008] to-[#1a0905];
+}
+
+.bg-gradient-yellow {
+  @apply bg-gradient-to-br from-[#f8f9fa] to-[#fff8e1];
+}
+
+.dark .bg-gradient-yellow {
+  @apply bg-gradient-to-br from-[#2d2105] to-[#1a1408];
+}
+
+.bg-gradient-purple {
+  @apply bg-gradient-to-br from-[#f8f9fa] to-[#ede7f6];
+}
+
+.dark .bg-gradient-purple {
+  @apply bg-gradient-to-br from-[#1a0d2e] to-[#0d071a];
+}
+
 .bg-gradient-green {
   @apply bg-gradient-to-br from-[#f8f9fa] to-[#e8f5e9];
 }
@@ -288,7 +375,7 @@
   @apply bg-gradient-to-br from-[#1a2e22] to-[#0d1912];
 }
 
-/* Add gradients for other themes */
+/* Legacy gradients */
 .bg-gradient-clinical {
   @apply bg-gradient-to-br from-[#f8f9fa] to-[#e1f5fe];
 }
@@ -327,6 +414,15 @@
 
 .dark .bg-gradient-neurology {
   @apply bg-gradient-to-br from-[#1a0d2e] to-[#0d071a];
+}
+
+/* Friendly Innovation combined gradients */
+.bg-gradient-friendly {
+  @apply bg-gradient-to-r from-teal via-purple to-coral;
+}
+
+.bg-gradient-innovation {
+  @apply bg-gradient-to-r from-coral via-yellow to-green;
 }
 
 /* Remove page-gradient or update */

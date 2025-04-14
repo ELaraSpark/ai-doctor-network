@@ -91,7 +91,7 @@ const StatusBadge = ({ status }: { status: TaskHistoryEntry['status'] }) => {
         <XCircle size={12} className="mr-1" />Failed
       </Badge>;
     case 'In Progress': 
-      return <Badge variant="outline" className="text-secondary-accent border-secondary-accent/40">
+      return <Badge variant="outline" className="text-primary border-primary/40"> // Use theme variable
         <Loader2 size={12} className="mr-1 animate-spin" />In Progress
       </Badge>;
     default: 
@@ -183,7 +183,7 @@ export const ChatHistoryModal: React.FC<ChatHistoryModalProps> = ({
                               name="Leny"
                               illustrationType="healing"
                               size="sm"
-                              color="text-primary"
+                              color="text-primary" // Use theme variable
                               className="flex-shrink-0 mt-1"
                             />
                             <div className="flex-1 min-w-0">
@@ -256,7 +256,7 @@ export const ChatHistoryModal: React.FC<ChatHistoryModalProps> = ({
                               </div>
                               {task.outputLink && (
                                 <div className="mt-1">
-                                  <Button variant="link" size="sm" className="h-auto p-0 text-xs text-secondary-accent hover:text-secondary-accent/80" asChild>
+                                  <Button variant="link" size="sm" className="h-auto p-0 text-xs text-primary hover:text-primary/80" asChild> // Use theme variable
                                     <a href={task.outputLink}>View Output <LinkIcon size={12} className="ml-1"/></a>
                                   </Button>
                                 </div>

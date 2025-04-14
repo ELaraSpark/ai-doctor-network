@@ -9,9 +9,10 @@ interface ChatMessagesContainerProps {
   messages: Message[];
   isLoading: boolean;
   selectedAgent?: Agent; // Add selectedAgent prop
+  chatStyle?: string; // Add chatStyle prop
 }
 
-const ChatMessagesContainer = ({ messages, isLoading, selectedAgent }: ChatMessagesContainerProps) => {
+const ChatMessagesContainer = ({ messages, isLoading, selectedAgent, chatStyle = "Professional" }: ChatMessagesContainerProps) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to the bottom when messages change or when loading
@@ -29,6 +30,7 @@ const ChatMessagesContainer = ({ messages, isLoading, selectedAgent }: ChatMessa
             key={message.id} 
             message={message} 
             selectedAgent={selectedAgent} // Pass selectedAgent to ChatMessage
+            chatStyle={chatStyle} // Pass the selected chat style
           />
         ))}
         

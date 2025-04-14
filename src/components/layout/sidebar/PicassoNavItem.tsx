@@ -36,12 +36,12 @@ const PicassoNavItem = ({
   // Use the provided illustration type or look it up from the map
   const illustration = illustrationType || routeToIllustrationMap[to] || 'empty';
 
-  // Use new primary colors and enhanced font weights for hover and active states
+  // Use theme variables for active and hover states
   const linkClasses = cn(
     "flex items-center px-3 py-1.5 rounded-md group transition-all duration-200 ease-in-out text-sm font-medium", // Added font-medium as default
     isActive 
-      ? "bg-primary/5 text-primary font-semibold" // Use new primary color
-      : "text-[#5A6D64] hover:bg-primary/5 hover:text-primary", // Use new colors
+      ? "bg-primary/5 text-primary font-semibold" // Use theme variables
+      : "text-[#5A6D64] hover:bg-primary/5 hover:text-primary", // Use theme variables
     isSubItem ? "py-1 text-xs" : "" // Make sub-item text slightly smaller too
   );
 
@@ -51,8 +51,8 @@ const PicassoNavItem = ({
         <PicassoIllustration 
           name={illustration} 
           size={isSubItem ? "xs" : "xs"} 
-          color={isActive ? "text-primary" : "text-[#5A6D64]"}
-          className="group-hover:text-primary"
+          color={isActive ? "text-primary" : "text-[#5A6D64]"} // Use theme variable for active
+          className="group-hover:text-primary" // Use theme variable for hover
         />
       </div>
       <span className="truncate">{label}</span> 

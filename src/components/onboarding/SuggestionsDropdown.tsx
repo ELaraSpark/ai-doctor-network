@@ -19,7 +19,7 @@ const SuggestionItem: React.FC<SuggestionItemProps> = ({ icon, text, onClick, ha
       whileHover={{ backgroundColor: 'rgba(var(--primary-rgb), 0.1)' }}
       className="flex items-center gap-3 px-4 py-3 cursor-pointer rounded-lg hover:bg-primary/5 transition-colors duration-200"
       onClick={onClick}
-      style={{ backgroundColor: '#ffffff' }}
+      style={{ backgroundColor: '#FFFFFF' }}
     >
       {icon && (
         <div className="bg-primary/10 p-2 rounded-lg text-primary">
@@ -215,12 +215,12 @@ const SuggestionsDropdown: React.FC<SuggestionsDropdownProps> = ({
           className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 border border-primary/10 rounded-xl shadow-xl z-[9999] overflow-hidden max-h-[80vh] overflow-y-auto w-[90%] max-w-[800px]"
           style={{ 
             boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.2)',
-            backgroundColor: '#ffffff',
+            backgroundColor: '#FFFFFF',
             position: 'relative'
           }}
         >
-          <div className="p-3" style={{ backgroundColor: '#ffffff' }}>
-            <div className="flex items-center justify-between mb-4 px-4 py-2 border-b border-gray-100" style={{ backgroundColor: '#ffffff' }}>
+          <div className="p-3" style={{ backgroundColor: '#FFFFFF' }}>
+            <div className="flex items-center justify-between mb-4 px-4 py-2 border-b border-gray-100" style={{ backgroundColor: '#FFFFFF' }}>
               <div className="flex items-center gap-2">
                 <Lightbulb className="h-4 w-4 text-primary" />
                 <h3 className="text-sm font-medium">Medical Suggestions</h3>
@@ -235,7 +235,7 @@ const SuggestionsDropdown: React.FC<SuggestionsDropdownProps> = ({
               </button>
             </div>
             
-            <div className="space-y-4" style={{ backgroundColor: '#ffffff' }}>
+            <div className="space-y-4" style={{ backgroundColor: '#FFFFFF' }}>
               {categories.map((category, index) => (
                 <SuggestionCategory
                   key={index}

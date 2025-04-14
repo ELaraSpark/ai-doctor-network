@@ -312,7 +312,7 @@ const ConsultationSetup: React.FC<ConsultationSetupProps> = ({ onStart, isPublic
 
   return (
     // Main container for the setup view - Using flex column
-    <div className="flex flex-col h-full bg-background p-4 rounded-lg shadow-sm"> {/* Added bg-background, padding, rounded, shadow */}
+    <div className="flex flex-col h-full bg-background p-4 rounded-lg shadow-lg"> {/* Changed shadow-sm to shadow-lg */}
       {/* Introduction Removed */}
 
       {/* Two-column layout for medium screens and up */}
@@ -327,21 +327,17 @@ const ConsultationSetup: React.FC<ConsultationSetupProps> = ({ onStart, isPublic
                <UsersIcon size={24} strokeWidth={1.5} />
              </div>
              <h1 className="text-xl md:text-2xl font-semibold text-gray-900">AI Expert Panel Setup</h1> {/* Updated Title */}
-          </div>
+           </div>
 
           <div className="flex flex-col flex-grow mb-4">
-            <Label htmlFor="case-summary" className="mb-1.5 text-sm font-medium text-gray-700">Patient Case Summary</Label>
-            {/* Moved descriptive paragraph here */}
-            <p className="text-xs text-gray-500 mb-2">
-              Enter patient case details below. Our AI will suggest relevant AI agents for a collaborative review in the expert panel. {/* Updated text */}
-            </p>
+            {/* Removed Label and description paragraph */}
             {/* Apply wrapper style similar to ChatInput */}
-            <div className="relative rounded-xl border border-primary/70 bg-background focus-within:border-primary focus-within:ring-1 focus-within:ring-primary/20 shadow-sm transition-colors duration-200 flex-grow min-h-[250px] md:min-h-[300px]">
+            <div className="relative rounded-xl border-2 border-gray-500 bg-white shadow-sm transition-colors duration-200 flex-grow min-h-[250px] md:min-h-[300px]"> {/* Changed border, bg */}
               <Textarea
                 id="case-summary"
                 value={caseDetails}
                 onChange={(e) => setCaseDetails(e.target.value)}
-                placeholder="Enter patient case summary, medical history, relevant findings, and specific questions..."
+                placeholder="Got a patient puzzle? Plug in the details and let our AI form the ultimate medical think tank."
                 className="absolute inset-0 w-full h-full resize-none text-sm p-3 bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0" // Remove default border/ring, adjust padding
               />
             </div>
@@ -388,8 +384,8 @@ const ConsultationSetup: React.FC<ConsultationSetupProps> = ({ onStart, isPublic
                     <div
                       key={agent.id}
                       onClick={() => toggleAgent(agent)}
-                      className={`flex items-center p-3 rounded-lg cursor-pointer transition-all duration-200 border ${
-                        isSelected ? 'bg-primary/10 border-primary/50 ring-1 ring-primary/30' : 'bg-white border-gray-200 hover:bg-gray-50 hover:border-gray-300'
+                      className={`flex items-center p-3 rounded-lg cursor-pointer transition-all duration-200 border-2 shadow-sm ${ // Added border-2, shadow-sm
+                        isSelected ? 'bg-primary/10 border-primary/50 ring-1 ring-primary/30' : 'bg-white border-gray-500 hover:bg-gray-50 hover:border-gray-400' // Changed border colors
                       }`}
                       style={{ animationDelay: `${index * 0.05}s`, opacity: 1, animationFillMode: 'forwards', animationName: 'fadeInUp' }}
                     >
@@ -420,7 +416,7 @@ const ConsultationSetup: React.FC<ConsultationSetupProps> = ({ onStart, isPublic
               allAgentsForPanel.map((agent, index) => ( // Use allAgentsForPanel
                 <div
                   key={agent.id}
-                  className={`flex items-center p-3 rounded-lg border border-gray-200 opacity-50 cursor-not-allowed`} // Grayed out and non-interactive
+                  className={`flex items-center p-3 rounded-lg border-2 border-gray-500 bg-white shadow-sm cursor-not-allowed`} // Removed opacity-50
                 >
                   <div
                     className="w-9 h-9 rounded-full flex items-center justify-center mr-3 text-base shrink-0 bg-gray-200 text-gray-500" // Gray avatar

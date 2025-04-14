@@ -29,14 +29,14 @@ const NavItem = ({ to, icon: Icon, label, isSubItem, hoverAccent = false }: NavI
     </>
   );
 
-  // Use refined colors: sidebar-selected for active bg, primary for active text, primary/10 for hover bg
+  // Use theme variables for active and hover states
   const linkClasses = cn(
     "flex items-center px-3 py-1.5 rounded-md group transition-colors text-sm", 
     isActive 
       ? hoverAccent 
-        ? "bg-sidebar-selected text-sidebar-primary font-medium hover:text-white hover:bg-accent" // Use white text on accent background for better contrast
-        : "bg-sidebar-selected text-sidebar-primary font-medium" // Use sidebar-specific active colors
-      : "text-perplexity-text-secondary hover:bg-primary/10 hover:text-perplexity-text-primary", // Use primary tint for hover bg
+        ? "bg-primary/10 text-primary font-medium hover:text-white hover:bg-primary" // Use theme variables
+        : "bg-primary/10 text-primary font-medium" // Use theme variables
+      : "text-gray-600 hover:bg-primary/10 hover:text-primary", // Use theme variables
     isSubItem ? "py-1 text-xs" : "" // Make sub-item text slightly smaller too
   );
 
@@ -47,9 +47,9 @@ const NavItem = ({ to, icon: Icon, label, isSubItem, hoverAccent = false }: NavI
         size={isSubItem ? 14 : 16} 
         className={cn(
           "mr-3 flex-shrink-0",
-          isActive && hoverAccent ? "text-primary group-hover:text-white" : "",
-          isActive && !hoverAccent ? "text-primary" : "",
-          !isActive ? "text-muted-foreground group-hover:text-primary" : ""
+          isActive && hoverAccent ? "text-primary group-hover:text-white" : "", // Use theme variable
+          isActive && !hoverAccent ? "text-primary" : "", // Use theme variable
+          !isActive ? "text-muted-foreground group-hover:text-primary" : "" // Use theme variable
         )} 
       /> 
       <span className="truncate">{label}</span> 

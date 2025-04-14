@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import SidebarHeader from './sidebar/SidebarHeader';
 import PicassoNavItem from './sidebar/PicassoNavItem';
@@ -44,9 +45,9 @@ interface SidebarProps {
 
 // Navigation Items
 const navItems = [
-  { to: '/chat', label: 'Ask AI', icon: MessageSquare, subItem: { to: '/recent-chats', label: 'View all chats', icon: Clock } },
-  { to: '/my-agents', label: 'My Agents', icon: Users, subItem: { to: '/tasks', label: 'My Tasks', icon: List } },
-  { to: '/my-templates', label: 'Quick Notes', icon: Zap },
+  { to: '/chat', label: 'Ask Leny', icon: MessageSquare, subItem: { to: '/recent-chats', label: 'View all chats', icon: Clock } },
+  { to: '/my-agents', label: 'AI Agents', icon: Users, subItem: { to: '/tasks', label: 'My Tasks', icon: List } },
+  { to: '/my-templates', label: 'Smart Notes', icon: Zap },
   { to: '/tumor-board', label: 'Expert Panel', icon: ClipboardList },
   // Removed Rewards & Lounge from main nav
 ];
@@ -56,8 +57,17 @@ const Sidebar = ({ className, isCollapsed = false, onMouseEnter, onToggle }: Sid
   const navigate = useNavigate();
   const location = useLocation();
 
+  const { toast } = useToast();
+
   const handleLogout = () => {
     signOut();
+    // Add toast notification
+    toast({
+      title: "Logged out",
+      description: "You have been logged out successfully."
+    });
+    // Navigate to the public main page
+    navigate("/");
   };
 
   // Function to render navigation items
@@ -79,7 +89,7 @@ const Sidebar = ({ className, isCollapsed = false, onMouseEnter, onToggle }: Sid
               "flex items-center w-full font-medium group transition-all duration-200 ease-in-out mb-1 py-2",
               isCollapsed ? "justify-center px-2" : "justify-start px-3",
               isParentActive
-                ? "bg-primary/10 border border-primary/50 text-primary rounded-md hover:text-white hover:bg-accent hover:border-accent/50"
+                ? "bg-primary/10 border border-primary/50 text-primary rounded-md hover:text-white hover:bg-primary hover:border-primary/50"
                 : "text-muted-foreground hover:text-primary hover:bg-transparent rounded-md"
             )}
             title={isCollapsed ? item.label : undefined}
