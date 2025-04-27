@@ -1,50 +1,48 @@
+import { useEffect, useRef, useState } from "react"
+import { supabase } from "@/lib/supabaseClient"
+import ChatMessage from "./ChatMessage"
 
-import { useEffect, useRef } from "react";
-import { Loader2 } from "lucide-react";
-import { Message, Agent } from "./types/agentTypes";
-import ChatMessage from "./ChatMessage";
-import { ScrollArea } from "@/components/ui/scroll-area";
+const ChatMessagesContainer = ({ user1, user2 }: { user1: string, user2: string }) => {
+  const [messages, setMessages] = useState<any[]>([])
+  const messagesEndRef = useRef<HTMLDivElement>(null)
 
-interface ChatMessagesContainerProps {
-  messages: Message[];
-  isLoading: boolean;
-  selectedAgent?: Agent; // Add selectedAgent prop
-  chatStyle?: string; // Add chatStyle prop
-}
+  const fetchMessages = async () => {
+    const { data, error } = await supabase
+      .from('messages')
+      .select('*')
+      .or(`and(sender_id.eq.${user1},receiver_id.eq.${user2}),and(sender_id.eq.${user2},receiver_id.eq.${user1})`)
+      .order('sent_at', { ascending: true })
 
-const ChatMessagesContainer = ({ messages, isLoading, selectedAgent, chatStyle = "Professional" }: ChatMessagesContainerProps) => {
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+    if (!error) setMessages(data)
+  }
 
-  // Auto-scroll to the bottom when messages change or when loading
   useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    fetchMessages()
+
+    const subscription = supabase
+      .channel('chat-room')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'messages' }, (payload) => {
+        fetchMessages()
+      })
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(subscription)
     }
-  }, [messages, isLoading]);
+  }, [user1, user2])
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }, [messages])
 
   return (
-    <ScrollArea className="h-[600px] pr-4">
-      <div className="space-y-6 pb-3">
-        {messages.map((message) => (
-          <ChatMessage 
-            key={message.id} 
-            message={message} 
-            selectedAgent={selectedAgent} // Pass selectedAgent to ChatMessage
-            chatStyle={chatStyle} // Pass the selected chat style
-          />
-        ))}
-        
-        {isLoading && (
-          <div className="flex justify-center items-center py-4">
-            <Loader2 className="h-6 w-6 animate-spin text-aida-500" />
-          </div>
-        )}
-        
-        {/* Invisible element to scroll to */}
-        <div ref={messagesEndRef} />
-      </div>
-    </ScrollArea>
-  );
-};
+    <div className="space-y-4 overflow-y-scroll max-h-[500px] px-4 py-2">
+      {messages.map((msg) => (
+        <ChatMessage key={msg.id} message={msg} />
+      ))}
+      <div ref={messagesEndRef} />
+    </div>
+  )
+}
 
-export default ChatMessagesContainer;
+export default ChatMessagesContainer

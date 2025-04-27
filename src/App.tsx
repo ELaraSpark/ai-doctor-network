@@ -1,4 +1,3 @@
-
 // Remove toast components that show notifications at the bottom right
 // import { Toaster } from "@/components/ui/toaster";
 // import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -14,7 +13,7 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 // import { Toaster } from "@/components/ui/toaster";
 // import { Toaster as Sonner } from "@/components/ui/sonner";
 
-import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import { RootHandler } from "@/components/auth/RootHandler"; 
 import AppLayout from "@/components/layout/AppLayout"; // Import the main AppLayout
 import PublicLayout from "@/components/layout/PublicLayout"; // Import the PublicLayout

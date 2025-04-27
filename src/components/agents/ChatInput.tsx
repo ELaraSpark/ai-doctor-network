@@ -272,3 +272,14 @@ const ChatInput = ({
 };
 
 export default ChatInput;
+
+
+// 🔌 Example usage with Supabase
+// const handleSendMessage = async (message: string) => {
+//   const { error } = await supabase.from('messages').insert([{
+//     sender_id: currentUserId,
+//     receiver_id: selectedReceiverId,
+//     content: message
+//   }])
+//   if (error) console.error('Send message error:', error)
+// }

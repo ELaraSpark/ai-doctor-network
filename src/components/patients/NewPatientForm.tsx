@@ -209,3 +209,18 @@ const NewPatientForm = ({ onSubmit, onCancel }: NewPatientFormProps) => {
 };
 
 export default NewPatientForm;
+
+
+// 🔌 Example integration to use this form
+// const handleCreatePatient = async (data: NewPatientFormValues) => {
+//   const { error } = await supabase.from('profiles').insert([
+//     {
+//       id: crypto.randomUUID(),
+//       full_name: data.name,
+//       email: `${data.name.replace(/\s+/g, '').toLowerCase()}@example.com`,
+//       role: 'patient'
+//     }
+//   ])
+//   if (error) console.error(error)
+// }
+

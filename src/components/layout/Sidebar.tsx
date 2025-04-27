@@ -60,14 +60,21 @@ const Sidebar = ({ className, isCollapsed = false, onMouseEnter, onToggle }: Sid
   const { toast } = useToast();
 
   const handleLogout = () => {
-    signOut();
-    // Add toast notification
-    toast({
-      title: "Logged out",
-      description: "You have been logged out successfully."
-    });
-    // Navigate to the public main page
-    navigate("/");
+    signOut()
+      .then(() => {
+        toast({
+          title: "Logged out",
+          description: "You have been logged out successfully."
+        });
+        navigate("/");
+      })
+      .catch((error) => {
+        toast({
+          title: "Logout failed",
+          description: error.message,
+          variant: "destructive"
+        });
+      });
   };
 
   // Function to render navigation items
